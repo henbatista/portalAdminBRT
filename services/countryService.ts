@@ -1,5 +1,5 @@
 import axios from "axios";
-import useApiUrl from "~/composables/useApiUrl";
+
 import { useCountryStore } from "../stores/CountryStore";
 
 const { getApiUrl } = useApiUrl();
