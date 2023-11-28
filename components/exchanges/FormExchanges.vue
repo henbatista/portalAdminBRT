@@ -3,6 +3,20 @@ import { ref } from "vue";
 import { useExchangesStore } from "~/stores/ExchangesStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
 
+import { Icon } from "@iconify/vue";
+
+const exchange = "material-symbols:question-exchange"
+const usdIcon = "mdi:currency-usd"
+const eurIcon = "gg:euro"
+const gbpIcon = "mdi:currency-gbp"
+
+const icons = {
+  exchange,
+  usdIcon,
+  eurIcon,
+  gbpIcon
+};
+
 const exchangesStore = useExchangesStore();
 const sidebarStore = useSidebarStore();
 
@@ -17,66 +31,129 @@ function saveExchanges() {
 </script>
 
 <template>
-  <div class="flex justify-between items-center w-full">
-    <span class="text-2xl font-bold flex gap-2 items-center">
-      Adicionar Câmbio</span
-    >
-    <button @click="sidebarStore.sideBarAction = false">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
+  <form class="space-y-4 px-6">
+    <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
+    <div class="flex justify-between  mb-2">
+      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
+        <span
+        class="flex items-center md:text-xl gap-2  font-semibold text-lg"
+       
+      >    <Icon class="-mt-0.5" :icon="icons.exchange" />
+        Adicionar Câmbio</span
       >
-        <path
-          fill="currentColor"
-          d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42c.39.39 1.02.39 1.41 0l6.59-6.59a.996.996 0 0 0 0-1.41l-6.58-6.6a.996.996 0 1 0-1.41 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"
-        />
-      </svg>
-    </button>
+
+        <div class="flex-1 md:text-base text-xs"> 
+          Preencha os dados para cadastrar um novo cãmbio.
+        </div>
+      </div>
+      <button @click="sidebarStore.sideBarAction = false">
+        <svg
+        class="mr-7"
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42c.39.39 1.02.39 1.41 0l6.59-6.59a.996.996 0 0 0 0-1.41l-6.58-6.6a.996.996 0 1 0-1.41 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
+
   <section class="flex mt-4 flex-col gap-4">
-    <div class="flex flex-col">
-      <label for="USD" class="font-bold text-xs mb-2">USD</label>
-      <input
-        type="text"
+
+    <div >
+      <label for="USD" class="font-bold text-xs mb-2">Dolar</label>
+      <div class="flex mt-2 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.usdIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+            type="text"
         id="USD"
         v-maska
         data-maska="#,##"
         placeholder="0,00"
         v-model="usd"
-        class="h-12 p-4 rounded-md border border-gray-200 text-sm placeholder-gray-300 mb-3"
-      />
+              class="bg-white  transition duration-300 ease-in-out border border-slate-200  focus:ring-0  
+
+              rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]" />
+
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flex flex-col">
-      <label for="EURO" class="font-bold text-xs mb-2">EURO</label>
-      <input
-        type="text"
-        id="EURO"
-        v-maska
-        data-maska="#,##"
-        placeholder="0,00"
-        v-model="eur"
-        class="h-12 p-4 rounded-md border border-gray-200 text-sm placeholder-gray-300 mb-3"
-      />
+
+    <div >
+      <label for="USD" class="font-bold text-xs mb-2">Euro</label>
+      <div class="flex mt-2 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.eurIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+            type="text"
+            id="EURO"
+            v-maska
+            data-maska="#,##"
+            placeholder="0,00"
+            v-model="eur"
+              class="bg-white  transition duration-300 ease-in-out border border-slate-200  focus:ring-0  
+
+              rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]" />
+
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="flex flex-col">
-      <label for="GBP" class="font-bold text-xs mb-2">GBP</label>
-      <input
-        type="text"
-        id="GBP"
-        v-maska
-        data-maska="#,##"
-        placeholder="0,00"
-        v-model="gbp"
-        class="h-12 p-4 rounded-md border border-gray-200 text-sm placeholder-gray-300 mb-3"
-      />
+    <div >
+      <label for="USD" class="font-bold text-xs mb-2">Libra</label>
+      <div class="flex mt-2 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.gbpIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+            type="text"
+            id="GBP"
+            v-maska
+            data-maska="#,##"
+            placeholder="0,00"
+            v-model="gbp"
+              class="bg-white  transition duration-300 ease-in-out border border-slate-200  focus:ring-0  
+
+              rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]" />
+
+          </div>
+        </div>
+      </div>
     </div>
+
+
     <button
       @click="saveExchanges"
       :class="!exchangesStore.isLoading ? '' : 'opacity-50'"
-      class="h-12 bg-blue-800 text-white px-4 rounded-md text-xs font-bold flex items-center w-full justify-center mt-4"
-    >
+      class="mt-5 inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+      >
       <div
         v-if="!exchangesStore.isLoading"
         class="flex justify-center items-center"
@@ -122,6 +199,7 @@ function saveExchanges() {
       </div>
     </button>
   </section>
+  </form>
 </template>
 
 <style scoped></style>

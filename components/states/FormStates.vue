@@ -3,9 +3,17 @@ import { ref } from 'vue';
 import { useStateStore } from "~/stores/StatesStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
 import  type  { StateComplete  } from "~/types/stateComplete";
+import { Icon } from "@iconify/vue";
+
 
 const stateStore = useStateStore();
 const sidebarStore = useSidebarStore();
+
+const stateIcon = "arcticons:50-us-states-map"
+
+const icons = {
+  stateIcon,  
+};
 
 function handleCountry() {
   if (stateStore.idDeleteOrUpdate === 0) {
@@ -28,17 +36,17 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
 </script>
 
 <template>
-      
-  <div class="bg-slate-50 justify-center p6 -mx-6 px-6 py-8">
+  <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
         <span
-        class="text-2xl font-bold flex gap-2 items-center"
+        class="flex items-center md:text-xl gap-2  font-semibold text-lg"
         v-if="stateStore.idDeleteOrUpdate === 0"
-      >
+      >    <Icon class="-mt-0.5" :icon="icons.stateIcon" />
         Adicionar Estado</span
       >
-      <span class="text-2xl font-bold flex gap-2 items-center" v-else>
+      <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
+        <Icon class="-mt-0.5" :icon="icons.stateIcon" />
         Atualizar Estado</span
       >
         <div class="flex-1 md:text-base text-xs"> 
@@ -47,6 +55,7 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
       </div>
       <button @click="sidebarStore.sideBarAction = false">
         <svg
+        class="mr-7"
           xmlns="http://www.w3.org/2000/svg"
           width="32"
           height="32"
@@ -58,11 +67,14 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
           />
         </svg>
       </button>
-      
-    </div>
     </div>
 
+
+    </div>
+
+
   <section class="flex p mt-4 p-6 flex-col gap-4">
+
 
     <div class="fromGroup relative mb-1">
       <label for="name" class="text-slate-900text-left text-base font-medium " >Estado</label>

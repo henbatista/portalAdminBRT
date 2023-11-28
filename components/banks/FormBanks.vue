@@ -2,6 +2,15 @@
 import { ref } from "vue";
 import { useBankStore } from "~/stores/BankStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
+import { Icon } from "@iconify/vue";
+
+const bankIcon = "mingcute:bank-line"
+
+
+const icons = {
+  bankIcon,
+
+};
 
 const bankStore = useBankStore();
 const sidebarStore = useSidebarStore();
@@ -20,20 +29,23 @@ function handleBank() {
 </script>
 
 <template>
+  <form class="space-y-4 px-6">
+
   <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
         <span
-        class="text-2xl font-bold flex gap-2 items-center"
+        class="flex items-center md:text-xl gap-2  font-semibold text-lg"
         v-if="bankStore.idDeleteOrUpdate === 0"
-      >
+      >    <Icon class="-mt-0.5" :icon="icons.bankIcon" />
         Adicionar Banco</span
       >
-      <span class="text-2xl font-bold flex gap-2 items-center" v-else>
+      <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
+        <Icon class="-mt-0.5" :icon="icons.bankIcon" />
         Atualizar Banco</span
       >
         <div class="flex-1 md:text-base text-xs"> 
-          Preencha os dados para cadastrar um novo Estado.
+          Preencha os dados para cadastrar um novo banco.
         </div>
       </div>
       <button @click="sidebarStore.sideBarAction = false">
@@ -51,6 +63,8 @@ function handleBank() {
         </svg>
       </button>
     </div>
+
+
     </div>
   <section class="flex mt-4 flex-col gap-4">
     <div class="flex flex-col">
@@ -125,6 +139,7 @@ function handleBank() {
       </div>
     </button>
   </section>
+  </form>
 </template>
 
 <style scoped></style>

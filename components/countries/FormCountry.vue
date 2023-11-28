@@ -1,9 +1,18 @@
 <script setup lang="ts">
 import { useCountryStore } from "~/stores/CountryStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
+import { Icon } from "@iconify/vue";
 
 const countryStore = useCountryStore();
 const sidebarStore = useSidebarStore();
+
+const countryIcon = "gis:search-country"
+
+
+const icons = {
+  countryIcon,  
+};
+
 
 function handleCountry() {
   if (countryStore.idDeleteOrUpdate === 0) {
@@ -18,32 +27,40 @@ function handleCountry() {
 <template>
       
   <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
-  <div class="flex justify-between  mb-2">
-    <div class="ml-6 grid lg:grid-cols-1 grid-cols-1">
-      <span class="flex-1 md:text-xl font-semibold text-lg"
-      v-if="countryStore.idDeleteOrUpdate === 0"
-        >País</span
+    <div class="flex justify-between  mb-2">
+      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
+        <span
+        class="flex items-center md:text-xl gap-2  font-semibold text-lg"
+        v-if="countryStore.idDeleteOrUpdate === 0"
+      >    <Icon class="-mt-0.5" :icon="icons.countryIcon" />
+        Adicionar País</span
       >
-      <div class="flex-1 md:text-base text-xs"> 
-        Preencha os dados para cadastrar um novo país.
+      <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
+        <Icon class="-mt-0.5" :icon="icons.countryIcon" />
+        Atualizar País</span
+      >
+        <div class="flex-1 md:text-base text-xs"> 
+          Preencha os dados para cadastrar um novo Estado.
+        </div>
       </div>
+      <button @click="sidebarStore.sideBarAction = false">
+        <svg
+        class="mr-7"
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42c.39.39 1.02.39 1.41 0l6.59-6.59a.996.996 0 0 0 0-1.41l-6.58-6.6a.996.996 0 1 0-1.41 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"
+          />
+        </svg>
+      </button>
     </div>
-    <button @click="sidebarStore.sideBarAction = false">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-      >
-        <path
-          fill="currentColor"
-          d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42c.39.39 1.02.39 1.41 0l6.59-6.59a.996.996 0 0 0 0-1.41l-6.58-6.6a.996.996 0 1 0-1.41 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z"
-        />
-      </svg>
-    </button>
-    
-  </div>
-  </div>
+
+
+    </div>
 
   <section class="flex  mt-4 p-6 flex-col gap-4">
 

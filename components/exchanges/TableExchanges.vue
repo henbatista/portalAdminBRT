@@ -19,10 +19,11 @@ const props = defineProps<{
 </script>
 
 <template>
-  <ModalConfirmation />
+  <ModalConfirmation  />
+
   <div class="px-4">
     <div class="sm:flex sm:items-center">
-      <div class="sm:flex-auto">
+      <div class="sm:flex-auto"> 
         <h1 class="text-xl font-semibold text-gray-900">Câmbio</h1>
         <p class="mt-2 text-sm text-gray-700">
           Atualize as informações relacionadas a câmbios do dia!
@@ -32,7 +33,7 @@ const props = defineProps<{
         <button
           @click="
             sidebarStore.sideBarAction = true;
-            sidebarStore.currentAction = 'Banks';
+            sidebarStore.currentAction = 'Exchanges';
           "
           type="button"
           class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
