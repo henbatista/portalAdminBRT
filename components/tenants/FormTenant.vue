@@ -4,13 +4,15 @@ import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
 import type { IForm } from '../../types/newTenant';
-import useApiUrl from '../../composables/useApiUrl';
+
 import { Icon } from "@iconify/vue";
 import { useTenantStore } from "~/stores/TenantStore";
 import { useMainStore } from "~/stores/MainStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
 
 const toast = useToast();
+const { getApiUrl } = useApiUrl();
+const apiUrl = getApiUrl();
 
 const handleButtonClick = (tenant: any) => {
   sidebarStore.sideBarAction = true;
@@ -218,8 +220,7 @@ type ISegments = {
 
 const { address, agency, user, bank } = toRefs(form);
 
-const { getApiUrl } = useApiUrl();
-const apiUrl = getApiUrl();
+
 
 const isEditMode = reactive({ value: false }); 
 
