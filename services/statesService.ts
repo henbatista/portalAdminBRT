@@ -4,7 +4,7 @@
 
 // Importa as dependências necessárias
 import axios from "axios";
-import useApiUrl from "~/composables/useApiUrl";
+import useApiUrl from "../composables/useApiUrl";
 import { useCountryStore } from "../stores/CountryStore";
 
 // Obtém a URL da API por meio do hook useApiUrl
