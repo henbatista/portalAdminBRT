@@ -10,7 +10,7 @@ import {
 } from '@headlessui/vue';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
 
-
+import useApiUrl from '@/composables/useApiUrl';
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 

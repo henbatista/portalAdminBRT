@@ -1,7 +1,4 @@
 import axios from "axios";
-import useApiUrl from "./../composables/useApiUrl"
-
-
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 

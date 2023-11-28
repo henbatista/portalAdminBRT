@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import useApiUrl from "~/composables/useApiUrl";
 import toast from "~/plugins/toast";
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();

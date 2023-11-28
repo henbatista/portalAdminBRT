@@ -11,6 +11,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
 import axios from 'axios';
 
+import useApiUrl from '@/composables/useApiUrl';
 import { updateCountry } from '~/services/countryService';
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();

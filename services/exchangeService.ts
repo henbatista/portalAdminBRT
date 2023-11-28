@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "../stores/AuthStore";
-
+import useApiUrl from "~/composables/useApiUrl";
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 
