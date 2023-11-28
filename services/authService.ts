@@ -1,5 +1,5 @@
 import axios from "axios";
-import useApiUrl from '../composables/useApiUrl'
+import useApiUrl from '@/composables/useApiUrl'
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 
@@ -10,7 +10,7 @@ export async function login(email: string, password: string) {
       password,
     });
 
-    
+
     return { success: true, data: data };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
