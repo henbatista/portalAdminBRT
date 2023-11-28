@@ -4,16 +4,13 @@ import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
 import axios from 'axios';
 import type { IForm } from '../../types/newTenant';
-import useApiUrl from '@/composables/useApiUrl';
+import useApiUrl from '~/composables/useApiUrl';
 import { Icon } from "@iconify/vue";
 import { useTenantStore } from "~/stores/TenantStore";
 import { useMainStore } from "~/stores/MainStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
 
 const toast = useToast();
-
-
-
 
 const handleButtonClick = (tenant: any) => {
   sidebarStore.sideBarAction = true;
@@ -51,9 +48,6 @@ const editTenant = (clientId: string) => {
 const sidebarStore = useSidebarStore();
 const tenantStore = useTenantStore();
 const mainStore = useMainStore();
-
-
-
 
 const lockIcon = "heroicons-outline:lock-closed";
 const company = "fluent:building-48-regular";
