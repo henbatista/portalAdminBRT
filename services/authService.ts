@@ -1,6 +1,6 @@
 import axios from "axios";
-import useApiUrl from '@/composables/useApiUrl'
-const { getApiUrl } = useApiUrl();
+import tete from '@/composables/useApiUrl'
+const { getApiUrl } = tete();
 const apiUrl = getApiUrl();
 
 export async function login(email: string, password: string) {
