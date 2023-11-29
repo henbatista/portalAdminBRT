@@ -103,7 +103,7 @@ watch(selected, (newVal) => {
           @after-leave="query = ''"
         >
           <ComboboxOptions
-            class="absolute mt-1 max-h-40  w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
+            class="absolute mt-1 max-h-40 z-50 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
           >
             <div
               v-if="filteredCountries.length === 0 && query !== ''"

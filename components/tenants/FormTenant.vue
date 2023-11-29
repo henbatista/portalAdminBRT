@@ -14,7 +14,6 @@ const toast = useToast();
 
 
 
-
 const handleButtonClick = (tenant: any) => {
   sidebarStore.sideBarAction = true;
   sidebarStore.currentAction = 'Tenant';
@@ -76,6 +75,7 @@ const cellphoneIcon = "vaadin:mobile-retro";
 const agencyIcon = "mdi-light:credit-card";
 const avatarIcon = "fa:user-o";
 const cpfIcon = "solar:user-id-linear";
+const sendIcon = ""
 
 
 
@@ -560,7 +560,7 @@ const handleFileChangeNovo = (event: Event) => {
   <form class="space-y-4 px-6">
     <div class="bg-slate-50 -mx-6 px-6 py-6">
       <div class="lg:col-span-1 col-span-1 mb-6">
-        <div class="grid text-slate-700 lg:grid-cols-1 grid-cols-1 mb-2">
+        <div class="grid  text-slate-900 lg:grid-cols-1 grid-cols-1 mb-2">
           <span class="flex items-center md:text-xl gap-2  font-semibold text-lg">
             <Icon class="-mt-0.5" :icon="icons.company" /> Dados da empresa
           </span>
@@ -952,7 +952,7 @@ const handleFileChangeNovo = (event: Event) => {
       <div class="pt-8">
         <div class="bg-slate-50 -mx-6 px-6 py-6">
           <div class="lg:col-span-1 col-span-1 mb-6">
-            <div class="grid text-slate-700 lg:grid-cols-1 grid-cols-1 mb-2">
+            <div class="grid  text-slate-900 lg:grid-cols-1 grid-cols-1 mb-2">
               <span class="flex items-center md:text-xl gap-2  font-semibold text-lg">
                 <Icon class="-mt-0.5" :icon="icons.bankIcon" /> Dados Bancários
               </span>
@@ -1176,7 +1176,7 @@ const handleFileChangeNovo = (event: Event) => {
       <div class="pt-8">
         <div class="bg-slate-50 -mx-6 px-6 py-6">
           <div class="lg:col-span-1 col-span-1 mb-6">
-            <div class="grid text-slate-700 lg:grid-cols-1 grid-cols-1 mb-2">
+            <div class="grid  text-slate-900 lg:grid-cols-1 grid-cols-1 mb-2">
               <span class="flex items-center md:text-xl gap-2  font-semibold text-lg">
                 <Icon class="-mt-0.5" :icon="icons.userProfile" /> Dados do Representante Legal
               </span>
@@ -1397,7 +1397,7 @@ const handleFileChangeNovo = (event: Event) => {
       <div class="pt-8">
         <div class="bg-slate-50 -mx-6 px-6 py-6">
           <div class="lg:col-span-1 col-span-1 mb-6">
-            <div class="grid text-slate-700 lg:grid-cols-1 grid-cols-1 mb-2">
+            <div class="grid  text-slate-900 lg:grid-cols-1 grid-cols-1 mb-2">
               <span class="flex items-center md:text-xl gap-2  font-semibold text-lg">
                 <Icon class="-mt-0.5" :icon="icons.sendFile" /> Envio de Documentos
               </span>
@@ -1766,34 +1766,72 @@ const handleFileChangeNovo = (event: Event) => {
       
 
     <div class="pt-5">
-      <div class="text-[10px] mb-4 ml-1 text-red-600 text-right" v-if="isFormEmpty">
+      <div class="flex justify-end gap-1">
+        <button
+        @click="submitForm"
+        :disabled="isFormEmpty"
+          :class="!tenantStore.isLoading ? '' : 'opacity-50'"
+    
+          
+          class="inline-flex mt-5 transition-all  duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+          >
+          <div
+            v-if="!tenantStore.isLoading"
+            class="flex justify-center gap-5 items-center"
+            :class="{
+              'bg-slate-500 py-2 px-3 rounded': isFormEmpty,
+              'bg-state-900 focus:outline-none': !isFormEmpty,
+            }"
+          >
+      
+            <span  v-if="isFormEmpty">Preencha todos os campos</span
+              >
+             
+              
+                <span v-else class="flex items-center">
+                  <img
+                  src="../../public/assets/wired-outline-259-share-arrow.gif"
+                  alt="Ícone de envio"
+                  class="w-5 h-5 mr-2"
+                />
+                  Enviar Cadastro
+                </span>
+            
+             
+          </div>
+          <div v-else>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="#ffffff"
+                d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                opacity=".25"
+              />
+              <path
+                fill="#ffffff"
+                d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  dur="0.75s"
+                  repeatCount="indefinite"
+                  type="rotate"
+                  values="0 12 12;360 12 12"
+                />
+              </path>
+            </svg>
+          </div>
+        </button>
+      </div>
+
+      <div class="text-[10px] 1 ml-1 text-red-600 text-right mr-4 mt-1" v-if="isFormEmpty">
         Você possui campos em branco ou inválidos!
       </div>
-      <div class="flex justify-end gap-3">
-        <button
-          type="button"
-          @click="handleButtonClick(tenantStore.slug_id)"
-          
-          class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
 
-        >
-          Voltar
-        </button>
-        
-        <button
-          type="button"
-          @click="submitForm"
-          :disabled="isFormEmpty"
-          class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
-          :class="{
-            'bg-gray-300': isFormEmpty,
-            'bg-blue-800 focus:outline-none': !isFormEmpty,
-          }"
-        >
-        
-          {{ isFormEmpty ? 'Preencha Todos os dados' : 'Enviar Cadastro' }}
-        </button>
-      </div>
     </div>
     <!-- CAMPOS ESCONDIDOS PARA RDSTATION -->
     <div>

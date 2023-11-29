@@ -28,17 +28,21 @@ const props = defineProps<{
   />
   <div class="px-4">
     <div class="sm:flex sm:items-center">
-      <div class="sm:flex-auto">
-        <div class="items-center mb-4">
-          <h1 class="font-semibold">Países</h1>
-          <p class="-mt-5 Text-slate-700 text-left text-base font-normal">
-            Adicione, Remova ou Edite a lista de país.
-          </p>
+      
+      <div class="sm:flex-auto mb-3">
+        <div class="flex items-center">
+          <img
+          src="../../public/assets/earth.gif"
+          alt="Ícone de envio"
+          class="w-10 h-10 mr-2"
+        />
+        <h1 class="text-xl font-semibold text-gray-900 -mb-0">País</h1>
         </div>
-
+        <p class="mt-2 text-sm text-gray-700">
+          Adicione, Remova ou Edite um País.
+        </p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-
         <button
           @click="
             sidebarStore.sideBarAction = true;
@@ -47,19 +51,14 @@ const props = defineProps<{
           type="button"
           class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
         >
-        <span>
-        <Icon :icon="icons.plus" />
-      </span>
-         <div class="ml-2 ">
           Criar Novo País
-        </div>
         </button>
       </div>
     </div>
     <div  
       class="-mx-4 mt-10 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg"
     >
-      <table class="min-w-full divide-y divide-gray-300">
+      <table class="min-w-full divide-y shadow-lg mb-10 divide-gray-300">
         <thead>
           <tr>
             <th

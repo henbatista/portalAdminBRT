@@ -79,7 +79,7 @@ watch(selected, (newVal) => {
             placeholder="Digite seu banco..."
             @change="query = $event.target.value"
           />
-          <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
+          <ComboboxButton class=" absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </ComboboxButton>
         </div>
@@ -90,7 +90,7 @@ watch(selected, (newVal) => {
           @after-leave="query = ''"
         >
           <ComboboxOptions
-            class="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
+            class="absolute mt-1 z-50 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
           >
             <div
               v-if="filteredBanks.length === 0 && query !== ''"

@@ -28,7 +28,7 @@ function handleCountry() {
       
   <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid  text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
         class="flex items-center md:text-xl gap-2  font-semibold text-lg"
         v-if="countryStore.idDeleteOrUpdate === 0"
@@ -124,7 +124,7 @@ function handleCountry() {
     </div>
 
     
-    <div class="fromGroup relative mb-8">
+    <div class="fromGroup relative ">
       <label for="iso3" class="text-slate-900 dark:text-slate-300 text-left text-base font-medium " >Código ISO (3 dígitos)</label>
       <div class="relative" >
         <input
@@ -143,7 +143,7 @@ function handleCountry() {
     <button
     @click="handleCountry"
       :class="!countryStore.isLoading ? '' : 'opacity-50'"
-      class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+      class="inline-flextransition-all mt-5 duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
       >
       <div
         v-if="!countryStore.isLoading"

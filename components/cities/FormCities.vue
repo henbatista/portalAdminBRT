@@ -71,7 +71,7 @@ const updateStateId = (StateName: string, newStateId: any) => {
 <template>
   <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid  text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
         class="text-2xl font-bold flex gap-2 items-center"
         v-if="cityStore.idDeleteOrUpdate === 0"
@@ -125,7 +125,7 @@ const updateStateId = (StateName: string, newStateId: any) => {
       <select
       id="destinationType"
       v-model="cityStore.destination_type"
-      class="h-12.5 p-4 rounded-md border border-gray-200 text-sm mb-3"
+      class="h-12.5 p-4 rounded-md border border-gray-200 text-sm "
     >
       <option value="" disabled selected>Selecione o tipo de destino</option>
       <option v-for="destination in destinations" :value="destination.value">{{ destination.label }}</option>
@@ -137,7 +137,7 @@ const updateStateId = (StateName: string, newStateId: any) => {
       :class="!cityStore.isLoading ? '' : 'opacity-50'"
       class="inline-flex mt-5 transition-all  duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
     >
-      <div v-if="!cityStore.isLoading" class="flex justify-center items-center">
+      <div v-if="!cityStore.isLoading" class="flex justify-center gap-5 items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"

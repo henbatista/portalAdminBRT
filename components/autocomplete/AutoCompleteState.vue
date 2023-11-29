@@ -83,12 +83,12 @@ watch(selected, (newVal) => {
         <span>Estado</span>
       <div class="relative mt-2">
         <div
-          class="relative mt-1  w-full   h-[48px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
+          class="relative mt-1  w-full  h-[48px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
         >
           <ComboboxInput
             class="w-full border-none py-3.5 pl-3 pr-10 text-sm leading-5 focus:ring-0"
             :displayValue="(state) => state && state.name"
-            placeholder="Digite o País"
+            placeholder="Digite o Estado"
             @change="query = $event.target.value"
           />
           <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">

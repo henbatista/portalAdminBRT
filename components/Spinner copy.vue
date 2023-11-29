@@ -1,10 +1,10 @@
 <template>
-  <div class="flex items-center mt-52 h-auto">
+  <div class="flex items-center">
     <img
-      src="../public/assets/travel.gif"
-      alt="Ícone de envio"
-      class="w-52 h-52 mx-auto"
-    />
+    src="../public/assets/earth.gif"
+    alt="Ícone de envio"
+    class="w-50 h-50 mr-2"
+  />
   </div>
 </template>
 

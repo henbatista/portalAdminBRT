@@ -3,6 +3,14 @@ import type { ListTenants } from "~/types/tenant";
 import { useTenantStore } from "~/stores/TenantStore";
 import { useMainStore } from "~/stores/MainStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
+import { Icon } from "@iconify/vue";
+
+const exchange = "material-symbols:question-exchange"
+
+const icons = {
+  exchange,
+
+};
 
 const handleButtonClick = (tenant: any) => {
   sidebarStore.sideBarAction = true;
@@ -53,12 +61,16 @@ const props = defineProps<{
     :deleteFunction="tenantStore.deleteTenant"
   />
   <div class="px-4 ">
-
-    
-    
     <div class="sm:flex sm:items-center">
-      <div class="sm:flex-auto">
-        <h1 class="text-xl font-semibold text-gray-900">Clientes</h1>
+      <div class="sm:flex-auto mb-3">
+        <div class="flex items-center">
+          <img
+          src="../../public/assets/social-care.gif"
+          alt="Ícone de envio"
+          class="w-10 h-10 mr-2"
+        />
+          <h1 class="text-xl font-semibold text-gray-900 -mb-0">Cliente</h1>
+        </div>
         <p class="mt-2 text-sm text-gray-700">
           Adicione, Remova ou Edite um Cliente.
         </p>
@@ -76,10 +88,11 @@ const props = defineProps<{
         </button>
       </div>
     </div>
+    
     <div
       class="-mx-4 mt-10 ring-1 ring-gray-300 sm:-mx-6 shadow-md md:mx-0 md:rounded-lg"
     >
-      <table class="min-w-full divide-y divide-gray-300">
+      <table class="min-w-full divide-y shadow-lg mb-10 divide-gray-300">
         <thead>
           <tr>
             <th

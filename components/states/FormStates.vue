@@ -38,7 +38,7 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
 <template>
   <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid   text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
         class="flex items-center md:text-xl gap-2  font-semibold text-lg"
         v-if="stateStore.idDeleteOrUpdate === 0"
@@ -75,7 +75,6 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
 
   <section class="flex p mt-4 p-6 flex-col gap-4">
 
-
     <div class="fromGroup relative mb-1">
       <label for="name" class="text-slate-900text-left text-base font-medium " >Estado</label>
       <div class="relative" >
@@ -98,7 +97,7 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
       >
       <div
         v-if="!stateStore.isLoading"
-        class="flex justify-center gap-6 items-center"
+        class="flex justify-center gap-5 items-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

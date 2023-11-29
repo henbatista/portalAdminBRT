@@ -34,7 +34,7 @@ function saveExchanges() {
   <form class="space-y-4 px-6">
     <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid   text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
         class="flex items-center md:text-xl gap-2  font-semibold text-lg"
        
@@ -63,7 +63,7 @@ function saveExchanges() {
     </div>
   </div>
 
-  <section class="flex mt-4 flex-col gap-4">
+  <section class="flex mt-4 shadow-xl flex-col gap-4">
 
     <div >
       <label for="USD" class="font-bold text-xs mb-2">Dolar</label>
@@ -120,6 +120,7 @@ function saveExchanges() {
         </div>
       </div>
     </div>
+
     <div >
       <label for="USD" class="font-bold text-xs mb-2">Libra</label>
       <div class="flex mt-2 items-stretch">
@@ -148,7 +149,6 @@ function saveExchanges() {
       </div>
     </div>
 
-
     <button
       @click="saveExchanges"
       :class="!exchangesStore.isLoading ? '' : 'opacity-50'"
@@ -156,7 +156,7 @@ function saveExchanges() {
       >
       <div
         v-if="!exchangesStore.isLoading"
-        class="flex justify-center items-center"
+        class="flex justify-center gap-5 items-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -33,7 +33,7 @@ function handleBank() {
 
   <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
     <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid  text-slate-700 lg:grid-cols-1 grid-cols-1">
+      <div class="ml-6 grid  text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
         class="flex items-center md:text-xl gap-2  font-semibold text-lg"
         v-if="bankStore.idDeleteOrUpdate === 0"
@@ -88,7 +88,7 @@ function handleBank() {
         id="bankName"
         placeholder="Digite o nome do banco..."
         v-model="bankStore.name"
-        class="h-12 p-4 rounded-md border border-gray-200 text-sm placeholder-gray-300 mb-3"
+        class="h-12 p-4 rounded-md border border-gray-200 text-sm placeholder-gray-300 "
       />
     </div>
     <button
@@ -96,7 +96,7 @@ function handleBank() {
       :class="!bankStore.isLoading ? '' : 'opacity-50'"
       class="inline-flex mt-5 transition-all  duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
     >
-      <div v-if="!bankStore.isLoading" class="flex justify-center items-center">
+      <div v-if="!bankStore.isLoading" class="flex justify-center gap-5 items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
