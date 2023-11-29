@@ -1,6 +1,6 @@
 <template>
   <div class="error-layout">
-    <img src="@/assets/img/404.svg" alt="Erro 404" />
+ 
 
     <p>
       A página que você está procurando<br />
