@@ -1,6 +1,6 @@
 <template>
   <div class="error-layout">
- 
+   
 
     <p>
       A página que você está procurando<br />

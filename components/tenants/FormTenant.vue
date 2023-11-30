@@ -12,8 +12,6 @@ import { useSidebarStore } from "~/stores/SidebarStore";
 
 const toast = useToast();
 
-
-
 const handleButtonClick = (tenant: any) => {
   sidebarStore.sideBarAction = true;
   sidebarStore.currentAction = 'Tenant';
@@ -51,9 +49,6 @@ const sidebarStore = useSidebarStore();
 const tenantStore = useTenantStore();
 const mainStore = useMainStore();
 
-
-
-
 const lockIcon = "heroicons-outline:lock-closed";
 const company = "fluent:building-48-regular";
 const bankIcon = "guidance:bank";
@@ -76,8 +71,6 @@ const agencyIcon = "mdi-light:credit-card";
 const avatarIcon = "fa:user-o";
 const cpfIcon = "solar:user-id-linear";
 const sendIcon = ""
-
-
 
 const icons = {
   company,
@@ -558,7 +551,7 @@ const handleFileChangeNovo = (event: Event) => {
 </script>
 <template>
   <form class="space-y-4 px-6">
-    <div class="bg-slate-50 -mx-6 px-6 py-6">
+    <div class="bg-slate-50 -mx-6 px-6  mb-6 py-6">
       <div class="lg:col-span-1 col-span-1 mb-6">
         <div class="grid  text-slate-900 lg:grid-cols-1 grid-cols-1 mb-2">
           <span class="flex items-center md:text-xl gap-2  font-semibold text-lg">
@@ -570,7 +563,7 @@ const handleFileChangeNovo = (event: Event) => {
         </div>
       </div>
     </div>
-        <div >
+        <div class="">
           <label
             class="flex-0 md:w-[100px] w-[60px]"
           >
@@ -735,7 +728,7 @@ const handleFileChangeNovo = (event: Event) => {
             name="agency-cellphone"
             id="agency-cellphone"
             v-model="form.agency.cellphone"
-              placeholder="Digite a URL do site"
+              placeholder="Digite o número do Celular"
               class="bg-white  transition duration-300 ease-in-out border border-slate-200  focus:ring-0  
               rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]"              />
           </div>
@@ -852,7 +845,7 @@ const handleFileChangeNovo = (event: Event) => {
                 name="number"
                 id="number"
                 v-model="form.address.street_number"
-                  placeholder="Digite o complemento"
+                  placeholder="Digite o número do estabelecimento"
                   class="bg-white  transition duration-300 ease-in-out border border-slate-200  focus:ring-0  
                   rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]"                  />
               </div>
@@ -1187,9 +1180,9 @@ const handleFileChangeNovo = (event: Event) => {
           </div>
         </div>
 
-      <div>
+      <div class="mt-6">
         <label
-          class="flex-0 mr-6 md:w-[100px] w-[60px] break-words input-label" for="first-name" 
+          class="flex-0 mt-2 mr-6 md:w-[100px] w-[60px] break-words input-label" for="first-name" 
           >Nome Completo</label
         >
         <div class="flex mt-2 items-stretch">
@@ -1408,7 +1401,7 @@ const handleFileChangeNovo = (event: Event) => {
           </div>
         </div>
         <!-- ANEXO PARA CONTRATO -->
-        <div id="attach-contract" class="mt-4 flex flex-col gap-2">
+        <div id="attach-contract" class="mt-6 flex flex-col gap-2">
           <p class="mt-1 text-sm font-bold">
             Anexo do Contrato Social ou Certificado de MEI <span class="text-red-500 text-xs">(Obrigatório)</span>
           </p>
