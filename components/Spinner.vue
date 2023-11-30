@@ -1,9 +1,9 @@
 <template>
-  <div class="flex items-center mt-52 h-auto">
+  <div class="flex items-center mt-64 mx-auto h-auto">
     <img
-      src="../public/assets/travel.gif"
+      src="/assets/bell.gif"
       alt="Ícone de envio"
-      class="w-52 h-52 mx-auto"
+      class="w-64 h-64 mx-auto"
     />
   </div>
 </template>

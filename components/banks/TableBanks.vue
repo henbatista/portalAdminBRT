@@ -29,7 +29,7 @@ const props = defineProps<{
       <div class="sm:flex-auto mb-3">
         <div class="flex items-center">
           <img
-          src="../../public/assets/bank.gif"
+          src="/assets/bank.gif"
           alt="Ícone de envio"
           class="w-10 h-10 mr-2"
           

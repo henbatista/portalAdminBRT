@@ -34,7 +34,7 @@ const props = defineProps<{
       <div class="sm:flex-auto mb-3">
         <div class="flex items-center">
           <img
-          src="../../public/assets/exchange.gif"
+          src="/assets/exchange.gif"
           alt="Ícone de envio"
           id="paused"
           class="w-10 h-10 mr-2"

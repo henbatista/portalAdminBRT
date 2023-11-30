@@ -2,50 +2,25 @@
 import type { ListTenants } from "~/types/tenant";
 import { useTenantStore } from "~/stores/TenantStore";
 import { useMainStore } from "~/stores/MainStore";
-import { useSidebarStore } from "~/stores/SidebarStore";
+import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { Icon } from "@iconify/vue";
 
 const exchange = "material-symbols:question-exchange"
 
 const icons = {
   exchange,
-
 };
 
-const handleButtonClick = (tenant: any) => {
-  sidebarStore.sideBarAction = true;
-  sidebarStore.currentAction = 'Tenant';
-  tenantStore.idDeleteOrUpdate = tenant.slug_id;
-  tenantStore.name = tenant.name;
-  tenantStore.corporate_name = tenant.corporate_name;
-  tenantStore.email = tenant.email;
-  tenantStore.phone = tenant.phone;
-  tenantStore.cellphone = tenant.cellphone;
-  tenantStore.cpf_cnpj = tenant.cpf_cnpj;
-  tenantStore.city_registration = tenant.city_registration;
-  tenantStore.state_registration = tenant.state_registration;
-  tenantStore.is_active = tenant.is_active;
-  tenantStore.site = tenant.site;
-  tenantStore.bank_billing_email = tenant.bank_billing_email;
-  tenantStore.estimate_sales = tenant.estimate_sales;
-  tenantStore.segment = tenant.segment;
-  tenantStore.privacy_policy_accept = tenant.privacy_policy_accept;
-  tenantStore.privacy_policy_accepted_at = tenant.privacy_policy_accepted_at;
-  tenantStore.parent_id = tenant.parent_id;
-  tenantStore.tenant_type = tenant.tenant_type;
-  sidebarStore.sideBarAction = true;
-  sidebarStore.currentAction = 'Tenants';
+const sidebarStoreTenant = useSidebarStoreTenant();
 
-};
 
 const editTenant = (clientId: string) => {
   console.log('Editando o inquilino com o ID:', clientId);
-  sidebarStore.sideBarAction = true;
-  sidebarStore.currentAction = 'Tenants';
+  sidebarStoreTenant.sideBarActionTenant = true;
+  sidebarStoreTenant.currentActionTenant = 'Tenants';
   tenantStore.idDeleteOrUpdate = clientId;
 };
 
-const sidebarStore = useSidebarStore();
 const tenantStore = useTenantStore();
 const mainStore = useMainStore();
 
@@ -65,7 +40,7 @@ const props = defineProps<{
       <div class="sm:flex-auto mb-3">
         <div class="flex items-center">
           <img
-          src="../../public/assets/social-care.gif"
+          src="/assets/social-care.gif"
           alt="Ícone de envio"
           class="w-10 h-10 mr-2"
         />
@@ -78,8 +53,8 @@ const props = defineProps<{
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
         <button
           @click="
-            sidebarStore.sideBarAction = true;
-            sidebarStore.currentAction = 'Tenants';
+            sidebarStoreTenant.sideBarActionTenant = true;
+            sidebarStoreTenant.currentActionTenant = 'Tenants';
           "
           type="button"
           class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
@@ -211,7 +186,7 @@ const props = defineProps<{
 
               </button>
               <button
-              @click="handleButtonClick(tenant.id)"
+            
             
             class="text-lime-600"
           > 

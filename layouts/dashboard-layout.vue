@@ -12,6 +12,8 @@ import {
 } from "@headlessui/vue";
 import { BellIcon, CheckIcon, HomeIcon, ShareIcon } from "@heroicons/vue/20/solid";
 import { useSidebarStore } from "../stores/SidebarStore";
+import { useSidebarStoreTenant } from "../stores/SidebarStoreTenant";
+
 import { Icon } from "@iconify/vue";
 
 const menuIcon = "line-md:menu-fold-right";
@@ -23,6 +25,8 @@ const icons = {
 
 };
 const sidebarStore = useSidebarStore();
+const sidebarStoreTenant = useSidebarStoreTenant();
+
 
 type NavigationItem = {
   name: string;
@@ -56,6 +60,10 @@ const sidebarOpen = ref(false);
 
 const closeSidebar = () => {
   sidebarStore.sideBarAction = false;
+};
+
+const closeSidebarTenant = () => {
+  sidebarStoreTenant.sideBarActionTenant = false;
 };
 </script>
 
@@ -113,7 +121,7 @@ const closeSidebar = () => {
             <div class="flex-shrink-0 flex justify-center items-center px-1">
               <img
                 class="h-28 w-auto"
-                src="../public/assets/logo_BRT_white.png"
+                src="/assets/logo_BRT_white.png"
                 alt="Workflow"
               />
             </div>
@@ -154,7 +162,7 @@ const closeSidebar = () => {
         <div class="flex items-center justify-center flex-shrink-0 px-2">
           <img
             class="h-32 w-auto"
-            src="../public/assets/logo_BRT_white.png"
+            src="/assets/logo_BRT_white.png"
             alt="Workflow"
           />
         </div>
@@ -257,7 +265,8 @@ const closeSidebar = () => {
         </div>
       </main>
     </div>
-    <!-- SIDE BAR DE TERMOS DE USOS DA TELA DE BOOKING -->
+
+    <!-- SIDE BAR DE MENU GENERAL -->
     <Transition name="slide-fade">
       <section
         v-if="sidebarStore.sideBarAction"
@@ -266,20 +275,36 @@ const closeSidebar = () => {
       >
         <FormExchanges v-if="sidebarStore.currentAction === 'Exchanges'" />
         <FormBanks v-if="sidebarStore.currentAction === 'Banks'" />
-        <FormTenant v-if="sidebarStore.currentAction === 'Tenants'" />
         <FormCountry v-if="sidebarStore.currentAction === 'Countries'" />
         <FormStates v-if="sidebarStore.currentAction === 'States'" />
         <FormCities v-if="sidebarStore.currentAction === 'Cities'" />
 
-
-
       </section>
     </Transition>
     <section
-      @click="closeSidebar()"
-      class="bg-sidebar"
-      :class="sidebarStore.sideBarAction ? 'active' : ''"
-    ></section>
+    @click="closeSidebar()"
+    class="bg-sidebar"
+    :class="sidebarStore.sideBarAction ? 'active' : ''"
+  ></section>
+
+
+    <Transition name="slide-fade-tenant">
+      <section
+        v-if="sidebarStoreTenant.sideBarActionTenant"
+        id="side-bar"
+        class="p-0 overflow-y-auto overflow-x-hidden w-full md:w-[1000px] right-0 fixed bg-white sidebar z-50 top-0"
+      >
+        <FormTenant v-if="sidebarStoreTenant.currentActionTenant === 'Tenants'" />
+      </section>
+    </Transition>
+    
+  
+    <section
+    @click="closeSidebarTenant()"
+    class="bg-sidebar"
+    :class="sidebarStoreTenant.sideBarActionTenant ? 'active' : ''"
+  ></section>
+
   </div>
 </template>
 

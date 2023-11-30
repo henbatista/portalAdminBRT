@@ -794,7 +794,7 @@ const handleFileChangeNovo = (event: Event) => {
       </div>
     </div>
     <div class="lg:col-span-2 col-span-1">
-      <div class="grid grid-cols-1 gap-3">
+      <div class="grid grid-cols-1 md:grid-col-3 gap-3">
         <div>
           <label
             class="flex-0 mr-6 md:w-[100px] w-[60px] break-words input-label" for="street-add"
@@ -1783,7 +1783,7 @@ const handleFileChangeNovo = (event: Event) => {
               
                 <span v-else class="flex items-center">
                   <img
-                  src="../../public/assets/wired-outline-259-share-arrow.gif"
+                  src="/assets/wired-outline-259-share-arrow.gif"
                   alt="Ícone de envio"
                   class="w-5 h-5 mr-2"
                 />
