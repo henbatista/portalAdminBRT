@@ -125,7 +125,7 @@ export const useCityStore = defineStore("cityStore", () => {
     try {
       // Verifica se o ID a ser deletado é válido
       if (!idDeleteOrUpdate.value || idDeleteOrUpdate.value <= 0) {
-        toast.error("ID de país inválido.");
+        toast.error("ID de Cidade inválido.");
         isLoading.value = false;
         return;
       }
@@ -138,14 +138,14 @@ export const useCityStore = defineStore("cityStore", () => {
         name.value = "",
         city.value  = "",
         idDeleteOrUpdate.value = 0;
-        toast.success("País deletado com sucesso!");
+        toast.success("Cidade deletada com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
       }
     } catch (error) {
 
-      toast.error("Erro ao deletar o país. Por favor, tente novamente.");
+      toast.error("Erro ao deletar a cidade. Por favor, tente novamente.");
     }
   }
 

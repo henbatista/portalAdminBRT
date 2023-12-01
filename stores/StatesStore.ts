@@ -66,7 +66,7 @@ export const useStateStore = defineStore("stateStore", () => {
       if (response.success) {
         getAllStates(); // Chama o getAllCountry para atualizar a tabela!
         sidebarStore.sideBarAction = false;
-        toast.success("País cadastrado com sucesso!");
+        toast.success("Estado cadastrado com sucesso!");
       } else {
         toast.error("Preencha todos os campos obrigatórios");
         //console.log(name, country_id)
@@ -130,7 +130,7 @@ export const useStateStore = defineStore("stateStore", () => {
     try {
       // Verifica se o ID a ser deletado é válido
       if (!idDeleteOrUpdate.value || idDeleteOrUpdate.value <= 0) {
-        toast.error("ID de país inválido.");
+        toast.error("ID de Estado inválido.");
         isLoading.value = false;
         return;
       }
@@ -143,13 +143,13 @@ export const useStateStore = defineStore("stateStore", () => {
         name.value = "",
         country.value  = "",
         idDeleteOrUpdate.value = 0;
-        toast.success("País deletado com sucesso!");
+        toast.success("Estado deletado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
       }
     } catch (error) {
-      toast.error("Erro ao deletar o país. Por favor, tente novamente.");
+      toast.error("Erro ao deletar o Estado. Por favor, tente novamente.");
     }
   }
   

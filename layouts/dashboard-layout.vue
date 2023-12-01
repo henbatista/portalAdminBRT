@@ -292,7 +292,7 @@ const closeSidebarTenant = () => {
       <section
         v-if="sidebarStoreTenant.sideBarActionTenant"
         id="side-bar"
-        class="p-0 overflow-y-auto overflow-x-hidden w-full md:w-[1000px] right-0 fixed bg-white sidebar z-50 top-0"
+        class="p-0 overflow-y-auto overflow-x-hidden  md:w-[60rem] right-0 fixed bg-white sidebar z-50 top-0"
       >
         <FormTenant v-if="sidebarStoreTenant.currentActionTenant === 'Tenants'" />
       </section>
@@ -313,7 +313,15 @@ const closeSidebarTenant = () => {
   transition: all 0.3s ease-out;
 }
 
+.slide-fade-tenant-enter-active {
+  transition: all 0.3s ease-out;
+}
+
 .slide-fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-tenant-leave-active {
   transition: all 0.3s ease-out;
 }
 
@@ -321,6 +329,14 @@ const closeSidebarTenant = () => {
 .slide-fade-leave-to {
   transform: translateX(500px);
 }
+
+.slide-fade-tenant-enter-from,
+.slide-fade-tenant-leave-to {
+  transform: translateX(60rem);
+}
+
+
+
 
 .sidebar {
   height: 100%;

@@ -5,7 +5,7 @@ export default function useApiUrl() {
 
   const getApiUrl = () => {
     return homolog.value
-      ? "https://back.brtoperadora.com.br"
+      ? "https://back.brtoperadora.com.brr"
       : "https://back.brtoperadora.com.br";
   };
 

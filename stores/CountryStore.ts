@@ -155,7 +155,7 @@ export const useCountryStore = defineStore("countryStore", () => {
         iso3.value  = "",
         name.value = "";
         idDeleteOrUpdate.value = 0;
-        toast.success("Banco deletado com sucesso!");
+        toast.success("País deletado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;

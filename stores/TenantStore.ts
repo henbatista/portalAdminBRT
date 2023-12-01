@@ -145,7 +145,7 @@ export const useTenantStore = defineStore("tenantStore", () => {
         parent_id.value = "",
         tenant_type.value = "",
         idDeleteOrUpdate.value = 0;
-        toast.success("Banco deletado com sucesso!");
+        toast.success("Cliente deletado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;

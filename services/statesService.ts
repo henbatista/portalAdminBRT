@@ -73,7 +73,7 @@ export async function saveState(name: string, country_id: number) {
 
       if (status === 422) {
         // Se o status for 422, trata como páis já cadastrado
-        return { success: false, error: "País já está cadastrado" };
+        return { success: false, error: "Estado já está cadastrado" };
       } else {
         // Outros códigos de erro podem ser tratados aqui conforme necessário
         return { success: false, error: data || "Erro desconhecido" };

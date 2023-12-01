@@ -54,7 +54,7 @@ const props = defineProps<{
           type="button"
           class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
         >
-          Criar Novo Cliente
+          Criar Novo Câmbio
         </button>
       </div>
     </div>
