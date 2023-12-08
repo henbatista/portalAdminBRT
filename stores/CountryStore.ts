@@ -123,7 +123,7 @@ export const useCountryStore = defineStore("countryStore", () => {
         iso.value  = "",
         iso3.value  = "",
         idDeleteOrUpdate.value = 0;
-        toast.success("Banco atualizado com sucesso!");
+        toast.success("País atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;

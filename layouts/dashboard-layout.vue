@@ -10,7 +10,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { BellIcon, CheckIcon, HomeIcon, ShareIcon } from "@heroicons/vue/20/solid";
+import { BellIcon, CheckIcon, HomeIcon } from "@heroicons/vue/20/solid";
 import { useSidebarStore } from "../stores/SidebarStore";
 import { useSidebarStoreTenant } from "../stores/SidebarStoreTenant";
 
@@ -42,6 +42,7 @@ type UserNavigationItem = {
 
 const navigation: NavigationItem[] = [
   { name: "Clientes", href: "/tenants", icon: CheckIcon, current: true },
+  { name: "Usuários", href: "/users", icon: HomeIcon, current: true },
   { name: "Câmbio", href: "/exchanges", icon: HomeIcon, current: true },
   { name: "Bancos", href: "/banks", icon: HomeIcon, current: true },
   { name: "Markups", href: "/markups", icon: HomeIcon, current: true },
@@ -213,6 +214,7 @@ const closeSidebarTenant = () => {
               <BellIcon class="h-6 w-6" aria-hidden="true" />
             </button>
 
+
             <!-- Profile dropdown -->
             <Menu as="div" class="ml-3 relative">
               <div>
@@ -265,7 +267,6 @@ const closeSidebarTenant = () => {
         </div>
       </main>
     </div>
-
     <!-- SIDE BAR DE MENU GENERAL -->
     <Transition name="slide-fade">
       <section
@@ -277,8 +278,8 @@ const closeSidebarTenant = () => {
         <FormBanks v-if="sidebarStore.currentAction === 'Banks'" />
         <FormCountry v-if="sidebarStore.currentAction === 'Countries'" />
         <FormStates v-if="sidebarStore.currentAction === 'States'" />
+        <FormUsers v-if="sidebarStore.currentAction === 'Users'" />
         <FormCities v-if="sidebarStore.currentAction === 'Cities'" />
-
       </section>
     </Transition>
     <section
@@ -287,7 +288,6 @@ const closeSidebarTenant = () => {
     :class="sidebarStore.sideBarAction ? 'active' : ''"
   ></section>
 
-
     <Transition name="slide-fade-tenant">
       <section
         v-if="sidebarStoreTenant.sideBarActionTenant"
@@ -295,6 +295,10 @@ const closeSidebarTenant = () => {
         class="p-0 overflow-y-auto overflow-x-hidden  md:w-[60rem] right-0 fixed bg-white sidebar z-50 top-0"
       >
         <FormTenant v-if="sidebarStoreTenant.currentActionTenant === 'Tenants'" />
+        <FormTenantedit v-if="sidebarStoreTenant.currentActionTenant === 'TenantsEdit'" />
+        <FormUsers v-if="sidebarStoreTenant.currentActionTenant === 'Users'" />
+
+       
       </section>
     </Transition>
     

@@ -131,7 +131,7 @@ const updateStateId = (StateName: string, newStateId: any) => {
       <option v-for="destination in destinations" :value="destination.value">{{ destination.label }}</option>
     </select>
     </div>
-
+    <div class="flex p mt-1  flex-col  items-center justify-center">
     <button
       @click="handleCity"
       :class="!cityStore.isLoading ? '' : 'opacity-50'"
@@ -179,8 +179,13 @@ const updateStateId = (StateName: string, newStateId: any) => {
         </svg>
       </div>
     </button>
+    </div>
   </section>
 </template>
 
-<style scoped></style>
-~/types/ctyComplete
+<style scoped>
+button:hover {
+  transform: scale(1.02);
+}
+
+</style>

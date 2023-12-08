@@ -8,46 +8,13 @@ import useApiUrl from '@/composables/useApiUrl';
 import { Icon } from "@iconify/vue";
 import { useTenantStore } from "~/stores/TenantStore";
 import { useMainStore } from "~/stores/MainStore";
-import { useSidebarStore } from "~/stores/SidebarStore";
+//import { useSidebarStore } from "~/stores/SidebarStore";
+import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 
 const toast = useToast();
 
-const handleButtonClick = (tenant: any) => {
-  sidebarStore.sideBarAction = true;
-  sidebarStore.currentAction = 'Tenant';
-  tenantStore.idDeleteOrUpdate = tenant.slug_id;
-  tenantStore.name = tenant.name;
-  tenantStore.corporate_name = tenant.corporate_name;
-  tenantStore.email = tenant.email;
-  tenantStore.phone = tenant.phone;
-  tenantStore.cellphone = tenant.cellphone;
-  tenantStore.cpf_cnpj = tenant.cpf_cnpj;
-  tenantStore.city_registration = tenant.city_registration;
-  tenantStore.state_registration = tenant.state_registration;
-  tenantStore.is_active = tenant.is_active;
-  tenantStore.site = tenant.site;
-  tenantStore.bank_billing_email = tenant.bank_billing_email;
-  tenantStore.estimate_sales = tenant.estimate_sales;
-  tenantStore.segment = tenant.segment;
-  tenantStore.privacy_policy_accept = tenant.privacy_policy_accept;
-  tenantStore.privacy_policy_accepted_at = tenant.privacy_policy_accepted_at;
-  tenantStore.parent_id = tenant.parent_id;
-  tenantStore.tenant_type = tenant.tenant_type;
-  sidebarStore.sideBarAction = true;
-  sidebarStore.currentAction = 'Tenants';
-
-};
-
-const editTenant = (clientId: string) => {
-  console.log('Editando o inquilino com o ID:', clientId);
-  sidebarStore.sideBarAction = true;
-  sidebarStore.currentAction = 'Tenants';
-  tenantStore.idDeleteOrUpdate = clientId;
-};
-
-const sidebarStore = useSidebarStore();
+const sidebarStoreTenant = useSidebarStoreTenant();
 const tenantStore = useTenantStore();
-const mainStore = useMainStore();
 
 const lockIcon = "heroicons-outline:lock-closed";
 const company = "fluent:building-48-regular";
@@ -70,7 +37,7 @@ const cellphoneIcon = "vaadin:mobile-retro";
 const agencyIcon = "mdi-light:credit-card";
 const avatarIcon = "fa:user-o";
 const cpfIcon = "solar:user-id-linear";
-const sendIcon = ""
+
 
 const icons = {
   company,
@@ -96,10 +63,19 @@ const icons = {
   lockIcon,
 };
 
-
 // Necessário para pegar o BANCO CORRETAMENTE
 const bankHidden = ref('');
 const props = defineProps(['clientId']); // Recebendo clientId como propriedade
+
+const isEditMode = reactive({ value: false }); 
+
+onMounted(async () => {
+  if (props.clientId) {
+    isEditMode.value = true;
+  } else {
+    isEditMode.value = false;
+  }
+});
 
 const form = reactive<IForm>({
   address: {
@@ -220,16 +196,6 @@ const { address, agency, user, bank } = toRefs(form);
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 
-const isEditMode = reactive({ value: false }); 
-
-onMounted(async () => {
-  if (props.clientId) {
-    isEditMode.value = true;
-  } else {
-    isEditMode.value = false;
-  }
-});
-
 
 const segments = ref<ISegments[]>([]);
 const segmentsHidden = ref('Lazer (Operadora)');
@@ -343,7 +309,18 @@ const submitForm = async () => {
   }
 
   try {
-      // Se não há tenant.id, é uma criação (POST)
+    if (isEditMode.value) {
+      // Se está em modo de edição, faça uma chamada PUT para atualizar os dados
+      const { data } = await axios.put(`${apiUrl}/api/v1/tenants/${props.clientId}`, FormDataNew);
+      if (data.success === true) {
+        toast.success('Cadastro efetuado com sucesso!', {
+          onClose: () => {
+            navigateTo('/tenants');
+          },
+        });
+      }
+    } else {
+      // Se não está em modo de edição, faça uma chamada POST para criar um novo cliente
       const { data } = await axios.post(`${apiUrl}/api/v1/client/create`, FormDataNew);
       if (data.success === true) {
         toast.success('Cadastro efetuado com sucesso!', {
@@ -352,6 +329,7 @@ const submitForm = async () => {
           },
         });
       }
+  } 
     
   } catch (error: any) {
     if (error.response && error.response.data && error.response.data.errors) {
@@ -548,15 +526,34 @@ const handleFileChangeNovo = (event: Event) => {
     }
   }
 };
+
+onMounted(async () => {
+  if (props.clientId) {
+    isEditMode.value = true;
+
+    try {
+      const response = await axios.get(`${apiUrl}/api/v1/client/${props.clientId}`);
+      const existingClientData = response.data; // ajuste conforme a estrutura da resposta
+      // Preencha o formulário com os dados do cliente existente
+      Object.assign(form, existingClientData);
+    } catch (error) {
+      toast.error('Erro ao obter dados do cliente. Entre em contato com a BRT!');
+    }
+  } else {
+    isEditMode.value = false;
+  }
+});
+
+
 </script>
 <template>
-  <form class="space-y-4 px-6">
+  <form @submit.prevent="submitForm" class="space-y-4 px-6">
     <div class="bg-slate-50 justify-center  -mx-6 px-2 py-6">
       <div class="flex justify-between  mb-2">
         <div class="ml-6 grid   text-slate-900 lg:grid-cols-1 grid-cols-1">
           <span
           class="flex items-center md:text-xl gap-2  font-semibold text-lg"
-          v-if="tenantStore.idDeleteOrUpdate === 0"
+          v-if='tenantStore.idDeleteOrUpdate === ""'
         >    <Icon class="-mt-0.5" :icon="icons.company" />
         Atualizar dados da empresa</span
         >
@@ -568,7 +565,7 @@ const handleFileChangeNovo = (event: Event) => {
             Preencha os dados para cadastrar um novo Estado.
           </div>
         </div>
-        <button @click="sidebarStore.sideBarAction = false">
+        <button @click="sidebarStoreTenant.sideBarActionTenant = false">
           <svg
           class="mr-7"
             xmlns="http://www.w3.org/2000/svg"
@@ -1200,12 +1197,6 @@ const handleFileChangeNovo = (event: Event) => {
             </div>
             </div>
 
-
-
-
-
-
-
       <div class="pt-3">
         <div class="bg-slate-50 -mx-6 px-6 py-6">
           <div class="lg:col-span-1 col-span-1 mb-6">
@@ -1835,10 +1826,9 @@ const handleFileChangeNovo = (event: Event) => {
     <div class="pt-5">
       <div class="flex justify-end gap-1">
         <button
-        @click="submitForm"
+        type="submit"
         :disabled="isFormEmpty"
           :class="!tenantStore.isLoading ? '' : 'opacity-50'"
-  
           class="inline-flex mt-5 transition-all  duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
           >
           <div

@@ -109,7 +109,7 @@ export const useCityStore = defineStore("cityStore", () => {
         state_id = 0,
         destination_type = ""
         idDeleteOrUpdate.value = 0;
-        toast.success("Banco atualizado com sucesso!");
+        toast.success("Ciodade atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
@@ -119,7 +119,7 @@ export const useCityStore = defineStore("cityStore", () => {
       toast.error("Erro ao atualizar país. Por favor, tente novamente.");
     }
   }
-
+  
   async function deleteCity() {
     isLoading.value = true;
     try {

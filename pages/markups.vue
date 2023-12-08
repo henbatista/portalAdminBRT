@@ -1,12 +1,19 @@
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useCountryStore } from "../stores/CountryStore";
+
+const countryStore = useCountryStore();
+
+onMounted(async () => {
+  countryStore.getAllCountries();
+});
+</script>
+
 <template>
   <NuxtLayout name="dashboard-layout">
-    <h1>Markup</h1>
     <section>
-      <form action=""></form>
+      <Spinner v-if="countryStore.isLoading" />
+      <TableMarkup v-if="countryStore.countries !== null" :countries="countryStore.countries"/>
     </section>
   </NuxtLayout>
 </template>
-
-<script setup lang="ts"></script>
-
-<style scoped></style>

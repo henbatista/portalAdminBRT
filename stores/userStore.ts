@@ -1,63 +1,67 @@
-
+// Importa as funções e módulos necessários do Vue e do arquivo de serviço
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { ListStates } from "~/types/states";
 import {
-  getAllStates as getAllStatesService,
+  getAllUser as getAllUserService,
   saveState as saveStatesService,
-  deleteState as deleteStatesService,
+  deleteUser as deleteUserService,
   updateState as updateStatesService,
-} from "~/services/statesService";
+} from "~/services/usersService";
 import { useToast } from "vue-toastification";
-import { useSidebarStore } from "~/stores/SidebarStore";
+import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { useMainStore } from "~/stores/MainStore";
+import type { ListUsers } from "~/types/users";
 
-export const useStateStore = defineStore("stateStore", () => {
-  const sidebarStore = useSidebarStore();
+// Define o store usando o Pinia
+export const useUserStore = defineStore("userStore", () => {
+  // Inicializa variáveis de estado e serviços
+  const sidebarStoreTenant = useSidebarStoreTenant();
   const mainStore = useMainStore();
+  
 
   // REF para armazenar as infos do Estados quando for fazer um UPDATE
-  const idDeleteOrUpdate = ref(0);
+  const idDeleteOrUpdate = ref(""); // Inicialize com uma string vazia ou com o valor inicial desejado
   const name = ref("");
-  const country = ref("");
+  const idTenant = ref("");
+  const id = ref("");
   const country_id = ref()
 
-  const states = ref<ListStates | null>(null);
+  const users = ref<ListUsers | null>(null);
   const toast = useToast();
   const isLoading = ref(true);
 
-  async function getAllStates() {
+  // Busca todos os Usuários na API
+  async function getAllUser() {
     isLoading.value = true;
     try {
-      const response = await getAllStatesService();
+      //console.log("Fetching tenants...");
+      const response = await getAllUserService();
+      //console.log("Response from service:", response); 
       if (response.success) {
-        states.value = response.data.data;
+        users.value = response.data.data;
       } else {
-        toast.error("Problemas em carregar lista de Estados!");
+        toast.error("Problemas em carregar lista de Usuários!");
       }
     } catch (error) {
       // Tratamento de erro genérico
-      toast.error("Erro ao obter a lista de Estados");
-  
+      toast.error("Erro ao obter a lista de usuários");
       // Tratamento de erro de conexão à internet desconectada
       if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
         toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
       } else {
-        // Exemplo de tratamento de erro de validação
-        toast.error("Ocorreu um erro ao obter a lista de países. Tente novamente mais tarde.");
+        // tratamento de erro de validação
+        toast.error("Ocorreu um erro ao obter a lista de clientes. Tente novamente mais tarde.");
       }
-  
       return { error };
     } finally {
       isLoading.value = false;
     }
   }
-  
-
+  // Salva um novo inquilino na API
   async function saveStates(
     name: string, 
     country_id: number | null) {
-    //console.log("Saving state:", name, country_id);
+    console.log("Saving Usuário:", name);
     isLoading.value = true;
     try {
       if (!name || !country_id) {
@@ -68,8 +72,8 @@ export const useStateStore = defineStore("stateStore", () => {
         name, 
         country_id );
       if (response.success) {
-        getAllStates(); // Chama o getAllCountry para atualizar a tabela!
-        sidebarStore.sideBarAction = false;
+        getAllUser(); // Chama o getAllCountry para atualizar a tabela!
+        sidebarStoreTenant.sideBarActionTenant = false;
         toast.success("Estado cadastrado com sucesso!");
       } else {
         toast.error("Preencha todos os campos obrigatórios");
@@ -79,14 +83,12 @@ export const useStateStore = defineStore("stateStore", () => {
     } catch (error) { 
       // Tratamento de erro genérico
       toast.error("Erro ao salvar o país");
-  
       // Tratamento de erro de conexão à internet desconectada
       if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
         toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
       } else {
         // tratamento de erro de rede
         if (error instanceof Error && error.message.includes("NetworkError")) {
-
           toast.error("Erro de rede ao salvar o país. Verifique sua conexão e tente novamente.");
         } else if (error instanceof Error && error.message.includes("ValidationError")) {
           // tratamento de erro de validação
@@ -101,7 +103,6 @@ export const useStateStore = defineStore("stateStore", () => {
     }
   }
 
-  
   async function updateStates(name: string, country_id: number ) {
     try {
       if (!name || !country_id ) {
@@ -115,11 +116,11 @@ export const useStateStore = defineStore("stateStore", () => {
         country_id
       );
       if (response.success) {
-        getAllStates(); // Chama o getAllbanks para atualizar a tabela!
-        sidebarStore.sideBarAction = false;
+        getAllUser(); // Chama o getAllbanks para atualizar a tabela!
+        sidebarStoreTenant.sideBarActionTenant = false;
         name = "",
         country_id = 0,
-        idDeleteOrUpdate.value = 0;
+        idDeleteOrUpdate.value = "";
         toast.success("Estado atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
@@ -129,42 +130,38 @@ export const useStateStore = defineStore("stateStore", () => {
       toast.error("Erro ao atualizar o Estado. Por favor, tente novamente.");
     }
   }
+  
 
-  async function deleteStates() {
-    isLoading.value = true;
+  async function deleteUser() {
+    isLoading.value = false;
     try {
       // Verifica se o ID a ser deletado é válido
-      if (!idDeleteOrUpdate.value || idDeleteOrUpdate.value <= 0) {
-        toast.error("ID de Estado inválido.");
-        isLoading.value = false;
-        return;
-      }
-
-      const response = await deleteStatesService(idDeleteOrUpdate.value);
+      const response = await deleteUserService(idDeleteOrUpdate.value);
       if (response.success) {
-        getAllStates(); // Chama o getAllbanks para atualizar a tabela!
-        sidebarStore.sideBarAction = false;
+ 
+        sidebarStoreTenant.sideBarActionTenant = false;
         mainStore.openDeleteModal = false;
         name.value = "",
-        country.value  = "",
-        idDeleteOrUpdate.value = 0;
-        toast.success("Estado deletado com sucesso!");
+        idDeleteOrUpdate.value = "";
+        toast.success("Usuário deletado com sucesso!");
+        // Encontre o elemento com a chave correspondente (item_id) e remova-o do DOM
+
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
       }
     } catch (error) {
-      toast.error("Erro ao deletar o Estado. Por favor, tente novamente.");
+      toast.error("Erro ao deletar o Usuário. Por favor, tente novamente.");
     }
   }
   
   return {
-    states,
+    users,
     idDeleteOrUpdate,
     isLoading,
-    getAllStates,
+    getAllUser,
     saveStates,
-    deleteStates,
+    deleteUser,
     updateStates,
     name,
     country_id, 

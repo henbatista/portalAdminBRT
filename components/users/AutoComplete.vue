@@ -10,13 +10,11 @@ import {
 } from '@headlessui/vue';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
 import axios from 'axios';
-import { useToast } from "vue-toastification";
 
 import useApiUrl from '@/composables/useApiUrl';
 import { updateCountry } from '~/services/countryService';
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
-const toast = useToast();
 
 const countries = ref([{ name: 'Afeganistão', id: 1 }]);
 
@@ -27,7 +25,7 @@ const getAllCountries = async () => {
       localStorage.getItem("authStore") || "{}"
     );
     const token = authLocalStore.token;
-        const { data } = await axios.get(`${apiUrl}/api/v1/countries/pluck?search=${country.name}&per_page=10&order=asc&page=1`, {
+        const { data } = await axios.get(`${apiUrl}/api/v1/countries/pluck`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -71,7 +69,7 @@ const props = defineProps({
 watch(selected, (newVal) => {
   // Atualiza country_id quando uma opção é selecionada
   country_id.value = newVal ? newVal.id : null;
- //  console.log("Updated country_id:", country_id.value);
+  //console.log("Updated country_id:", country_id.value);
   props.updateCountryId(newVal.name, newVal.id)
 });
 
@@ -82,17 +80,17 @@ watch(selected, (newVal) => {
     <Combobox v-model="selected">
         <span>País</span>
 
-      <div class="relative mt-2">
+      <div class="relative mt-1">
         <div
-          class="relative  w-full   h-[48px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
+          class="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none border border-gray-300"
         >
           <ComboboxInput
-            class="w-full border-none py-3.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"
+            class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 focus:ring-0"
             :displayValue="(country) => country && country.name"
             placeholder="Digite o País"
             @change="query = $event.target.value"
           />
-          <ComboboxButton class="absolute  inset-y-0 right-0 flex items-center pr-2">
+          <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
           </ComboboxButton>
         </div>
@@ -103,7 +101,7 @@ watch(selected, (newVal) => {
           @after-leave="query = ''"
         >
           <ComboboxOptions
-            class="absolute mt-1 max-h-40 z-50 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
+            class="absolute mt-1 max-h-40 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
           >
             <div
               v-if="filteredCountries.length === 0 && query !== ''"
@@ -119,9 +117,9 @@ watch(selected, (newVal) => {
               v-slot="{ selected, active }"
             >
               <li
-                class="relative cursor-default  select-none py-2 pl-10 pr-4"
+                class="relative cursor-default select-none py-2 pl-10 pr-4"
                 :class="{
-                  'bg-slate-900 text-white': active,
+                  'bg-blue-800 text-white': active,
                   'text-gray-900': !active,
                 }"
               >

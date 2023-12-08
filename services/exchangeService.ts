@@ -50,7 +50,6 @@ export async function saveExchanges(usd: string, eur: string, gbp: string) {
         },
       }
     );
-
     return { success: true, data: data };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

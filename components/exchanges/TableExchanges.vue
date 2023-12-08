@@ -3,6 +3,7 @@ import type { ListExchangeRates } from "~/types/exchanges";
 import { useSidebarStore } from "~/stores/SidebarStore";
 const sidebarStore = useSidebarStore();
 import { Icon } from "@iconify/vue";
+import { ref } from 'vue';
 
 const plus = "iconoir:plus";
 const libra = "ph:currency-gbp-light"
@@ -16,6 +17,8 @@ const icons = {
 const props = defineProps<{
   exchanges: ListExchangeRates | null;
 }>();
+
+
 
 
 </script>
@@ -145,3 +148,8 @@ const props = defineProps<{
     </div>
   </div>
 </template>
+<style>
+button:hover {
+  transform: scale(1.2);
+}
+</style>

@@ -15,11 +15,8 @@ export interface Tenant {
   city_registration: string
   state_registration: string
   is_active: boolean
-  addresses: any[]
   tenant_parent: any
-  tenants_child: any[]
   bank_billing_email: string
-  products: any[]
   site: string
   privacy_policy_accept: boolean
   privacy_policy_accepted_at: boolean

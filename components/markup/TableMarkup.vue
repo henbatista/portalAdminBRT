@@ -7,6 +7,7 @@ const countryStore = useCountryStore();
 import { useMainStore } from "~/stores/MainStore";
 const mainStore = useMainStore();
 import { Icon } from "@iconify/vue";
+import { ref } from 'vue';
 
 const plus = "iconoir:plus";
 
@@ -47,14 +48,14 @@ const props = defineProps<{
       <div class="sm:flex-auto mb-3">
         <div class="flex items-center">
           <img
-          src="/assets/earth.gif"
+          src="/assets/pie-chart.gif"
           alt="Ícone de envio"
           class="w-10 h-10 mr-2"
         />
-        <h1 class="text-xl font-semibold text-gray-900 -mb-0">País</h1>
+        <h1 class="text-xl font-semibold text-gray-900 -mb-0">Markup</h1>
         </div>
         <p class="mt-2 text-sm text-gray-700">
-          Adicione, Remova ou Edite um País.
+          Adicione, Remova ou Edite o Markup.
         </p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
@@ -66,7 +67,7 @@ const props = defineProps<{
           type="button"
           class="inline-flex transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
         >
-          Criar Novo País
+          Criar novo Markup
         </button>
       </div>
     </div>
@@ -212,8 +213,5 @@ const props = defineProps<{
   }
 }
 
-button:hover {
-  transform: scale(1.2);
-}
 </style>
 

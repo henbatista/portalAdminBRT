@@ -4,7 +4,7 @@ const apiUrl = getApiUrl();
 
 export async function login(email: string, password: string) {
   try {
-    const { data } = await axios.post(`${apiUrl}/api/v1/login`, {
+    const { data } = await axios.post(`${apiUrl}/api/v1/dev-login`, {
       email,
       password,
     });
