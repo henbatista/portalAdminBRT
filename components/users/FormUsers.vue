@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useUserStore } from "~/stores/userStore";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import type { User } from '../../types/newUser';
@@ -18,6 +18,45 @@ watch(is_active, (newVal) => {
   console.log(value); // Aqui você pode usar o valor conforme necessário
 });
 
+const userName = ref({ name: 'Nome do Usuário' });
+
+const imagePreview = ref('/assets/profile.gif');
+
+const updateImagePreview = (base64Image: string) => {
+  imagePreview.value = base64Image;
+  user.value.avatar = base64Image;
+};
+
+
+const imageToBase64 = (file: File, callback: (base64Image: string) => void) => {
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    const base64String = reader.result?.toString().split(',')[1];
+    if (base64String) {
+      callback(base64String);
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
+
+
+const handleImageUpload = (event: Event) => {
+  const fileInput = event.target as HTMLInputElement;
+  const file = fileInput.files?.[0];
+
+  if (file) {
+    imageToBase64(file, (base64Image) => {
+      updateImagePreview(base64Image);
+    });
+  }
+};
+
+const sendImageToServer = (base64Image: string) => {
+  // Implemente a lógica para enviar a imagem ao servidor
+  console.log('Enviando imagem para o servidor:', base64Image);
+};
 
 // Instâncias dos stores e do Toast
 const userStore = useUserStore();
@@ -69,16 +108,13 @@ const user = ref<User>({
 });
 
 function handleSubmit() {
-  const {
-    idDeleteOrUpdate,
-  } = userStore;
-
+  const { idDeleteOrUpdate } = userStore;
   const isUpdate = idDeleteOrUpdate !== "";
-
   const saveOrUpdateTenant = isUpdate
     ? userStore.updateUsers
     : userStore.saveUser;
 
+  // Aqui você envia a string de base64 para o backend
   saveOrUpdateTenant(
     userStore.idDeleteOrUpdate,
     user.value.name, 
@@ -100,6 +136,7 @@ function handleSubmit() {
   );
 }
 
+
 const tenant = ref<UserComplete>({
     name: "",
     tenant_id: 0
@@ -107,29 +144,32 @@ const tenant = ref<UserComplete>({
 
 const updateTenantId = (TenantName: string, newTenantId: any) => {
   user.value.tenant_id = newTenantId;
-
 };
 
 onMounted(() => {
-    const userExist = userStore.users?.find(user => user.id === userStore.idDeleteOrUpdate)
-    if (userExist) {
-      user.value.name = userExist.name
-      user.value.email = userExist.email
-      user.value.avatar = userExist.avatar
-      user.value.rg = userExist.rg
-      user.value.cpf = userExist.cpf
-      user.value.passport = userExist.passport
-      user.value.passport_expiry = userExist.passport_expiry
-      user.value.tenant_id = userExist.tenant_id
-      user.value.phone = userExist.phone
-      user.value.cellphone = userExist.cellphone
-      user.value.ext = userExist.ext
-      user.value.mother_name = userExist.mother_name
-      user.value.father_name = userExist.father_name,
-      user.value.is_active = userExist.is_active
+  const userExist = userStore.users?.find(user => user.id === userStore.idDeleteOrUpdate)
+  if (userExist) {
+    user.value.name = userExist.name
+    user.value.email = userExist.email
+    user.value.avatar = userExist.avatar
+    user.value.rg = userExist.rg
+    user.value.cpf = userExist.cpf
+    user.value.passport = userExist.passport
+    user.value.passport_expiry = userExist.passport_expiry
+    user.value.tenant_id = userExist.tenant_id
+    user.value.phone = userExist.phone
+    user.value.cellphone = userExist.cellphone
+    user.value.ext = userExist.ext
+    user.value.mother_name = userExist.mother_name
+    user.value.father_name = userExist.father_name,
+    user.value.is_active = userExist.is_active
 
+    // Atualiza a prévia da imagem ao carregar os dados existentes
+    if (userExist.avatar) {
+      updateImagePreview(userExist.avatar);
     }
-})
+  }
+}); 
 
 </script>
 
@@ -168,43 +208,39 @@ onMounted(() => {
       </button>
     </div>
   </div>
-    <div class="mt-1">
+    <div class="mt-3">
       <div class="lg:col-span-3 md:col-span-5 col-span-12">
-          <div class="space-y-2 items-center justify-center">
-            <div
-              class="h-[150px] w-[150px] mx-auto rounded-full ring-4 ring-white relative"
-            >
-              <img
-                src="/assets/profile.gif"
-                alt=""
-                class="w-full h-full object-cover rounded-full"
-              />
-              <div class="mt-14">
-                <div class="text-center mt-7">
-                  <label class="cursor-pointer">
-                    <input
-                      type="file"
-                      class="hidden shadow-xl"
-                    
-                    />
-                    <span
-                      class="absolute right-2 h-6 w-6  bg-white ring-1 ring-slate-500 text-slate-600 rounded-full shadow-xl flex flex-col items-center justify-center md:top-[80px] top-[120px]"
-                    >
+        <div class="space-y-2 items-center justify-center">
+          <div class="h-[100px] w-[100px] mx-auto rounded-full ring-4 ring-white relative">
+            <img
+              :src="imagePreview"
+              alt=""
+              class="w-full h-full object-cover rounded-full"
+            />
+            <div class="mt-14">
+              <div class="text-center mt-7">
+                <label class="cursor-pointer">
+                  <input
+                    type="file"
+                    class="hidden shadow-xl"
+                    @change="handleImageUpload"
+                  />
+                  <span
+                    class="absolute right-2 h-6 w-6  bg-white ring-1 ring-slate-500 text-slate-600 rounded-full shadow-xl flex flex-col items-center justify-center md:top-[80px] top-[120px]"
+                  >
                     <Icon :icon="icons.imageIcon" />
-                    </span>
-                  </label>
-                </div>
+                  </span>
+                </label>
               </div>
             </div>
-            <div class="mx-auto text-lg text-center ">
-              {{user.name}}
-            </div>
-            <div class="text-xs px-60 text-slate-600 text-center ">
-              <span class="font-bold"> Não se esqueça:</span> Para melhor
-              resultado, user uma imagem com o tamanho de 200px por 200px nos
-              formatos .jpg ou .png
-            </div>
           </div>
+          <div class="mx-auto text-lg text-center ">{{ userName.name }}</div>
+          <div class="text-xs px-60 text-slate-600 text-center ">
+            <span class="font-bold"> Não se esqueça:</span> Para melhor resultado,
+            use uma imagem com o tamanho de 200px por 200px nos formatos .jpg ou
+            .png
+          </div>
+        </div>
       </div>
       <div class="mx-5">
           <div class="profile-box mt-1 mb-4 flex-none md:text-start text-center">
