@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import axios from 'axios';
 import { ref, watch , onMounted } from 'vue';
+import { useTenantStore } from "~/stores/TenantStore";
+import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { reactive } from 'vue';
 import { useToast } from 'vue-toastification';
-import axios from 'axios';
 import type { Tenant } from '../../types/tenant';
 import type { IForm }  from '../../types/newTenant'
 import useApiUrl from '@/composables/useApiUrl';
 import { Icon } from "@iconify/vue";
-import { useTenantStore } from "~/stores/TenantStore";
-import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { Switch } from '@headlessui/vue'
 
 // Variável reativa para controlar o estado de 'is_active'
@@ -307,11 +307,11 @@ onMounted(() => {
           class="flex items-center md:text-xl gap-2  font-semibold text-lg"
           v-if='tenantStore.idDeleteOrUpdate === ""'
         >    <Icon class="-mt-0.5" :icon="icons.company" />
-        Atualizar dados da empresa</span
+        Adicionar dados da empresa</span
         >
         <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
           <Icon class="-mt-0.5" :icon="icons.company" />
-          Adiconar dados da empresa</span
+          Atualizar dados da empresa</span
         >
           <div class="flex-1 md:text-base text-xs"> 
             Preencha os dados para cadastrar um novo Estado.

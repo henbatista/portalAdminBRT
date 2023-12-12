@@ -10,6 +10,7 @@ import { ref } from 'vue';
 const activeHover = ref({
   is_active: false,
 });
+
 // Manipuladores de eventos para lidar com o mouse sobre e fora do elemento
 const handleMouseOver = () => {
   activeHover.value.is_active = !activeHover.value.is_active;
@@ -189,7 +190,7 @@ const props = defineProps<{
           >
           <span
           class="custom-span "
-          :class="{ 'bg-teal-600': tenant.is_active, 'bg-red-500': !tenant.is_active }"
+          :class="{ 'h-[3px] w-[3px] bg-teal-600 rounded-full inline-block ring-4 ring-opacity-30 ring-teal-500': tenant.is_active, 'h-[6px] w-[6px] bg-red-500 rounded-full inline-block ring-4 ring-opacity-30 ring-red-500': !tenant.is_active }"
           @mouseover="handleMouseOver"
           @mouseout="handleMouseOut"
         ></span>
@@ -222,7 +223,6 @@ const props = defineProps<{
                   sidebarStoreTenant.currentActionTenant = 'TenantsEdit';
                   tenantStore.idDeleteOrUpdate = tenant.id;
                 "
-
                 class="hover:text-lime-600 text-slate-900 transform transition-transform duration-500"
                 @mouseover="handleMouseOverButton"
                 @mouseout="handleMouseOutButton"
@@ -242,8 +242,8 @@ const props = defineProps<{
 
 
 .custom-span {
-  width: 15px;
-  height: 15px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: flex;
   align-items: center;

@@ -16,10 +16,7 @@ interface User {
     mother_name: any | null;        // Nome da mãe do usuário ou nulo se não informado
     father_name: any | null;        // Nome do pai do usuário ou nulo se não informado
     is_active: boolean;             // Indica se o usuário está ativo no sistema
-    roles: Role;                   // Papéis (roles) atribuídos ao usuário
-    permissions: Permission;          // Lista de permissões concedidas ao usuário
-    tenant: Tenant;                 // Informações sobre o locatário ao qual o usuário pertence
-    avatar: any | null;             // Dados adicionais sobre o avatar do usuário ou nulo se não informado
+            // Dados adicionais sobre o avatar do usuário ou nulo se não informado
 }
 
 // Definindo a interface para representar as regras (roles) atribuídos a um usuário

@@ -36,9 +36,9 @@ export const useExchangesStore = defineStore("exchangesStore", () => {
       const response = await saveExchangeService(usd, eur, gbp);
       toast.success("Câmbios cadastrados com sucesso!");
       if (response.success) {
+
         getAllExchanges(); // Chama o getAllExchanges para atualizar a tabela!
         sidebarStore.sideBarAction = false;
-        toast.success("Câmbios cadastrados com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;

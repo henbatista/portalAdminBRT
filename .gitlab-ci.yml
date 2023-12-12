@@ -1,10 +1,11 @@
-##************************************************##
-##==>  PIPELINE AUTOMATION AND CONTROL HUSERV  <==##
-##************************************************##                                                                                                                                                                                                                                                                                                                                                           ****************************************##  
-##     Integrations GitLab and servers contros,   ##
-##  MonitoriNG servers, process and projects and  ##   
-## ***********************************************## 
-
+############################################################################
+##************************************************************************##
+##==>             PIPELINE AUTOMATION AND CONTROL HUSERV               <==##
+##************************************************************************##                                                                                                                                                                                                                                                                                                                                                           ****************************************##  
+##                Integrations GitLab and servers contros,                ##
+##              MonitoriNG servers, process and projects and              ##   
+##************************************************************************## 
+############################################################################
 
 ##************************************************##
 ##==>        STAGES VALID IN PIPELINE          <==##
@@ -15,7 +16,6 @@ stages:
   - prepare
   - rebuild
   - finishing
-
 
 
 ##************************************************##
@@ -29,7 +29,7 @@ variables:
   TRAVEL_GIT_PROJECT:         $CI_PROJECT_NAME
   TRAVEL_GIT_TAG:             $TRAVEL_GIT_TAG 
   TRAVEL_GIT_GROUP:           $CI_PROJECT_ROOT_NAMESPACE
-  TRAVEL_GIT_CLONE:           "git clone http://${DEPLOY_USER}:${DEPLOY_TOKEN_READ}@${TRAVEL_GIT_URL}/${TRAVEL_GIT_GROUP}/${TRAVEL_GIT_PROJECT}.git"
+  TRAVEL_GIT_CLONE:           "http://${TRAVEL_DEPLOY_USER}:${TRAVEL_DEPLOY_TOKEN}@${TRAVEL_GIT_URL}/${TRAVEL_GIT_GROUP}/${TRAVEL_GIT_PROJECT}.git "
 
 
 
@@ -41,8 +41,9 @@ variables:
   TRAVEL_PROJECT_NAME:        $CI_PROJECT_NAME
   TRAVEL_PROJECT_TAG:         ${CI_PROJECT_NAME}_${TRAVEL_GIT_BRANCH}
   TRAVEL_PROJECT_HUSERV:      "huserv"
-  TRAVEL_PROJECT_SERVERNAME: $TRAVEL_SERVER_NAME
-
+  TRAVEL_PROJECT_SERVERNAME:  $TRAVEL_SERVER_NAME
+  TRAVEL_PROJECT_CWD:         $TRAVEL_PATHS_FIXE/$CI_PROJECT_NAME
+  TRAVEL_PROJECT_SERVERNAME:  $TRAVEL_SERVER_NAME
 
 ##************************************************##
 ##==>            DEFAULT TAG GITLAB            <==##
@@ -77,8 +78,6 @@ prepare-informations:
   stage: prepare
   script: 
     -  
-      sudo chown gitlab-runner:gitlab-runner  -R $TRAVEL_PATHS_FIXE/huserv-class/storage/tmp;
-
       PREPARE_VARS_ENV=$(printenv | grep TRAVEL);
       IF_OLD=$IFS;
       IFS=$'\n';
@@ -93,10 +92,12 @@ prepare-informations:
       echo $TRAVEL_VARIABLES_JSON;
 
       IFS=$IF_OLD;
-      
+
+      sudo su && node $TRAVEL_PATHS_FIXE/huserv-class/cli.js server --access_files  ;
+
       echo "${TRAVEL_VARIABLES_JSON}" > $TRAVEL_PATHS_FIXE/huserv-class/storage/tmp/${TRAVEL_PROJECT_NAME}.json;
-      node $TRAVEL_PATHS_FIXE/huserv-class/cli.js gitlab --sync "$TRAVEL_PATHS_FIXE/huserv-class/storage/tmp/${TRAVEL_PROJECT_NAME}.json" $TRAVEL_PATHS_FIXE/huserv-class/storage/master_data/tmp/${TRAVEL_PROJECT_NAME}.json;
-      node $TRAVEL_PATHS_FIXE/huserv-class/cli.js gitlab --create "${TRAVEL_PROJECT_NAME}"
+      
+      node $TRAVEL_PATHS_FIXE/huserv-class/cli.js gitlab --create "${TRAVEL_PROJECT_NAME}";
 
 
 ##************************************************##
@@ -111,8 +112,8 @@ build-system:
       echo "Validate envs before push" ;
       export;
       echo "****  GIT PULL NODE SERVICES ****";
-       node $TRAVEL_PATHS_FIXE/huserv-class/cli.js monitor --alert $TRAVEL_PROJECT_NAME;
-      cd $TRAVEL_PATHS_FIXE/huserv-class/ && git pull origin homolog $TRAVEL_GITLAB_BRANCH_PULL;
+      sudo node $TRAVEL_PATHS_FIXE/huserv-class/cli.js server --build $TRAVEL_PROJECT_SERVERNAME $TRAVEL_PROJECT_NAME ;
+      
       
 
 

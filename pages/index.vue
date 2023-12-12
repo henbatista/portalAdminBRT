@@ -58,7 +58,7 @@ async function handleLogin() {
     <section class="flex w-full sm:w-3/5 xl:w-4/12 lg:w-3/12 2xl justify-center items-center p-4">
       <div class="right-column relative">
         <div
-          class="inner-content h-full flex flex-col bg-white dark:bg-slate-800"
+          class="inner-content h-full flex flex-col bg-white "
         >
           <div class="auth-box h-full flex flex-col justify-center">
             <div class="mobile-logo text-center mb-10 lg:hidden block">
@@ -68,7 +68,7 @@ async function handleLogin() {
       <div class="w-full max-w-sm">
         <div class="text-center 2xl:mb-10 mb-4">
           <h1 class="font-medium">Entrar</h1>
-          <div class="text-slate-500 dark:text-slate-400 text-base">
+          <div class="text-slate-500  text-base">
             Faça login  para começar a usar o painel
             administrativo
           </div>

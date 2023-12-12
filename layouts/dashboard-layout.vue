@@ -339,9 +339,6 @@ const closeSidebarTenant = () => {
   transform: translateX(60rem);
 }
 
-
-
-
 .sidebar {
   height: 100%;
   z-index: 99;

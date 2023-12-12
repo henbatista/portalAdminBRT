@@ -3,9 +3,9 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import {
   getAllUser as getAllUserService,
-  saveState as saveStatesService,
+  saveUser as saveUserService,
   deleteUser as deleteUserService,
-  updateState as updateStatesService,
+  updateUser as updateUserService,
 } from "~/services/usersService";
 import { useToast } from "vue-toastification";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
@@ -20,11 +20,25 @@ export const useUserStore = defineStore("userStore", () => {
   
 
   // REF para armazenar as infos do Estados quando for fazer um UPDATE
-  const idDeleteOrUpdate = ref(""); // Inicialize com uma string vazia ou com o valor inicial desejado
+  const idDeleteOrUpdate = ref("");  // Inicialize com uma string vazia ou com o valor inicial desejado
   const name = ref("");
-  const idTenant = ref("");
-  const id = ref("");
-  const country_id = ref()
+  const email =ref("");
+  const avatar = ref("");
+  const rg = ref("");
+  const cpf = ref("");
+  const password = ref("");
+  const password_confirmation = ref("");
+  const passport = ref("");
+  const passport_expiry = ref("");
+  const tenant_id = ref("");
+  const phone = ref("");
+  const cellphone = ref("");
+  const ext = ref("");
+  const mother_name = ref("");
+  const father_name = ref("");
+  const is_active = false
+
+
 
   const users = ref<ListUsers | null>(null);
   const toast = useToast();
@@ -57,24 +71,49 @@ export const useUserStore = defineStore("userStore", () => {
       isLoading.value = false;
     }
   }
-  // Salva um novo inquilino na API
-  async function saveStates(
+
+  // Salva um novo Usuário na API
+  async function saveUser(
     name: string, 
-    country_id: number | null) {
-    console.log("Saving Usuário:", name);
+    email: string,
+    avatar: string,
+    rg: string,
+    cpf: string,
+    password: string,
+    password_confirmation: string,
+    passport: string,
+    passport_expiry: string,
+    tenant_id: string,
+    phone: string,
+    cellphone: string,
+    ext: string,
+    mother_name: string,
+    father_name: string,
+    is_active: boolean) {
+    //console.log("Saving state:", name, country_id);
     isLoading.value = true;
     try {
-      if (!name || !country_id) {
-        toast.error("Por favor, preencha todos os campos obrigatórios.");
-        return;
-      }
-      const response = await saveStatesService(
+      const response = await saveUserService(
         name, 
-        country_id );
+        email,
+        avatar,
+        rg,
+        cpf,
+        password,
+        password_confirmation,
+        passport,
+        passport_expiry,
+        tenant_id,
+        phone,
+        cellphone,
+        ext,
+        mother_name,
+        father_name,
+        is_active );
       if (response.success) {
         getAllUser(); // Chama o getAllCountry para atualizar a tabela!
         sidebarStoreTenant.sideBarActionTenant = false;
-        toast.success("Estado cadastrado com sucesso!");
+        toast.success("Usuário cadastrado com sucesso!");
       } else {
         toast.error("Preencha todos os campos obrigatórios");
         //console.log(name, country_id)
@@ -82,20 +121,22 @@ export const useUserStore = defineStore("userStore", () => {
       }
     } catch (error) { 
       // Tratamento de erro genérico
-      toast.error("Erro ao salvar o país");
+      toast.error("Erro ao salvar o usuário");
+  
       // Tratamento de erro de conexão à internet desconectada
       if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
         toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
       } else {
         // tratamento de erro de rede
         if (error instanceof Error && error.message.includes("NetworkError")) {
-          toast.error("Erro de rede ao salvar o país. Verifique sua conexão e tente novamente.");
+
+          toast.error("Erro de rede ao salvar o usuário. Verifique sua conexão e tente novamente.");
         } else if (error instanceof Error && error.message.includes("ValidationError")) {
           // tratamento de erro de validação
-          toast.error("Erro de validação ao salvar o país. Verifique os dados inseridos.");
+          toast.error("Erro de validação ao salvar o usuário. Verifique os dados inseridos.");
         } else {
           // Tratamento de outros erros
-          toast.error("Ocorreu um erro ao salvar o país. Tente novamente mais tarde.");
+          toast.error("Ocorreu um erro ao salvar o usuário. Tente novamente mais tarde.");
         }
       }
     } finally {
@@ -103,25 +144,66 @@ export const useUserStore = defineStore("userStore", () => {
     }
   }
 
-  async function updateStates(name: string, country_id: number ) {
+  // Atualiza um Usuário existente na API
+  async function updateUsers(  
+    id: string,
+    name: string, 
+    email:string,
+    avatar: string,
+    rg: string,
+    cpf: string,
+    password:string,
+    password_confirmation: string,
+    passport:string,
+    passport_expiry:string,
+    tenant_id: string,
+    phone:string,
+    cellphone: string,
+    ext: string,
+    mother_name: string,
+    father_name:string,
+    is_active : boolean ) {
     try {
-      if (!name || !country_id ) {
-        toast.error("Por favor, preencha todos os campos obrigatórios.");
-        return;
-      }
-  
-      const response = await updateStatesService(
+      const response = await updateUserService(
         idDeleteOrUpdate.value,
         name, 
-        country_id
+        email,
+        avatar,
+        rg,
+        cpf,
+        password,
+        password_confirmation,
+        passport,
+        passport_expiry,
+        tenant_id,
+        phone,
+        cellphone,
+        ext,
+        mother_name,
+        father_name,
+        is_active
       );
       if (response.success) {
-        getAllUser(); // Chama o getAllbanks para atualizar a tabela!
+
         sidebarStoreTenant.sideBarActionTenant = false;
-        name = "",
-        country_id = 0,
+        name = "", 
+        email = "",
+        avatar = "",
+        rg = "",
+        cpf = "",
+        password = "",
+        password_confirmation = "",
+        passport = "",
+        passport_expiry = "",
+        tenant_id = "",
+        phone = "",
+        cellphone = "",
+        ext = "",
+        mother_name = "",
+        father_name = "",
+        is_active = false
         idDeleteOrUpdate.value = "";
-        toast.success("Estado atualizado com sucesso!");
+        toast.success("Usuário atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
@@ -160,10 +242,24 @@ export const useUserStore = defineStore("userStore", () => {
     idDeleteOrUpdate,
     isLoading,
     getAllUser,
-    saveStates,
+    saveUser,
     deleteUser,
-    updateStates,
+    updateUsers,
     name,
-    country_id, 
+    email,
+    avatar,
+    rg,
+    cpf,
+    password,
+    password_confirmation,
+    passport,
+    passport_expiry,
+    tenant_id,
+    phone,
+    cellphone,
+    ext,
+    mother_name,
+    father_name,
+    is_active
   };
 });

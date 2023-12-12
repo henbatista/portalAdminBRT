@@ -109,7 +109,7 @@ export const useCityStore = defineStore("cityStore", () => {
         state_id = 0,
         destination_type = ""
         idDeleteOrUpdate.value = 0;
-        toast.success("Ciodade atualizado com sucesso!");
+        toast.success("Cidade atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;

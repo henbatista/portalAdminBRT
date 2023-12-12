@@ -102,7 +102,9 @@ export const useStateStore = defineStore("stateStore", () => {
   }
 
   
-  async function updateStates(name: string, country_id: number ) {
+  async function updateStates(
+    name: string, 
+    country_id: number ) {
     try {
       if (!name || !country_id ) {
         toast.error("Por favor, preencha todos os campos obrigatórios.");

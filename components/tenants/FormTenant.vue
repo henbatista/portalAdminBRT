@@ -555,11 +555,12 @@ onMounted(async () => {
           class="flex items-center md:text-xl gap-2  font-semibold text-lg"
           v-if='tenantStore.idDeleteOrUpdate === ""'
         >    <Icon class="-mt-0.5" :icon="icons.company" />
-        Atualizar dados da empresa</span
+        Adicionar dados da empresa</span
         >
         <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
           <Icon class="-mt-0.5" :icon="icons.company" />
-          Adiconar dados da empresa</span
+          Atualizar dados da empresa 
+          </span
         >
           <div class="flex-1 md:text-base text-xs"> 
             Preencha os dados para cadastrar um novo Estado.
@@ -1032,7 +1033,7 @@ onMounted(async () => {
               <div class="flex mt-2 items-stretch">
                 <span class="flex-none input-group-addon">
                   <span
-                    class="bg-white dark:bg-slate-900 transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200  text-slate-400 text-base font-light h-full"
+                    class="bg-white  transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200  text-slate-400 text-base font-light h-full"
                   >
                     <Icon :icon="icons.agencyIcon" />
                   </span>
@@ -1145,7 +1146,7 @@ onMounted(async () => {
               <div class="flex mt-2 items-stretch">
                 <span class="flex-none input-group-addon">
                   <span
-                    class="bg-white dark:bg-slate-900 transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 dark:border-slate-700 ltr:rounded-tl rtl:rounded-tr rtl:rounded-br ltr:rounded-bl text-slate-400 text-base font-light inline-block h-full"
+                    class="bg-white  transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 ltr:rounded-tl rtl:rounded-tr rtl:rounded-br ltr:rounded-bl text-slate-400 text-base font-light inline-block h-full"
                   >
                     <Icon :icon="icons.avatarIcon" />
                   </span>
@@ -1219,7 +1220,7 @@ onMounted(async () => {
         <div class="flex mt-2 items-stretch">
           <span class="flex-none input-group-addon">
             <span
-              class="bg-white dark:bg-slate-900 transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200  text-slate-400 text-base font-light  h-full"
+              class="bg-white  transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200  text-slate-400 text-base font-light  h-full"
             >
               <Icon :icon="icons.avatarIcon" />
             </span>
@@ -1232,8 +1233,7 @@ onMounted(async () => {
               id="name"
               v-model="form.user.name"
                 placeholder="Digite o nome completo do responsável"
-                class="bg-white dark:bg-slate-900 dark:placeholder:text-slate-400 transition duration-300 ease-in-out border border-slate-200 dark:border-slate-700 focus:ring-0    
-                rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600  dark:focus:border-slate-900 dark:text-white; block w-full focus:outline-none h-[40px]"
+                class="bg-white transition duration-300 ease-in-out border border-slate-200  focus:ring-0  rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]"
               />
             </div>
           </div>
@@ -1279,7 +1279,7 @@ onMounted(async () => {
           <div class="flex mt-2 items-stretch">
             <span class="flex-none input-group-addon">
               <span
-                class="bg-white dark:bg-slate-900 transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light inline-block h-full"
+                class="bg-white  transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light inline-block h-full"
               ><Icon :icon="icons.cpfIcon" />
               </span>
             </span>
@@ -1372,7 +1372,7 @@ onMounted(async () => {
                       : 'focus:border-indigo-500 border-gray-300',
                   ]"
                     placeholder="Digite um e-mail válido"
-                    class="bg-white dark:bg-slate-900 transition duration-300 ease-in-out border border-slate-200 dark:border-slate-700 focus:ring-0  
+                    class="bg-white  transition duration-300 ease-in-out border border-slate-200  focus:ring-0  
                     rounded placeholder:text-slate-400 text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600   block w-full focus:outline-none h-[40px]"
                   />
                 </div>

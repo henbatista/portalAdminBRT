@@ -78,7 +78,7 @@ function handleCountry() {
     </div>
 
     <div class="fromGroup relative mb-1">
-      <label for="formal_name" class="text-slate-900 dark:text-slate-300 text-left text-base font-medium " >Nome Oficial do País</label>
+      <label for="formal_name" class="text-slate-900  text-left text-base font-medium " >Nome Oficial do País</label>
       <div class="relative" >
         <input
         type="text"
@@ -92,7 +92,7 @@ function handleCountry() {
 
     
     <div class="fromGroup relative mb-1">
-      <label for="phone_code" class="text-slate-900 dark:text-slate-300 text-left text-base font-medium " >Código do País (Telefone)</label>
+      <label for="phone_code" class="text-slate-900  text-left text-base font-medium " >Código do País (Telefone)</label>
       <div class="relative" >
         <input
         type="number"
@@ -107,7 +107,7 @@ function handleCountry() {
     </div>
 
     <div class="fromGroup relative mb-1">
-      <label for="iso" class="text-slate-900 dark:text-slate-300 text-left text-base font-medium">
+      <label for="iso" class="text-slate-900  text-left text-base font-medium">
         Código ISO (2 letras)
       </label>
       <div class="relative">
@@ -125,7 +125,7 @@ function handleCountry() {
 
     
     <div class="fromGroup relative ">
-      <label for="iso3" class="text-slate-900 dark:text-slate-300 text-left text-base font-medium " >Código ISO (3 dígitos)</label>
+      <label for="iso3" class="text-slate-900 text-left text-base font-medium " >Código ISO (3 dígitos)</label>
       <div class="relative" >
         <input
         type="text"

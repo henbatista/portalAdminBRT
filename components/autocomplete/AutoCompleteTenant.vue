@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed, defineProps } from 'vue';
 import {
   Combobox,
   ComboboxInput,
@@ -11,26 +11,26 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
 import axios from 'axios';
 import { useToast } from "vue-toastification";
-
 import useApiUrl from '@/composables/useApiUrl';
-import { updateCountry } from '~/services/countryService';
 
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 const toast = useToast();
 
-const countries = ref([{ name: 'Afeganistão', id: 1 }]);
+const tenants = ref([{ name: 'Afeganistão', id: 1 }]);
 const query = ref('');
 
+const props = defineProps(['updateTenantId']);
 
-const getAllCountries = async () => {
+
+const getAllTenants = async () => {
   try {
     const authLocalStore = JSON.parse(
       localStorage.getItem("authStore") || "{}"
     );
     const token = authLocalStore.token;
     
-    const { data } = await axios.get(`${apiUrl}/api/v1/countries/pluck?search=${query.value}&per_page=10&order=asc&page=1`, {
+    const { data } = await axios.get(`${apiUrl}/api/v1/tenants/pluck?search=${query.value}&order=asc&page=1&per_page=10`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -38,34 +38,34 @@ const getAllCountries = async () => {
     });
 
     // Verifique se a propriedade 'data' existe na resposta
-    const newCountries = data && data.data ? data.data : [];
+    const newTenants = data && data.data ? data.data : [];
 
-    countries.value = Array.isArray(newCountries) ? newCountries : [];
+    tenants.value = Array.isArray(newTenants) ? newTenants : [];
     
   } catch (error) {
     toast.error('API do CEP fora do ar, entre em contato com a BRT!');
   }
 };
 
-getAllCountries();
+getAllTenants();
 
 let selected = ref(null);
-let country_id = ref(null);
+let tenant_id = ref(null);
 
 watch(selected, (newVal) => {
-  country_id.value = newVal ? newVal.id : null;
-  props.updateCountryId(newVal.name, newVal.id);
+  tenant_id.value = newVal ? newVal.id : null;
+  props.updateTenantId(newVal ? newVal.name : null, newVal ? newVal.id : null);
 });
 
 watch(query, () => {
-  getAllCountries();
+  getAllTenants();
 });
 
-const filteredCountries = computed(() =>
+const filteredTenants = computed(() =>
   query.value === ''
-    ? countries.value
-    : countries.value.filter((country) =>
-        country.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
+    ? tenants.value
+    : tenants.value.filter((tenant) =>
+    tenant.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
       )
 );
 </script>
@@ -73,16 +73,16 @@ const filteredCountries = computed(() =>
 <template>
   <div class="w-full">
     <Combobox v-model="selected">
-        <span>País</span>
+        <span class="text-sm">Empresa</span>
 
       <div class="relative mt-2">
         <div
-          class="relative  w-full   h-[48px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
+          class="relative  w-full   h-[40px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
         >
           <ComboboxInput
-            class="w-full border-none py-3.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"
-            :displayValue="(country) => country && country.name"
-            placeholder="Digite o País"
+            class="w-full border-none py-2.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"
+            :displayValue="(tenant) => tenant && tenant.name"
+            placeholder="Digite o nome da empresa a ser vinculada"
             @change="query = $event.target.value"
           />
           <ComboboxButton class="absolute  inset-y-0 right-0 flex items-center pr-2">
@@ -99,16 +99,16 @@ const filteredCountries = computed(() =>
             class="absolute mt-1 max-h-40 z-50 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
           >
             <div
-              v-if="filteredCountries.length === 0 && query !== ''"
+              v-if="filteredTenants.length === 0 && query !== ''"
               class="relative cursor-default select-none py-2 px-4 text-gray-700"
             >
               Nenhum Estado encontrado!
             </div>
              <ComboboxOption
-              v-for="country in filteredCountries"
+              v-for="tenant in filteredTenants"
               as="template"
-              :key="country.id"
-              :value="country"
+              :key="tenant.id"
+              :value="tenant"
               v-slot="{ selected, active }"
             >
               <li
@@ -119,7 +119,7 @@ const filteredCountries = computed(() =>
                 }"
               >
                 <span class="block truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
-                  {{ country.name }}
+                  {{ tenant.name }}
                 </span>
                 <span
                   v-if="selected"

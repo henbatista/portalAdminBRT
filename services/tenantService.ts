@@ -144,7 +144,6 @@ export async function updateTenant(
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(localStorage.getItem("authStore") || "{}");
     const token = authLocalStore.token;
-
     // Monta o payload para a requisição PUT
     const axiosPayload = {
       id,

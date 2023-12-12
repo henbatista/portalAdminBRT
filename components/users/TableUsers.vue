@@ -1,15 +1,16 @@
 <script setup lang="ts">
+// Importando módulos e tipos necessários
 import type { ListUsers } from "~/types/users";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { useUserStore } from "~/stores/userStore";
 import { useMainStore } from "~/stores/MainStore";
 import { ref } from 'vue';
 
-
-
+// Variáveis reativas para lidar com estados de hover
 const activeHover = ref({
   is_active: false,
 });
+
 const handleMouseOver = () => {
   activeHover.value.is_active = !activeHover.value.is_active;
 };
@@ -18,6 +19,7 @@ const handleMouseOut = () => {
   activeHover.value.is_active = !activeHover.value.is_active;
 };
 
+// Variáveis reativas para o estado de hover do botão
 const buttonHover = ref({
   isHovered: false,
 });
@@ -30,25 +32,27 @@ const handleMouseOutButton = () => {
   buttonHover.value.isHovered = false;
 };
 
+// Acessando stores Pinia
 const sidebarStore = useSidebarStoreTenant();
 const userStore = useUserStore();
 const mainStore = useMainStore();
 
+// Definindo props
 const props = defineProps<{
   users: ListUsers | null;
 }>();
 
-
-
 </script>
 
 <template>
+  <!-- Modal para exclusão de usuário -->
   <ModalConfirmation
     title="Deletar Usuário"
     :deleteFunction="userStore.deleteUser"
   />
   <div class="px-4">
     <div class="sm:flex sm:items-center">
+      <!-- Seção do cabeçalho -->
       <div class="sm:flex-auto mb-3">
         <div class="flex items-center">
           <img
@@ -62,6 +66,7 @@ const props = defineProps<{
           Adicione, Remova ou Edite o Usuário.
         </p>
       </div>
+      <!-- Botão para criar um novo usuário -->
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
         <button
           @click="
@@ -75,6 +80,7 @@ const props = defineProps<{
         </button>
       </div>
     </div>
+    <!-- Seção da tabela de usuários -->
     <div  
       class="-mx-4 mt-10 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg"
     >
@@ -94,12 +100,7 @@ const props = defineProps<{
               E-mail
             </th>
 
-            <th
-            scope="col"
-            class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
-          >
-            Permissão
-          </th>
+
           <th
           scope="col"
           class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
@@ -145,16 +146,6 @@ const props = defineProps<{
             >
               {{ user.email }}
             </td>
-
-            <td
-            :class="[
-              stateIdx === 0 ? '' : 'border-t border-gray-200',
-              'relative py-4  text-sm text-left',
-            ]"
-          >
-            {{ user.roles.name }}
-          </td>
-          
           <td
           :class="[
             stateIdx === 0 ? '' : 'border-t border-gray-200',
@@ -177,9 +168,12 @@ const props = defineProps<{
           'relative py-4  text-sm text-left',
         ]"
       >
+    
+    
       <span
+      
       class="custom-span"
-      :class="{ 'bg-teal-600': user.is_active, 'bg-red-500': !user.is_active }"
+      :class="{ 'h-[3px] w-[3px] bg-teal-600 rounded-full inline-block ring-4 ring-opacity-30 ring-teal-500': user.is_active, 'h-[6px] w-[6px] bg-red-500 rounded-full inline-block ring-4 ring-opacity-30 ring-red-500': !user.is_active }"
       @mouseover="handleMouseOver"
       @mouseout="handleMouseOut"
     ></span>
@@ -230,16 +224,11 @@ const props = defineProps<{
 </template>
 
 <style lang="scss" scoped>
-.btn-outline-dark {
-  @apply bg-transparent text-slate-900     hover:bg-slate-900 hover:bg-opacity-5;
-  &.active {
-    @apply bg-slate-900 text-white dark:bg-slate-900 dark:text-slate-300;
-  }
-}
+/* Estilização para o span personalizado que representa o status de atividade do usuário */
 
 .custom-span {
-  width: 15px;
-  height: 15px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -249,7 +238,7 @@ const props = defineProps<{
   transition: background-color 0.3s ease, transform 0.5s ease; 
 
 }
-
+/* Estilização para os indicadores de status de atividade do usuário */
 /* Cor padrão quando o plano de fundo é teal */
 .bg-teal-600 {
   background-color: #319795;
@@ -274,6 +263,7 @@ const props = defineProps<{
 
 }
 
+/* Estilização para o efeito de hover do botão */
 button:hover {
   transform: scale(1.05);
 }
