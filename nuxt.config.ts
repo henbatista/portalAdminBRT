@@ -40,18 +40,18 @@ export default defineNuxtConfig({
   vite: {
     server: {
       hmr: {
-        protocol: 'ws',
-        host: 'localhost'
-      }
-    }
+        protocol: "ws",
+        host: "localhost",
+      },
+    },
   },
   build: {
     transpile: ["vue-toastification"],
   },
   components: [
     {
-      path: "~/components", pathPrefix: false// Pasta padrão "components",
+      path: "~/components",
+      pathPrefix: false, // Pasta padrão "components",
     },
-    
   ],
 });

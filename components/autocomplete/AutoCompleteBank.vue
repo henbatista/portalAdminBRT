@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from "vue";
 import {
   Combobox,
   ComboboxInput,
@@ -7,18 +7,20 @@ import {
   ComboboxOptions,
   ComboboxOption,
   TransitionRoot,
-} from '@headlessui/vue';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
+} from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
-import useApiUrl from '@/composables/useApiUrl';
+import useApiUrl from "@/composables/useApiUrl";
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 
-const banks = ref([{ name: 'Banco do Brasil S.A.', bank_number: '001', id: 2 }]);
+const banks = ref([
+  { name: "Banco do Brasil S.A.", bank_number: "001", id: 2 },
+]);
 
 const gelAllBanks = async () => {
   const { data, error } = await useFetch(`${apiUrl}/api/v1/banks/pluck`, {
-    method: 'GET',
+    method: "GET",
   });
 
   if (data.value && Array.isArray(data.value)) {
@@ -27,7 +29,7 @@ const gelAllBanks = async () => {
       name: `${bank.bank_number} - ${bank.name}`,
     }));
   } else if (error) {
-    toast.error('API do CEP fora do ar, entre em contato com a BRT!');
+    toast.error("API do CEP fora do ar, entre em contato com a BRT!");
   }
 };
 
@@ -35,14 +37,17 @@ const gelAllBanks = async () => {
 gelAllBanks();
 
 let selected = ref(null);
-let query = ref('');
+let query = ref("");
 
 let filteredBanks = computed(() =>
-  query.value === ''
+  query.value === ""
     ? banks.value
     : banks.value.filter((bank) =>
-        bank.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
-      )
+        bank.name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(query.value.toLowerCase().replace(/\s+/g, "")),
+      ),
 );
 
 const props = defineProps({
@@ -70,8 +75,7 @@ watch(selected, (newVal) => {
     <Combobox v-model="selected">
       <div class="relative mt-1">
         <div
-        class="block w-full rounded-sm b  g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0  focus:outline-none  
-        text-slate-900 text-sm px-3  placeholder:font-light focus:border-slate-600 "
+          class="block w-full rounded-sm b g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
         >
           <ComboboxInput
             class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 focus:ring-0"
@@ -79,8 +83,13 @@ watch(selected, (newVal) => {
             placeholder="Digite seu banco..."
             @change="query = $event.target.value"
           />
-          <ComboboxButton class=" absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <ComboboxButton
+            class="absolute inset-y-0 right-0 flex items-center pr-2"
+          >
+            <ChevronUpDownIcon
+              class="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
           </ComboboxButton>
         </div>
         <TransitionRoot
@@ -119,7 +128,10 @@ watch(selected, (newVal) => {
                   'text-gray-900': !active,
                 }"
               >
-                <span class="block truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
+                <span
+                  class="block truncate"
+                  :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                >
                   {{ bank.name }}
                 </span>
                 <span

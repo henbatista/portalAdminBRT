@@ -6,46 +6,60 @@ import { Icon } from "@iconify/vue";
 const countryStore = useCountryStore();
 const sidebarStore = useSidebarStore();
 
-const countryIcon = "gis:search-country"
-
+const countryIcon = "gis:search-country";
+const countryNameIcon = "emojione-monotone:world-map";
+const countryNameOfficialIcon = "gis:map-book";
+const countryCodeIcon = "ph:phone-plus-light";
+const countryIsoIcon = "carbon:iso-outline";
 
 const icons = {
-  countryIcon,  
+  countryIcon,
+  countryNameIcon,
+  countryNameOfficialIcon,
+  countryCodeIcon,
+  countryIsoIcon,
 };
-
 
 function handleCountry() {
   if (countryStore.idDeleteOrUpdate === 0) {
-    countryStore.saveCountry(countryStore.name, countryStore.formal_name, countryStore.phone_code, countryStore.iso, countryStore.iso3);
+    countryStore.saveCountry(
+      countryStore.name,
+      countryStore.formal_name,
+      countryStore.phone_code,
+      countryStore.iso,
+      countryStore.iso3,
+    );
   } else {
     countryStore.updateCountry();
   }
 }
-
 </script>
 
 <template>
-      
-  <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
-    <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid  text-slate-900 lg:grid-cols-1 grid-cols-1">
+  <div class="bg-slate-50 justify-center -mx-6 px-6 py-6">
+    <div class="flex justify-between mb-2">
+      <div class="ml-6 grid text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
-        class="flex items-center md:text-xl gap-2  font-semibold text-lg"
-        v-if="countryStore.idDeleteOrUpdate === 0"
-      >    <Icon class="-mt-0.5" :icon="icons.countryIcon" />
-        Adicionar País</span
-      >
-      <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
-        <Icon class="-mt-0.5" :icon="icons.countryIcon" />
-        Atualizar País</span
-      >
-        <div class="flex-1 md:text-base text-xs"> 
+          class="flex items-center md:text-xl gap-2 font-semibold text-lg"
+          v-if="countryStore.idDeleteOrUpdate === 0"
+        >
+          <Icon class="-mt-0.5" :icon="icons.countryIcon" /> Adicionar
+          País</span
+        >
+        <span
+          class="flex items-center md:text-xl gap-2 font-semibold text-lg"
+          v-else
+        >
+          <Icon class="-mt-0.5" :icon="icons.countryIcon" />
+          Atualizar País</span
+        >
+        <div class="flex-1 md:text-base text-xs">
           Preencha os dados para cadastrar um novo Estado.
         </div>
       </div>
       <button @click="sidebarStore.sideBarAction = false">
         <svg
-        class="mr-7"
+          class="mr-7"
           xmlns="http://www.w3.org/2000/svg"
           width="32"
           height="32"
@@ -58,93 +72,148 @@ function handleCountry() {
         </svg>
       </button>
     </div>
+  </div>
 
-
-    </div>
-
-  <section class="flex  mt-4 p-6 flex-col gap-4">
-
-    <div class="fromGroup relative mb-1">
-      <label for="name" class="text-slate-900text-left text-base font-medium " >Nome</label>
-      <div class="relative" >
-        <input
-        v-model="countryStore.name"
-        type="text"
-        id="name"
-          placeholder="Digite o nome do país"
-          class="mt-1 rounded w-full  focus:outline-none h-[40px] bg-transparent  transition duration-300 border border-slate-200  focus:ring-slate-600  focus:ring-opacity-90 placeholder:text-slate-400 text-slate-900 text-sm px-3  "
-        />
+  <section class="flex mt-4 p-6 flex-col gap-4">
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">Nome do País</label>
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.countryNameIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="countryStore.name"
+              type="text"
+              id="name"
+              placeholder="Digite o nome do país"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="fromGroup relative mb-1">
-      <label for="formal_name" class="text-slate-900  text-left text-base font-medium " >Nome Oficial do País</label>
-      <div class="relative" >
-        <input
-        type="text"
-        id="formal_name"
-        v-model="countryStore.formal_name"
-          placeholder="Digite o nome oficial do país"
-          class="mt-1 rounded w-full  focus:outline-none h-[40px] bg-transparent  transition duration-300 border border-slate-200  focus:ring-slate-600  focus:ring-opacity-90 placeholder:text-slate-400 text-slate-900 text-sm px-3  "
-        />
-      </div>
-    </div>
-
-    
-    <div class="fromGroup relative mb-1">
-      <label for="phone_code" class="text-slate-900  text-left text-base font-medium " >Código do País (Telefone)</label>
-      <div class="relative" >
-        <input
-        type="number"
-        v-maska
-        data-maska="####"
-        id="phone_code"
-        v-model="countryStore.phone_code"
-          placeholder="Digite o código de telefone do país "
-          class="mt-1 rounded w-full  focus:outline-none h-[40px] bg-transparent  transition duration-300 border border-slate-200  focus:ring-slate-600  focus:ring-opacity-90 placeholder:text-slate-400 text-slate-900 text-sm px-3  "
-        />
-      </div>
-    </div>
-
-    <div class="fromGroup relative mb-1">
-      <label for="iso" class="text-slate-900  text-left text-base font-medium">
-        Código ISO (2 letras)
-      </label>
-      <div class="relative">
-        <input
-          type="text"
-          id="iso"
-          v-model="countryStore.iso"
-          placeholder="Digite o código de telefone do país"
-          class="mt-1 rounded w-full focus:outline-none h-[40px] bg-transparent transition duration-300 border border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 placeholder:text-slate-400 text-slate-900 text-sm px-3"
-          maxlength="2" 
-          oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '');"
-        />
-      </div>
-    </div>
-
-    
-    <div class="fromGroup relative ">
-      <label for="iso3" class="text-slate-900  text-left text-base font-medium " >Código ISO (3 dígitos)</label>
-      <div class="relative" >
-        <input
-        type="text"
-        id="iso3"
-        v-model="countryStore.iso3"
-        maxlength="3" 
-        oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '');"
-          placeholder="Digite o código de telefone do país "
-          class="mt-1 rounded w-full  focus:outline-none h-[40px] bg-transparent  transition duration-300 border border-slate-200  focus:ring-slate-600  focus:ring-opacity-90 placeholder:text-slate-400 text-slate-900 text-sm px-3  "
-        />
-      </div>
-    </div>
-
-    
-    <button
-    @click="handleCountry"
-      :class="!countryStore.isLoading ? '' : 'opacity-50'"
-      class="inline-flextransition-all mt-5 duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+        Nome Oficial do País</label
       >
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.countryNameOfficialIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="countryStore.formal_name"
+              type="text"
+              id="formal_name"
+              placeholder="Digite o nome oficial do país"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+        Código do País (Telefone)</label
+      >
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.countryCodeIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="countryStore.phone_code"
+              type="number"
+              v-maska
+              data-maska="####"
+              id="phone_code"
+              placeholder="Digite o código de telefone do país "
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+        Código ISO (2 letras)</label
+      >
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.countryIsoIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="countryStore.iso"
+              name="name"
+              type="text"
+              id="iso"
+              placeholder="Digite o código de telefone do país"
+              maxlength="2"
+              oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '');"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+        Código ISO (3 dígitos)</label
+      >
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.countryIsoIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              type="text"
+              id="iso3"
+              v-model="countryStore.iso3"
+              maxlength="3"
+              oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '');"
+              placeholder="Digite o código de telefone do país "
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      @click="handleCountry"
+      :class="!countryStore.isLoading ? '' : 'opacity-50'"
+      class="inline-flextransition-all mt-5 duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+    >
       <div
         v-if="!countryStore.isLoading"
         class="flex justify-center gap-5 items-center"
@@ -161,7 +230,7 @@ function handleCountry() {
           />
         </svg>
         <span v-if="countryStore.idDeleteOrUpdate === 0">ADICIONAR PAÍS</span
-          ><span v-else>ATUALIZAR PÁIS</span>
+        ><span v-else>ATUALIZAR PÁIS</span>
       </div>
       <div v-else>
         <svg
@@ -190,8 +259,11 @@ function handleCountry() {
         </svg>
       </div>
     </button>
-    
   </section>
 </template>
 
-<style scoped></style>
+<style scoped>
+button:hover {
+  transform: scale(1.02);
+}
+</style>

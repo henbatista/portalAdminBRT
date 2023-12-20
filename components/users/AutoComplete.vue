@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch } from "vue";
 import {
   Combobox,
   ComboboxInput,
@@ -7,52 +7,53 @@ import {
   ComboboxOptions,
   ComboboxOption,
   TransitionRoot,
-} from '@headlessui/vue';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
-import axios from 'axios';
+} from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import axios from "axios";
 
-import useApiUrl from '@/composables/useApiUrl';
-import { updateCountry } from '~/services/countryService';
+import useApiUrl from "@/composables/useApiUrl";
+import { updateCountry } from "~/services/countryService";
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 
-const countries = ref([{ name: 'Afeganistão', id: 1 }]);
+const countries = ref([{ name: "Afeganistão", id: 1 }]);
 
 const getAllCountries = async () => {
-    try {
-        // Pegar o token do localStorage
+  try {
+    // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
-        const { data } = await axios.get(`${apiUrl}/api/v1/countries/pluck`, {
+    const { data } = await axios.get(`${apiUrl}/api/v1/countries/pluck`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
     //console.log(data)
-       countries.value = data
-    } catch (error) {
-        toast.error('API do CEP fora do ar, entre em contato com a BRT!');
-    }
-  
+    countries.value = data;
+  } catch (error) {
+    toast.error("API do CEP fora do ar, entre em contato com a BRT!");
+  }
 };
 
 // FUnção para pegar todos os bancos cadastrados
 getAllCountries();
 
 let selected = ref(null);
-let query = ref('');
+let query = ref("");
 let country_id = ref(null);
 
-
 let filteredCountries = computed(() =>
-  query.value === ''
+  query.value === ""
     ? countries.value
     : countries.value.filter((country) =>
-    country.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
-      )
+        country.name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(query.value.toLowerCase().replace(/\s+/g, "")),
+      ),
 );
 
 const props = defineProps({
@@ -65,20 +66,18 @@ const props = defineProps({
   },
 });
 
-
 watch(selected, (newVal) => {
   // Atualiza country_id quando uma opção é selecionada
   country_id.value = newVal ? newVal.id : null;
   //console.log("Updated country_id:", country_id.value);
-  props.updateCountryId(newVal.name, newVal.id)
+  props.updateCountryId(newVal.name, newVal.id);
 });
-
 </script>
 
 <template>
   <div class="w-full">
     <Combobox v-model="selected">
-        <span>País</span>
+      <span>País</span>
 
       <div class="relative mt-1">
         <div
@@ -90,8 +89,13 @@ watch(selected, (newVal) => {
             placeholder="Digite o País"
             @change="query = $event.target.value"
           />
-          <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <ComboboxButton
+            class="absolute inset-y-0 right-0 flex items-center pr-2"
+          >
+            <ChevronUpDownIcon
+              class="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
           </ComboboxButton>
         </div>
         <TransitionRoot
@@ -109,7 +113,7 @@ watch(selected, (newVal) => {
             >
               Nenhum Estado encontrado!
             </div>
-             <ComboboxOption
+            <ComboboxOption
               v-for="country in filteredCountries"
               as="template"
               :key="country.id"
@@ -123,7 +127,10 @@ watch(selected, (newVal) => {
                   'text-gray-900': !active,
                 }"
               >
-                <span class="block truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
+                <span
+                  class="block truncate"
+                  :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                >
                   {{ country.name }}
                 </span>
                 <span

@@ -1,5 +1,5 @@
 // apiService.js
-import axios from 'axios';
+import axios from "axios";
 
 interface CEPData {
   // Define the expected structure of the response data
@@ -13,7 +13,7 @@ interface CEPData {
 }
 
 const cepService = axios.create({
-  baseURL: 'https://viacep.com.br/ws/',
+  baseURL: "https://viacep.com.br/ws/",
 });
 
 export const getCEPData = async (zipcode: string): Promise<CEPData> => {

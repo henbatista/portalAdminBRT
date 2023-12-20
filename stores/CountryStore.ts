@@ -15,8 +15,6 @@ export const useCountryStore = defineStore("countryStore", () => {
   const sidebarStore = useSidebarStore();
   const mainStore = useMainStore();
 
-  
-
   // REF para armazenar as infos do país quando for fazer um UPDATE
   const idDeleteOrUpdate = ref(0);
   const name = ref("");
@@ -24,7 +22,6 @@ export const useCountryStore = defineStore("countryStore", () => {
   const phone_code = ref(0);
   const iso = ref("");
   const iso3 = ref("");
-
 
   const countries = ref<ListCountries | null>(null);
   const toast = useToast();
@@ -42,27 +39,45 @@ export const useCountryStore = defineStore("countryStore", () => {
     } catch (error) {
       // Tratamento de erro genérico
       toast.error("Erro ao obter a lista de países:");
-  
+
       // Tratamento de erro de conexão à internet desconectada
-      if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
+      if (
+        error instanceof Error &&
+        error.message.includes("ERR_INTERNET_DISCONNECTED")
+      ) {
         toast.error("Erro de conexão à internet desconectada:");
-        toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
+        toast.error(
+          "Você está desconectado da internet. Verifique sua conexão e tente novamente.",
+        );
       } else {
         // Exemplo de tratamento de erro de validação
-        toast.error("Ocorreu um erro ao obter a lista de países. Tente novamente mais tarde.");
+        toast.error(
+          "Ocorreu um erro ao obter a lista de países. Tente novamente mais tarde.",
+        );
       }
-  
+
       return { error };
     } finally {
       isLoading.value = false;
     }
   }
-  
 
-  async function saveCountry(name: string, formal_name: string, phone_code: number, iso: string, iso3: string) {
+  async function saveCountry(
+    name: string,
+    formal_name: string,
+    phone_code: number,
+    iso: string,
+    iso3: string,
+  ) {
     isLoading.value = true;
     try {
-      const response = await saveCountryService(name, formal_name, phone_code, iso, iso3);
+      const response = await saveCountryService(
+        name,
+        formal_name,
+        phone_code,
+        iso,
+        iso3,
+      );
       if (response.success) {
         getAllCountries(); // Chama o getAllCountry para atualizar a tabela!
         sidebarStore.sideBarAction = false;
@@ -74,23 +89,37 @@ export const useCountryStore = defineStore("countryStore", () => {
     } catch (error) {
       // Tratamento de erro genérico
       toast.error("Erro ao salvar o país:");
-  
+
       // Tratamento de erro de conexão à internet desconectada
-      if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
+      if (
+        error instanceof Error &&
+        error.message.includes("ERR_INTERNET_DISCONNECTED")
+      ) {
         toast.error("Erro de conexão à internet desconectada:");
-        toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
+        toast.error(
+          "Você está desconectado da internet. Verifique sua conexão e tente novamente.",
+        );
       } else {
         // tratamento de erro de rede
         if (error instanceof Error && error.message.includes("NetworkError")) {
-        toast.error("Erro de rede");
-          toast.error("Erro de rede ao salvar o país. Verifique sua conexão e tente novamente.");
-        } else if (error instanceof Error && error.message.includes("ValidationError")) {
+          toast.error("Erro de rede");
+          toast.error(
+            "Erro de rede ao salvar o país. Verifique sua conexão e tente novamente.",
+          );
+        } else if (
+          error instanceof Error &&
+          error.message.includes("ValidationError")
+        ) {
           // tratamento de erro de validação
           toast.error("Erro de validação");
-          toast.error("Erro de validação ao salvar o país. Verifique os dados inseridos.");
+          toast.error(
+            "Erro de validação ao salvar o país. Verifique os dados inseridos.",
+          );
         } else {
           // Tratamento de outros erros
-          toast.error("Ocorreu um erro ao salvar o país. Tente novamente mais tarde.");
+          toast.error(
+            "Ocorreu um erro ao salvar o país. Tente novamente mais tarde.",
+          );
         }
       }
     } finally {
@@ -98,37 +127,42 @@ export const useCountryStore = defineStore("countryStore", () => {
     }
   }
 
-  
   async function updateCountry() {
     try {
-      if (!name.value || !formal_name.value || !phone_code.value || !iso.value || !iso3.value) {
+      if (
+        !name.value ||
+        !formal_name.value ||
+        !phone_code.value ||
+        !iso.value ||
+        !iso3.value
+      ) {
         toast.error("Por favor, preencha todos os campos obrigatórios.");
         return;
       }
-  
+
       const response = await updateCountryService(
         idDeleteOrUpdate.value,
         name.value,
         formal_name.value,
         phone_code.value,
         iso.value,
-        iso3.value
+        iso3.value,
       );
       if (response.success) {
         getAllCountries(); // Chama o getAllbanks para atualizar a tabela!
         sidebarStore.sideBarAction = false;
-        name.value = "",
-        formal_name.value  = "",
-        phone_code.value  = 0,
-        iso.value  = "",
-        iso3.value  = "",
-        idDeleteOrUpdate.value = 0;
+        (name.value = ""),
+          (formal_name.value = ""),
+          (phone_code.value = 0),
+          (iso.value = ""),
+          (iso3.value = ""),
+          (idDeleteOrUpdate.value = 0);
         toast.success("País atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
       }
-    }  catch (error) {
+    } catch (error) {
       toast.error("Erro ao atualizar país. Por favor, tente novamente.");
     }
   }
@@ -148,12 +182,12 @@ export const useCountryStore = defineStore("countryStore", () => {
         getAllCountries(); // Chama o getAllbanks para atualizar a tabela!
         sidebarStore.sideBarAction = false;
         mainStore.openDeleteModal = false;
-        name.value = "",
-        formal_name.value  = "",
-        phone_code.value  = 0,
-        iso.value  = "",
-        iso3.value  = "",
-        name.value = "";
+        (name.value = ""),
+          (formal_name.value = ""),
+          (phone_code.value = 0),
+          (iso.value = ""),
+          (iso3.value = ""),
+          (name.value = "");
         idDeleteOrUpdate.value = 0;
         toast.success("País deletado com sucesso!");
       } else {
@@ -164,7 +198,7 @@ export const useCountryStore = defineStore("countryStore", () => {
       toast.error("Erro ao deletar país. Por favor, tente novamente.");
     }
   }
-  
+
   return {
     countries,
     idDeleteOrUpdate,
@@ -177,6 +211,6 @@ export const useCountryStore = defineStore("countryStore", () => {
     formal_name,
     phone_code,
     iso,
-    iso3
+    iso3,
   };
 });

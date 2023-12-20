@@ -8,4 +8,3 @@ export const useSidebarStoreTenant = defineStore("sidebarStoreTenant", () => {
     sideBarActionTenant,
   };
 });
-

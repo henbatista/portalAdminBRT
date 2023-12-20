@@ -9,7 +9,7 @@ export async function getAllCountries() {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const { data } = await axios.get(`${apiUrl}/api/v1/countries`, {
@@ -29,11 +29,17 @@ export async function getAllCountries() {
   }
 }
 
-export async function saveCountry(name: string, formal_name: string, phone_code: number, iso: string, iso3: string) {
+export async function saveCountry(
+  name: string,
+  formal_name: string,
+  phone_code: number,
+  iso: string,
+  iso3: string,
+) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const axiosPayload = {
@@ -41,14 +47,18 @@ export async function saveCountry(name: string, formal_name: string, phone_code:
       formal_name: formal_name,
       phone_code: phone_code,
       iso: iso,
-      iso3: iso3
+      iso3: iso3,
     };
-    const { data } = await axios.post(`${apiUrl}/api/v1/countries`, axiosPayload, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const { data } = await axios.post(
+      `${apiUrl}/api/v1/countries`,
+      axiosPayload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     return { success: true, data: data };
   } catch (error) {
@@ -64,15 +74,18 @@ export async function deleteCountry(countryId: number) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
-    const { data } = await axios.delete(`${apiUrl}/api/v1/countries/${countryId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const { data } = await axios.delete(
+      `${apiUrl}/api/v1/countries/${countryId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     return { success: true, data: data };
   } catch (error) {
@@ -90,12 +103,12 @@ export async function updateCountry(
   formal_name: string,
   phone_code: number,
   iso: string,
-  iso3: string
+  iso3: string,
 ) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const axiosPayload = {
@@ -104,8 +117,7 @@ export async function updateCountry(
       phone_code: phone_code,
       iso: iso,
       iso3: iso3,
-      countryId: countryId
-
+      countryId: countryId,
     };
     const { data } = await axios.put(
       `${apiUrl}/api/v1/countries/${countryId}`,
@@ -115,7 +127,7 @@ export async function updateCountry(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return { success: true, data: data };

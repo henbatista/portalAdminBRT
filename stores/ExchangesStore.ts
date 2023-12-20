@@ -19,7 +19,6 @@ export const useExchangesStore = defineStore("exchangesStore", () => {
       const response = await getAllExchangesService();
       if (response.success) {
         exchanges.value = response.data.data;
-     
       } else {
         toast.error("Usuário/Senha inválidos!");
       }
@@ -36,7 +35,6 @@ export const useExchangesStore = defineStore("exchangesStore", () => {
       const response = await saveExchangeService(usd, eur, gbp);
       toast.success("Câmbios cadastrados com sucesso!");
       if (response.success) {
-
         getAllExchanges(); // Chama o getAllExchanges para atualizar a tabela!
         sidebarStore.sideBarAction = false;
       } else {

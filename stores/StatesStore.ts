@@ -1,4 +1,3 @@
-
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { ListStates } from "~/types/states";
@@ -20,7 +19,7 @@ export const useStateStore = defineStore("stateStore", () => {
   const idDeleteOrUpdate = ref(0);
   const name = ref("");
   const country = ref("");
-  const country_id = ref()
+  const country_id = ref();
 
   const states = ref<ListStates | null>(null);
   const toast = useToast();
@@ -38,25 +37,29 @@ export const useStateStore = defineStore("stateStore", () => {
     } catch (error) {
       // Tratamento de erro genérico
       toast.error("Erro ao obter a lista de Estados");
-  
+
       // Tratamento de erro de conexão à internet desconectada
-      if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
-        toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
+      if (
+        error instanceof Error &&
+        error.message.includes("ERR_INTERNET_DISCONNECTED")
+      ) {
+        toast.error(
+          "Você está desconectado da internet. Verifique sua conexão e tente novamente.",
+        );
       } else {
         // Exemplo de tratamento de erro de validação
-        toast.error("Ocorreu um erro ao obter a lista de países. Tente novamente mais tarde.");
+        toast.error(
+          "Ocorreu um erro ao obter a lista de países. Tente novamente mais tarde.",
+        );
       }
-  
+
       return { error };
     } finally {
       isLoading.value = false;
     }
   }
-  
 
-  async function saveStates(
-    name: string, 
-    country_id: number | null) {
+  async function saveStates(name: string, country_id: number | null) {
     //console.log("Saving state:", name, country_id);
     isLoading.value = true;
     try {
@@ -64,9 +67,7 @@ export const useStateStore = defineStore("stateStore", () => {
         toast.error("Por favor, preencha todos os campos obrigatórios.");
         return;
       }
-      const response = await saveStatesService(
-        name, 
-        country_id );
+      const response = await saveStatesService(name, country_id);
       if (response.success) {
         getAllStates(); // Chama o getAllCountry para atualizar a tabela!
         sidebarStore.sideBarAction = false;
@@ -76,24 +77,37 @@ export const useStateStore = defineStore("stateStore", () => {
         //console.log(name, country_id)
         isLoading.value = false;
       }
-    } catch (error) { 
+    } catch (error) {
       // Tratamento de erro genérico
       toast.error("Erro ao salvar o país");
-  
+
       // Tratamento de erro de conexão à internet desconectada
-      if (error instanceof Error && error.message.includes("ERR_INTERNET_DISCONNECTED")) {
-        toast.error("Você está desconectado da internet. Verifique sua conexão e tente novamente.");
+      if (
+        error instanceof Error &&
+        error.message.includes("ERR_INTERNET_DISCONNECTED")
+      ) {
+        toast.error(
+          "Você está desconectado da internet. Verifique sua conexão e tente novamente.",
+        );
       } else {
         // tratamento de erro de rede
         if (error instanceof Error && error.message.includes("NetworkError")) {
-
-          toast.error("Erro de rede ao salvar o país. Verifique sua conexão e tente novamente.");
-        } else if (error instanceof Error && error.message.includes("ValidationError")) {
+          toast.error(
+            "Erro de rede ao salvar o país. Verifique sua conexão e tente novamente.",
+          );
+        } else if (
+          error instanceof Error &&
+          error.message.includes("ValidationError")
+        ) {
           // tratamento de erro de validação
-          toast.error("Erro de validação ao salvar o país. Verifique os dados inseridos.");
+          toast.error(
+            "Erro de validação ao salvar o país. Verifique os dados inseridos.",
+          );
         } else {
           // Tratamento de outros erros
-          toast.error("Ocorreu um erro ao salvar o país. Tente novamente mais tarde.");
+          toast.error(
+            "Ocorreu um erro ao salvar o país. Tente novamente mais tarde.",
+          );
         }
       }
     } finally {
@@ -101,33 +115,29 @@ export const useStateStore = defineStore("stateStore", () => {
     }
   }
 
-  
-  async function updateStates(
-    name: string, 
-    country_id: number ) {
+  async function updateStates(name: string, country_id: number) {
     try {
-      if (!name || !country_id ) {
+      if (!name || !country_id) {
         toast.error("Por favor, preencha todos os campos obrigatórios.");
         return;
       }
-  
+
       const response = await updateStatesService(
         idDeleteOrUpdate.value,
-        name, 
-        country_id
+        name,
+        country_id,
       );
+
       if (response.success) {
-        getAllStates(); // Chama o getAllbanks para atualizar a tabela!
+        getAllStates(); // Chama o getAllStates para atualizar a tabela!
         sidebarStore.sideBarAction = false;
-        name = "",
-        country_id = 0,
-        idDeleteOrUpdate.value = 0;
+        (name = ""), (country_id = 0), (idDeleteOrUpdate.value = 0);
         toast.success("Estado atualizado com sucesso!");
       } else {
         toast.error("Problemas com API!");
         isLoading.value = false;
       }
-    }  catch (error) {
+    } catch (error) {
       toast.error("Erro ao atualizar o Estado. Por favor, tente novamente.");
     }
   }
@@ -147,9 +157,7 @@ export const useStateStore = defineStore("stateStore", () => {
         getAllStates(); // Chama o getAllbanks para atualizar a tabela!
         sidebarStore.sideBarAction = false;
         mainStore.openDeleteModal = false;
-        name.value = "",
-        country.value  = "",
-        idDeleteOrUpdate.value = 0;
+        (name.value = ""), (country.value = ""), (idDeleteOrUpdate.value = 0);
         toast.success("Estado deletado com sucesso!");
       } else {
         toast.error("Problemas com API!");
@@ -159,7 +167,7 @@ export const useStateStore = defineStore("stateStore", () => {
       toast.error("Erro ao deletar o Estado. Por favor, tente novamente.");
     }
   }
-  
+
   return {
     states,
     idDeleteOrUpdate,
@@ -169,6 +177,6 @@ export const useStateStore = defineStore("stateStore", () => {
     deleteStates,
     updateStates,
     name,
-    country_id, 
+    country_id,
   };
 });

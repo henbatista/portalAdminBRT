@@ -7,7 +7,7 @@ export async function getAllBanks() {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const { data } = await axios.get(`${apiUrl}/api/v1/banks`, {
@@ -31,7 +31,7 @@ export async function saveBank(bankNumber: string, name: string) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const axiosPayload = {
@@ -60,7 +60,7 @@ export async function deleteBank(idBank: number) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const { data } = await axios.delete(`${apiUrl}/api/v1/banks/${idBank}`, {
@@ -83,12 +83,12 @@ export async function deleteBank(idBank: number) {
 export async function updateBank(
   idBank: number,
   bankNumber: string,
-  name: string
+  name: string,
 ) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const axiosPayload = {
@@ -104,7 +104,7 @@ export async function updateBank(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     return { success: true, data: data };

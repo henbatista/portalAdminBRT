@@ -8,4 +8,3 @@ export const useSidebarStore = defineStore("sidebarStore", () => {
     sideBarAction,
   };
 });
-

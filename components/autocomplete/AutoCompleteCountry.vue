@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed } from "vue";
 import {
   Combobox,
   ComboboxInput,
@@ -7,43 +7,44 @@ import {
   ComboboxOptions,
   ComboboxOption,
   TransitionRoot,
-} from '@headlessui/vue';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
-import axios from 'axios';
+} from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import axios from "axios";
 import { useToast } from "vue-toastification";
 
-import useApiUrl from '@/composables/useApiUrl';
-import { updateCountry } from '~/services/countryService';
+import useApiUrl from "@/composables/useApiUrl";
+import { updateCountry } from "~/services/countryService";
 
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 const toast = useToast();
 
-const countries = ref([{ name: 'Afeganistão', id: 1 }]);
-const query = ref('');
-
+const countries = ref([{ name: "Afeganistão", id: 1 }]);
+const query = ref("");
 
 const getAllCountries = async () => {
   try {
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
-    
-    const { data } = await axios.get(`${apiUrl}/api/v1/countries/pluck?search=${query.value}&per_page=10&order=asc&page=1`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+
+    const { data } = await axios.get(
+      `${apiUrl}/api/v1/countries/pluck?search=${query.value}&per_page=10&order=asc&page=1`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     // Verifique se a propriedade 'data' existe na resposta
     const newCountries = data && data.data ? data.data : [];
 
     countries.value = Array.isArray(newCountries) ? newCountries : [];
-    
   } catch (error) {
-    toast.error('API do CEP fora do ar, entre em contato com a BRT!');
+    toast.error("API do CEP fora do ar, entre em contato com a BRT!");
   }
 };
 
@@ -62,22 +63,25 @@ watch(query, () => {
 });
 
 const filteredCountries = computed(() =>
-  query.value === ''
+  query.value === ""
     ? countries.value
     : countries.value.filter((country) =>
-        country.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
-      )
+        country.name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(query.value.toLowerCase().replace(/\s+/g, "")),
+      ),
 );
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="text-sm w-full">
     <Combobox v-model="selected">
-        <span>País</span>
+      <span>País</span>
 
       <div class="relative mt-2">
         <div
-          class="relative  w-full   h-[48px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
+          class="relative w-full h-[48px] bg-transparent transition duration-300 border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border"
         >
           <ComboboxInput
             class="w-full border-none py-3.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"
@@ -85,8 +89,13 @@ const filteredCountries = computed(() =>
             placeholder="Digite o País"
             @change="query = $event.target.value"
           />
-          <ComboboxButton class="absolute  inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <ComboboxButton
+            class="absolute inset-y-0 right-0 flex items-center pr-2"
+          >
+            <ChevronUpDownIcon
+              class="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
           </ComboboxButton>
         </div>
         <TransitionRoot
@@ -104,7 +113,7 @@ const filteredCountries = computed(() =>
             >
               Nenhum Estado encontrado!
             </div>
-             <ComboboxOption
+            <ComboboxOption
               v-for="country in filteredCountries"
               as="template"
               :key="country.id"
@@ -112,13 +121,16 @@ const filteredCountries = computed(() =>
               v-slot="{ selected, active }"
             >
               <li
-                class="relative cursor-default  select-none py-2 pl-10 pr-4"
+                class="relative cursor-default select-none py-2 pl-10 pr-4"
                 :class="{
                   'bg-slate-900 text-white': active,
                   'text-gray-900': !active,
                 }"
               >
-                <span class="block truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
+                <span
+                  class="block truncate"
+                  :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                >
                   {{ country.name }}
                 </span>
                 <span

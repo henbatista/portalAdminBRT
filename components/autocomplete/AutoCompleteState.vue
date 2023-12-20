@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
+import { ref, watch, computed } from "vue";
 import {
   Combobox,
   ComboboxInput,
@@ -7,55 +7,56 @@ import {
   ComboboxOptions,
   ComboboxOption,
   TransitionRoot,
-} from '@headlessui/vue';
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid';
-import axios from 'axios';
+} from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import axios from "axios";
 import { useToast } from "vue-toastification";
 
-import useApiUrl from '@/composables/useApiUrl';
-import { updateCountry } from '~/services/countryService';
+import useApiUrl from "@/composables/useApiUrl";
+import { updateCountry } from "~/services/countryService";
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
 const toast = useToast();
 
-const states = ref([{ name: 'Aarhus', id: 70 }]);
+const states = ref([{ name: "Aarhus", id: 70 }]);
 
 const getAllStates = async () => {
-    try {
-        // Pegar o token do localStorage
+  try {
+    // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
-        const { data } = await axios.get(`${apiUrl}/api/v1/states/pluck`, {
+    const { data } = await axios.get(`${apiUrl}/api/v1/states/pluck`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
     //console.log(data)
-        states.value = data
-    } catch (error) {
-        toast.error('API do CEP fora do ar, entre em contato com a BRT!');
-    }
-  
+    states.value = data;
+  } catch (error) {
+    toast.error("API do CEP fora do ar, entre em contato com a BRT!");
+  }
 };
 
 // FUnção para pegar todos os bancos cadastrados
 getAllStates();
 
 let selected = ref(null);
-let query = ref('');
+let query = ref("");
 let state_id = ref(null);
 
-
 let filteredStates = computed(() =>
-  query.value === ''
+  query.value === ""
     ? states.value
     : states.value.filter((state) =>
-    state.name.toLowerCase().replace(/\s+/g, '').includes(query.value.toLowerCase().replace(/\s+/g, ''))
-      )
-    );
+        state.name
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(query.value.toLowerCase().replace(/\s+/g, "")),
+      ),
+);
 
 const props = defineProps({
   stateId: {
@@ -67,23 +68,21 @@ const props = defineProps({
   },
 });
 
-
 watch(selected, (newVal) => {
   // Atualiza country_id quando uma opção é selecionada
   state_id.value = newVal ? newVal.id : null;
   //console.log("Updated country_id:", state_id.value);
-  props.updateStateId(newVal.name, newVal.id)
+  props.updateStateId(newVal.name, newVal.id);
 });
-
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full text-sm">
     <Combobox v-model="selected">
-        <span>Estado</span>
+      <span>Estado</span>
       <div class="relative mt-2">
         <div
-          class="relative mt-1  w-full  h-[48px] bg-transparent  transition duration-300  border-slate-200  focus:ring-slate-600  focus:ring-opacity-90  cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border "
+          class="relative mt-1 w-full h-[48px] bg-transparent transition duration-300 border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border"
         >
           <ComboboxInput
             class="w-full border-none py-3.5 pl-3 pr-10 text-sm leading-5 focus:ring-0"
@@ -91,8 +90,13 @@ watch(selected, (newVal) => {
             placeholder="Digite o Estado"
             @change="query = $event.target.value"
           />
-          <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <ComboboxButton
+            class="absolute inset-y-0 right-0 flex items-center pr-2"
+          >
+            <ChevronUpDownIcon
+              class="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
           </ComboboxButton>
         </div>
         <TransitionRoot
@@ -110,7 +114,7 @@ watch(selected, (newVal) => {
             >
               Nenhum Estado encontrado!
             </div>
-             <ComboboxOption
+            <ComboboxOption
               v-for="state in filteredStates"
               as="template"
               :key="state.id"
@@ -124,7 +128,10 @@ watch(selected, (newVal) => {
                   'text-gray-900': !active,
                 }"
               >
-                <span class="block truncate" :class="{ 'font-medium': selected, 'font-normal': !selected }">
+                <span
+                  class="block truncate"
+                  :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                >
                   {{ state.name }}
                 </span>
                 <span

@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 import { useStateStore } from "~/stores/StatesStore";
 import { useSidebarStore } from "~/stores/SidebarStore";
-import  type  { StateComplete  } from "~/types/stateComplete";
+import type { StateComplete } from "~/types/stateComplete";
 import { Icon } from "@iconify/vue";
-
 
 const stateStore = useStateStore();
 const sidebarStore = useSidebarStore();
 
-const stateIcon = "arcticons:50-us-states-map"
+const stateIcon = "arcticons:50-us-states-map";
+const stateNameIcon = "lucide:map-pinned";
 
 const icons = {
-  stateIcon,  
+  stateIcon,
+  stateNameIcon,
 };
 
 function handleCountry() {
@@ -24,38 +25,41 @@ function handleCountry() {
 }
 
 const country = ref<StateComplete>({
-    name: "",
-    country_id: 0
+  name: "",
+  country_id: 0,
 });
 
 const updateCountryId = (CountryName: string, newCountryId: any) => {
   country.value.country_id = newCountryId;
   country.value.name = CountryName;
 };
-
 </script>
 
 <template>
-  <div class="bg-slate-50 justify-center  -mx-6 px-6 py-6">
-    <div class="flex justify-between  mb-2">
-      <div class="ml-6 grid   text-slate-900 lg:grid-cols-1 grid-cols-1">
+  <div class="bg-slate-50 justify-center -mx-6 px-6 py-6">
+    <div class="flex justify-between mb-2">
+      <div class="ml-6 grid text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
-        class="flex items-center md:text-xl gap-2  font-semibold text-lg"
-        v-if="stateStore.idDeleteOrUpdate === 0"
-      >    <Icon class="-mt-0.5" :icon="icons.stateIcon" />
-        Adicionar Estado</span
-      >
-      <span  class="flex items-center md:text-xl gap-2  font-semibold text-lg" v-else>
-        <Icon class="-mt-0.5" :icon="icons.stateIcon" />
-        Atualizar Estado</span
-      >
-        <div class="flex-1 md:text-base text-xs"> 
+          class="flex items-center md:text-xl gap-2 font-semibold text-lg"
+          v-if="stateStore.idDeleteOrUpdate === 0"
+        >
+          <Icon class="-mt-0.5" :icon="icons.stateIcon" /> Adicionar
+          Estado</span
+        >
+        <span
+          class="flex items-center md:text-xl gap-2 font-semibold text-lg"
+          v-else
+        >
+          <Icon class="-mt-0.5" :icon="icons.stateIcon" />
+          Atualizar Estado</span
+        >
+        <div class="flex-1 md:text-base text-xs">
           Preencha os dados para cadastrar um novo Estado.
         </div>
       </div>
       <button @click="sidebarStore.sideBarAction = false">
         <svg
-        class="mr-7"
+          class="mr-7"
           xmlns="http://www.w3.org/2000/svg"
           width="32"
           height="32"
@@ -68,33 +72,44 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
         </svg>
       </button>
     </div>
-
-
-    </div>
-
+  </div>
 
   <section class="flex p mt-4 p-6 flex-col gap-4">
-
-    <div class="fromGroup relative mb-1">
-      <label for="name" class="text-slate-900text-left text-base font-medium " >Estado</label>
-      <div class="relative" >
-        <input
-        v-model="stateStore.name"
-        type="text"
-        id="name"
-          placeholder="Digite o nome do estado"
-          class="mt-1 rounded w-full  focus:outline-none h-[40px] bg-transparent  transition duration-300 border border-slate-200  focus:ring-slate-600  focus:ring-opacity-90 placeholder:text-slate-400 text-slate-900 text-sm px-3  "
-        />
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]"> Nome</label>
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon :icon="icons.stateNameIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="stateStore.name"
+              name="name"
+              type="text"
+              id="name"
+              placeholder="Digite o nome do estado"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
-    <AutoCompleteCountry :countryId="country.country_id" :updateCountryId="updateCountryId" />
+    <AutoCompleteCountry
+      :countryId="country.country_id"
+      :updateCountryId="updateCountryId"
+    />
 
     <button
-    @click="handleCountry"
+      @click="handleCountry"
       :class="!stateStore.isLoading ? '' : 'opacity-50'"
-      class="inline-flex mt-5 transition-all  duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950  bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
-      >
+      class="inline-flex mt-5 transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+    >
       <div
         v-if="!stateStore.isLoading"
         class="flex justify-center gap-5 items-center"
@@ -111,7 +126,7 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
           />
         </svg>
         <span v-if="stateStore.idDeleteOrUpdate === 0">ADICIONAR ESTADO</span
-          ><span v-else>ATUALIZAR ESTADO</span>
+        ><span v-else>ATUALIZAR ESTADO</span>
       </div>
       <div v-else>
         <svg
@@ -144,4 +159,7 @@ const updateCountryId = (CountryName: string, newCountryId: any) => {
 </template>
 
 <style scoped>
+button:hover {
+  transform: scale(1.02);
+}
 </style>

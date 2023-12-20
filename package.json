@@ -7,13 +7,16 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write ."
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxtjs/tailwindcss": "^6.9.4",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "nuxt": "^3.8.1",
+    "prettier": "^3.1.1",
     "sass": "^1.69.5",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"

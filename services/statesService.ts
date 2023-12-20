@@ -16,7 +16,7 @@ export async function getAllStates() {
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
 
@@ -46,7 +46,7 @@ export async function saveState(name: string, country_id: number) {
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
 
@@ -85,13 +85,12 @@ export async function saveState(name: string, country_id: number) {
   }
 }
 
-
 // Função para deletar um estado existente
 export async function deleteState(stateId: number) {
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
 
@@ -120,12 +119,12 @@ export async function deleteState(stateId: number) {
 export async function updateState(
   stateId: number,
   name: string,
-  country_id: number
+  country_id: number,
 ) {
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
 
@@ -144,7 +143,7 @@ export async function updateState(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     // Retorna um objeto indicando o sucesso da operação e os dados obtidos
     return { success: true, data: data };

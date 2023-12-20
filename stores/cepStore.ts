@@ -1,5 +1,4 @@
-
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 interface AddressData {
   city_name: string;
@@ -12,18 +11,18 @@ interface AddressData {
   street_number: string;
 }
 
-export const useCEPStore = defineStore('cep', {
+export const useCEPStore = defineStore("cep", {
   state: () => ({
     form: {
       address: {
-        city_name: '',
-        street: '',
-        street_add: '',
-        district: '',
-        zipcode: '',
-        state_name: '',
-        number: '',
-        street_number: '',
+        city_name: "",
+        street: "",
+        street_add: "",
+        district: "",
+        zipcode: "",
+        state_name: "",
+        number: "",
+        street_number: "",
       },
     },
   }),

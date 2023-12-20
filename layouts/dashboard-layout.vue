@@ -21,12 +21,10 @@ const closeIcon = "line-md:menu-fold-left";
 
 const icons = {
   menuIcon,
-  closeIcon
-
+  closeIcon,
 };
 const sidebarStore = useSidebarStore();
 const sidebarStoreTenant = useSidebarStoreTenant();
-
 
 type NavigationItem = {
   name: string;
@@ -49,8 +47,6 @@ const navigation: NavigationItem[] = [
   { name: "País", href: "/countries", icon: HomeIcon, current: true },
   { name: "Estados", href: "/states", icon: HomeIcon, current: true },
   { name: "Cidades", href: "/cities", icon: HomeIcon, current: true },
-
-
 ];
 
 const userNavigation: UserNavigationItem[] = [
@@ -126,7 +122,7 @@ const closeSidebarTenant = () => {
                 alt="Workflow"
               />
             </div>
-            <div class="mt-2  flex-1 h-0 overflow-y-auto">
+            <div class="mt-2 flex-1 h-0 overflow-y-auto">
               <nav class="px-5 space-y-1">
                 <a
                   v-for="item in navigation"
@@ -159,7 +155,9 @@ const closeSidebarTenant = () => {
     <!-- Static sidebar for desktop -->
     <div class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
-      <div class="flex flex-col justify-center flex-grow pt-2 bg-slate-900 overflow-y-auto">
+      <div
+        class="flex flex-col justify-center flex-grow pt-2 bg-slate-900 overflow-y-auto"
+      >
         <div class="flex items-center justify-center flex-shrink-0 px-2">
           <img
             class="h-32 w-auto"
@@ -191,20 +189,18 @@ const closeSidebarTenant = () => {
         </div>
       </div>
     </div>
-    <div class="md:pl-64 flex  flex-col flex-1">
+    <div class="md:pl-64 flex flex-col flex-1">
       <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow">
         <button
           type="button"
-          class="px-4 border-r  border-gray-200 text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500 md:hidden"
+          class="px-4 border-r border-gray-200 text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500 md:hidden"
           @click="sidebarOpen = true"
         >
           <span class="sr-only">Open sidebar</span>
-           <Icon :icon="icons.menuIcon" />
+          <Icon :icon="icons.menuIcon" />
         </button>
         <div class="flex-1 px-4 flex justify-between">
-          <div class="flex-1 flex">
-    
-          </div>
+          <div class="flex-1 flex"></div>
           <div class="ml-4 flex items-center md:ml-6">
             <button
               type="button"
@@ -213,7 +209,6 @@ const closeSidebarTenant = () => {
               <span class="sr-only">View notifications</span>
               <BellIcon class="h-6 w-6" aria-hidden="true" />
             </button>
-
 
             <!-- Profile dropdown -->
             <Menu as="div" class="ml-3 relative">
@@ -283,32 +278,35 @@ const closeSidebarTenant = () => {
       </section>
     </Transition>
     <section
-    @click="closeSidebar()"
-    class="bg-sidebar"
-    :class="sidebarStore.sideBarAction ? 'active' : ''"
-  ></section>
+      @click="closeSidebar()"
+      class="bg-sidebar"
+      :class="sidebarStore.sideBarAction ? 'active' : ''"
+    ></section>
 
     <Transition name="slide-fade-tenant">
       <section
         v-if="sidebarStoreTenant.sideBarActionTenant"
         id="side-bar"
-        class="p-0 overflow-y-auto overflow-x-hidden  md:w-[60rem] right-0 fixed bg-white sidebar z-50 top-0"
+        class="p-0 overflow-y-auto overflow-x-hidden md:w-[60rem] w-30 right-0 fixed bg-white sidebar z-50 top-0"
       >
-        <FormTenant v-if="sidebarStoreTenant.currentActionTenant === 'Tenants'" />
-        <FormTenantedit v-if="sidebarStoreTenant.currentActionTenant === 'TenantsEdit'" />
+        <FormTenant
+          v-if="sidebarStoreTenant.currentActionTenant === 'Tenants'"
+        />
+        <FormTenantedit
+          v-if="sidebarStoreTenant.currentActionTenant === 'TenantsEdit'"
+        />
         <FormUsers v-if="sidebarStoreTenant.currentActionTenant === 'Users'" />
-
-       
+        <FormMarkup
+          v-if="sidebarStoreTenant.currentActionTenant === 'Markups'"
+        />
       </section>
     </Transition>
-    
-  
-    <section
-    @click="closeSidebarTenant()"
-    class="bg-sidebar"
-    :class="sidebarStoreTenant.sideBarActionTenant ? 'active' : ''"
-  ></section>
 
+    <section
+      @click="closeSidebarTenant()"
+      class="bg-sidebar"
+      :class="sidebarStoreTenant.sideBarActionTenant ? 'active' : ''"
+    ></section>
   </div>
 </template>
 

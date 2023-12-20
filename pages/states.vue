@@ -13,7 +13,10 @@ onMounted(async () => {
   <NuxtLayout name="dashboard-layout">
     <section>
       <Spinner v-if="stateStore.isLoading" />
-      <TableStates   v-if="stateStore.states !== null" :states="stateStore.states"/>
+      <TableStates
+        v-if="stateStore.states !== null"
+        :states="stateStore.states"
+      />
     </section>
   </NuxtLayout>
 </template>

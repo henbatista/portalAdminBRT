@@ -8,7 +8,7 @@ export async function getAllExchanges() {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const { data } = await axios.get(`${apiUrl}/api/v1/exchanges`, {
@@ -32,7 +32,7 @@ export async function saveExchanges(usd: string, eur: string, gbp: string) {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const axiosPayload = {
@@ -48,7 +48,7 @@ export async function saveExchanges(usd: string, eur: string, gbp: string) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     return { success: true, data: data };
   } catch (error) {

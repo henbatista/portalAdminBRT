@@ -11,5 +11,5 @@ export const useAuthStore = defineStore(
       token,
     };
   },
-  { persist: { storage: persistedState.localStorage } }
+  { persist: { storage: persistedState.localStorage } },
 );

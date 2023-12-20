@@ -1,6 +1,5 @@
 import axios from "axios";
 import useApiUrl from "~/composables/useApiUrl";
-import { useCityStore } from "../stores/CityStore";
 
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
@@ -9,7 +8,7 @@ export async function getAllCities() {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const { data } = await axios.get(`${apiUrl}/api/v1/cities`, {
@@ -29,12 +28,17 @@ export async function getAllCities() {
   }
 }
 
-export async function saveCity(name: string, country_id: number, state_id: number, destination_type: string) {
+export async function saveCity(
+  name: string,
+  country_id: number,
+  state_id: number,
+  destination_type: string,
+) {
   //console.log("Payload before request:", name, country_id, state_id, destination_type);
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     // Monta o payload para a requisição POST
@@ -42,7 +46,7 @@ export async function saveCity(name: string, country_id: number, state_id: numbe
       name: name,
       country_id: country_id,
       state_id: state_id,
-      destination_type: destination_type
+      destination_type: destination_type,
     };
 
     // Faz uma requisição POST para a API de estados, incluindo o token de autorização nos cabeçalhos
@@ -78,7 +82,7 @@ export async function deleteCity(cityId: number) {
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
 
@@ -109,12 +113,12 @@ export async function updateCity(
   name: string,
   country_id: number,
   state_id: number,
-  destination_type: string
+  destination_type: string,
 ) {
   try {
     // Obtém o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
 
@@ -123,19 +127,19 @@ export async function updateCity(
       name: name,
       country_id: country_id,
       state_id: state_id,
-      destination_type: destination_type
+      destination_type: destination_type,
     };
 
     // Faz uma requisição PUT para a API de estados, incluindo o token de autorização nos cabeçalhos
     const { data } = await axios.put(
-      `${apiUrl}/api/v1/cities/${cityId}`, 
+      `${apiUrl}/api/v1/cities/${cityId}`,
       axiosPayload,
       {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
 
     // Retorna um objeto indicando o sucesso da operação e os dados obtidos

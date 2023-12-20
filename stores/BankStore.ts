@@ -59,7 +59,7 @@ export const useBankStore = defineStore("bankStore", () => {
       const response = await updateBankService(
         idDeleteOrUpdate.value,
         bankNumber.value,
-        name.value
+        name.value,
       );
       if (response.success) {
         getAllBanks(); // Chama o getAllbanks para atualizar a tabela!
