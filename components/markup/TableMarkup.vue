@@ -41,7 +41,6 @@ const mainStore = useMainStore();
 const props = defineProps<{
   markups: ListMarkups | null;
 }>();
-
 </script>
 
 <template>
@@ -49,7 +48,7 @@ const props = defineProps<{
   <ModalConfirmation
     title="Deletar Markup"
     :deleteFunction="markupStore.deleteMarkup"
-  ></ModalConfirmation>
+  />
   <div class="px-4">
     <div class="sm:flex sm:items-center">
       <!-- Seção do cabeçalho -->
@@ -102,10 +101,10 @@ const props = defineProps<{
               Markup Recebido
             </th>
             <th
-            class="py-3.5 text-center text-sm font-semibold text-slate-900 bg-gray-50"
-          >
-            Tipo do Markup
-          </th>
+              class="py-3.5 text-center text-sm font-semibold text-slate-900 bg-gray-50"
+            >
+              Tipo do Markup
+            </th>
 
             <th
               class="py-3.5 md:px-0 px-3 text-left text-sm font-semibold text-slate-900 bg-gray-50"
@@ -120,119 +119,119 @@ const props = defineProps<{
           </tr>
         </thead>
         <tbody>
-          <tr
+          <template
             v-for="(markup, markupIdx) in props.markups"
-            :data-index="markup.markup_id"
             :key="markupIdx"
           >
-
-            <td
-              :class="[
-                markupIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4  pl-4  text-sm text-left',
-              ]"
-            >
-              {{ markup.markup_title }}
-            </td>
-            <td
-              :class="[
-                markupIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-center',
-              ]"
-            >
-              {{ markup.markup_priority }}
-            </td>
-            <td
-            :class="[
-              markupIdx === 0 ? '' : 'border-t border-gray-200',
-              'py-4 text-sm text-center',
-            ]"
-          >
-            {{ markup.markup_received }}
-          </td>
-          <td
-          :class="[
-            markupIdx === 0 ? '' : 'border-t border-gray-200',
-            'py-4 text-sm text-center',
-          ]"
-        >
-          {{ markup.markup_type }}
-        </td>
-            <td
-              :class="[
-                markupIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4  text-sm text-left',
-              ]"
-            >
-              <span
-                class="custom-span"
-                :class="{
-                  'h-[3px] w-[3px] bg-teal-600 ml-2  rounded-full inline-block ring-4 ring-opacity-30 ring-teal-500':
-                  markup.markup_is_active,
-                  'h-[6px] w-[6px] bg-red-500 rounded-full inline-block ring-4 ring-opacity-30 ring-red-500':
-                    !markup.markup_is_active,
-                }"
-                @mouseover="handleMouseOver"
-                @mouseout="handleMouseOut"
-              ></span>
-            </td>
-
-            <td
-              :class="[
-                markupIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
-              ]"
-            >
-              <button
-                @click="
-                  mainStore.openDeleteModal = true;
-                  markupStore.idDeleteOrUpdate = markup.markup_id;
-                "
-                class="hover:text-red-600 ml-2 text-slate-900 transform transition-transform duration-500"
-                @mouseover="handleMouseOverButton"
-                @mouseout="handleMouseOutButton"
+            <tr v-if="markup.markup_is_active">
+              <td
+                :class="[
+                  markupIdx === 0 ? '' : 'border-t border-gray-200',
+                  'py-4  pl-4  text-sm text-left',
+                ]"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M19.45 4.06h-4.18v-.5a1.5 1.5 0 0 0-1.5-1.5h-3.54a1.5 1.5 0 0 0-1.5 1.5v.5H4.55a.5.5 0 0 0 0 1h.72l.42 14.45a2.493 2.493 0 0 0 2.5 2.43h7.62a2.493 2.493 0 0 0 2.5-2.43l.42-14.45h.72a.5.5 0 0 0 0-1Zm-9.72-.5a.5.5 0 0 1 .5-.5h3.54a.5.5 0 0 1 .5.5v.5H9.73Zm7.58 15.92a1.5 1.5 0 0 1-1.5 1.46H8.19a1.5 1.5 0 0 1-1.5-1.46L6.26 5.06h11.48Z"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M8.375 8a.5.5 0 0 1 1 0l.25 10a.5.5 0 0 1-1 0Zm7.25.007a.5.5 0 0 0-1 0l-.25 10a.5.5 0 0 0 1 0Z"
-                  />
-                </svg>
-              </button>
-              <button
-                @click="
-                  sidebarStore.sideBarActionTenant = true;
-                  sidebarStore.currentActionTenant = 'Markups';
-                  markupStore.idDeleteOrUpdate = markup.markup_id;
-                  markupStore.markup_title = markup.markup_title;
-                "
-                class="hover:text-lime-600 ml-2 text-slate-900 transform transition-transform duration-500"
-                @mouseover="handleMouseOverButton"
-                @mouseout="handleMouseOutButton"
+                {{ markup.markup_title }}
+              </td>
+              <td
+                :class="[
+                  markupIdx === 0 ? '' : 'border-t border-gray-200',
+                  'py-4 text-sm text-center',
+                ]"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
+                {{ markup.markup_priority }}
+              </td>
+              <td
+                :class="[
+                  markupIdx === 0 ? '' : 'border-t border-gray-200',
+                  'py-4 text-sm text-center',
+                ]"
+              >
+                {{ markup.markup_received }}
+              </td>
+              <td
+                :class="[
+                  markupIdx === 0 ? '' : 'border-t border-gray-200',
+                  'py-4 text-sm text-center',
+                ]"
+              >
+                {{ markup.markup_type }}
+              </td>
+              <td
+                :class="[
+                  markupIdx === 0 ? '' : 'border-t border-gray-200',
+                  'py-4  text-sm text-left',
+                ]"
+              >
+                <span
+                  class="custom-span"
+                  :class="{
+                    'h-[3px] w-[3px] bg-teal-600 ml-2  rounded-full inline-block ring-4 ring-opacity-30 ring-teal-500':
+                      markup.markup_is_active,
+                    'h-[6px] w-[6px] bg-red-500 rounded-full inline-block ring-4 ring-opacity-30 ring-red-500':
+                      !markup.markup_is_active,
+                  }"
+                  @mouseover="handleMouseOver"
+                  @mouseout="handleMouseOut"
+                ></span>
+              </td>
+
+              <td
+                :class="[
+                  markupIdx === 0 ? '' : 'border-t border-gray-200',
+                  'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                ]"
+              >
+                <button
+                  @click="
+                    mainStore.openDeleteModal = true;
+                    markupStore.idDeleteOrUpdate = markup.markup_id;
+                  "
+                  class="hover:text-red-600 ml-2 text-slate-900 transform transition-transform duration-500"
+                  @mouseover="handleMouseOverButton"
+                  @mouseout="handleMouseOutButton"
                 >
-                  <path
-                    fill="currentColor"
-                    d="m19.71 8.04l-2.34 2.33l-3.75-3.75l2.34-2.33c.39-.39 1.04-.39 1.41 0l2.34 2.34c.39.37.39 1.02 0 1.41M3 17.25L13.06 7.18l3.75 3.75L6.75 21H3v-3.75M16.62 5.04l-1.54 1.54l2.34 2.34l1.54-1.54l-2.34-2.34M15.36 11L13 8.64l-9 9.02V20h2.34l9.02-9Z"
-                  />
-                </svg>
-              </button>
-            </td>
-          </tr>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M19.45 4.06h-4.18v-.5a1.5 1.5 0 0 0-1.5-1.5h-3.54a1.5 1.5 0 0 0-1.5 1.5v.5H4.55a.5.5 0 0 0 0 1h.72l.42 14.45a2.493 2.493 0 0 0 2.5 2.43h7.62a2.493 2.493 0 0 0 2.5-2.43l.42-14.45h.72a.5.5 0 0 0 0-1Zm-9.72-.5a.5.5 0 0 1 .5-.5h3.54a.5.5 0 0 1 .5.5v.5H9.73Zm7.58 15.92a1.5 1.5 0 0 1-1.5 1.46H8.19a1.5 1.5 0 0 1-1.5-1.46L6.26 5.06h11.48Z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M8.375 8a.5.5 0 0 1 1 0l.25 10a.5.5 0 0 1-1 0Zm7.25.007a.5.5 0 0 0-1 0l-.25 10a.5.5 0 0 0 1 0Z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  @click="
+                    sidebarStore.sideBarActionTenant = true;
+                    sidebarStore.currentActionTenant = 'Markups';
+                    markupStore.idDeleteOrUpdate = markup.markup_id;
+                    markupStore.markup_title = markup.markup_title;
+                  "
+                  class="hover:text-lime-600 ml-2 text-slate-900 transform transition-transform duration-500"
+                  @mouseover="handleMouseOverButton"
+                  @mouseout="handleMouseOutButton"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="m19.71 8.04l-2.34 2.33l-3.75-3.75l2.34-2.33c.39-.39 1.04-.39 1.41 0l2.34 2.34c.39.37.39 1.02 0 1.41M3 17.25L13.06 7.18l3.75 3.75L6.75 21H3v-3.75M16.62 5.04l-1.54 1.54l2.34 2.34l1.54-1.54l-2.34-2.34M15.36 11L13 8.64l-9 9.02V20h2.34l9.02-9Z"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>

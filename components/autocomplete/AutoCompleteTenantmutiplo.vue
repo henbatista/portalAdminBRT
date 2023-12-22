@@ -19,6 +19,9 @@ const toast = useToast();
 
 const tenants = ref([{ name: "Afeganistão", id: 1 }]);
 const query = ref("");
+const selected = ref([]);
+const tenant_ids = ref([]);
+
 
 const props = defineProps(["updateTenantId"]);
 
@@ -39,9 +42,7 @@ const getAllTenants = async () => {
       },
     );
 
-    // Verifique se a propriedade 'data' existe na resposta
     const newTenants = data && data.data ? data.data : [];
-
     tenants.value = Array.isArray(newTenants) ? newTenants : [];
   } catch (error) {
     toast.error("API do CEP fora do ar, entre em contato com a BRT!");
@@ -50,54 +51,49 @@ const getAllTenants = async () => {
 
 getAllTenants();
 
-let selected = ref(null);
-let tenant_id = ref(null);
+const removeItem = (itemToRemove) => {
+  selected.value = selected.value.filter(item => item.id !== itemToRemove.id);
+};
 
 watch(selected, (newVal) => {
-  tenant_id.value = newVal ? newVal.id : null;
-  props.updateTenantId(newVal ? newVal.name : null, newVal ? newVal.id : null);
+  tenant_ids.value = newVal.map((item) => item.id);
+  props.updateTenantId(newVal.map((item) => item.name), tenant_ids.value);
 });
 
 watch(query, () => {
   getAllTenants();
 });
 
-const filteredTenants = computed(() =>
-  query.value === ""
-    ? tenants.value
-    : tenants.value.filter((tenant) =>
-        tenant.name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .includes(query.value.toLowerCase().replace(/\s+/g, "")),
-      ),
+const filteredTenants = computed(() => 
+  tenants.value.filter((tenant) =>
+    tenant.name.toLowerCase().includes(query.value.toLowerCase())
+  )
 );
+
+const updateQuery = (event) => {
+  query.value = event.target.value;
+};
 </script>
 
 <template>
   <div class="w-full">
-    <Combobox v-model="selected">
+    <Combobox v-model="selected" multiple>
       <span class="text-sm">Empresa</span>
 
       <div class="relative mt-1">
-        <div
-          class="relative w-full h-[40px] bg-transparent transition duration-300 border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border"
+        <ComboboxInput
+          class="w-full border-none py-2.5 pl-3 pr-10 text-sm leading-5 focus:ring-0"
+          placeholder="A quem esta empresa está filiada?"
+          @input="updateQuery"
+        />
+        <ComboboxButton
+          class="absolute inset-y-0 right-0 flex items-center pr-2"
         >
-          <ComboboxInput
-            class="w-full border-none py-2.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"
-            :displayValue="(tenant) => tenant && tenant.name"
-            placeholder="A quem esta empresa está filiada?"
-            @change="query = $event.target.value"
+          <ChevronUpDownIcon
+            class="h-5 w-5 text-gray-400"
+            aria-hidden="true"
           />
-          <ComboboxButton
-            class="absolute inset-y-0 right-0 flex items-center pr-2"
-          >
-            <ChevronUpDownIcon
-              class="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          </ComboboxButton>
-        </div>
+        </ComboboxButton>
         <TransitionRoot
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
@@ -146,5 +142,54 @@ const filteredTenants = computed(() =>
         </TransitionRoot>
       </div>
     </Combobox>
+
+  <!-- Tabela para exibir itens selecionados -->
+  <div class="mt-4 font-sans text-gray-800">
+    <span class="block mb-2 text-sm text-slate-900">Itens Selecionados:</span>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm border-collapse">
+        <thead>
+          <tr>
+            <th class="px-2 py-2 border border-gray-900 text-white bg-slate-900">Empresa</th>
+            <th class="px-2 py-2 border border-gray-900 text-center text-white bg-slate-900">Excluir</th> <!-- Coluna adicional para ações -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in selected" :key="item.id" class="hover:bg-gray-100">
+            <td class="px-2 py-2 border border-gray-700">{{ item.name }}</td>
+            <td class="px-2 py-2  text-center border border-gray-700">
+              <button @click="removeItem(item)"                 
+              class="hover:text-red-600 text-slate-900 transform transition-transform duration-500"
+              @mouseover="handleMouseOverButton"
+              @mouseout="handleMouseOutButton">
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M19.45 4.06h-4.18v-.5a1.5 1.5 0 0 0-1.5-1.5h-3.54a1.5 1.5 0 0 0-1.5 1.5v.5H4.55a.5.5 0 0 0 0 1h.72l.42 14.45a2.493 2.493 0 0 0 2.5 2.43h7.62a2.493 2.493 0 0 0 2.5-2.43l.42-14.45h.72a.5.5 0 0 0 0-1Zm-9.72-.5a.5.5 0 0 1 .5-.5h3.54a.5.5 0 0 1 .5.5v.5H9.73Zm7.58 15.92a1.5 1.5 0 0 1-1.5 1.46H8.19a1.5 1.5 0 0 1-1.5-1.46L6.26 5.06h11.48Z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M8.375 8a.5.5 0 0 1 1 0l.25 10a.5.5 0 0 1-1 0Zm7.25.007a.5.5 0 0 0-1 0l-.25 10a.5.5 0 0 0 1 0Z"
+                />
+              </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   </div>
 </template>
+<style>
+@media screen and (max-width: 600px) {
+  .sm\:text-xs { font-size: 0.75rem; }
+  .sm\:px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+  .sm\:py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+}
+</style>

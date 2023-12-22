@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useMarkupStore } from "~/stores/MarkupStore";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import type { Markup, Commission, Rule } from "../../types/markup";
@@ -15,7 +15,6 @@ watch(is_active, (newVal) => {
   const value = newVal ? true : false;
   console.log(value); // Aqui você pode usar o valor conforme necessário
 });
-
 
 // Instâncias dos stores e do Toast
 const markupStore = useMarkupStore();
@@ -51,118 +50,82 @@ const icons = {
   ruleTypeIcon,
   dateIcon,
 };
-const getDefaultRule = (): Rule => ({
-  markup_rule_id: '',
-  markup_rule_type: '',
-  markup_rule_period_inicial: '',
-  markup_rule_period_final: '',
-  markup_rule_days: '',
-  markup_rule_hotels_ids: '',
+
+const rule = ref<Rule>({
+  markup_rule_type: "",
+  markup_rule_period_inicial: "",
+  markup_rule_period_final: "",
+  markup_rule_days: 0,
+  markup_rule_hotels_ids: [],
   markup_rule_hotels_names: [],
-  markup_rule_value: '',
+  markup_rule_value: 0,
   markup_rule_is_active: false,
-  markup_rule_markup_id: 0,
-  created_at: '',
-  updated_at: ''
 });
 
-const getDefaultCommission = (): Commission => ({
-  markup_commission_id: '',
-  markup_commission_tenants: [],
-  markup_commission_commission_pay: '',
-  markup_commission_commission_receive: '',
-  markup_commission_title: '',
+const commission = ref<Commission>({
+  markup_commission_tenants: "",
+  markup_commission_commission_pay: 0,
+  markup_commission_commission_receive: "",
+  markup_commission_title: "",
   markup_commission_is_active: false,
   markup_commission_markup_id: 0,
-  created_at: '',
-  updated_at: ''
 });
-
-const updateRuleType = (event: Event) => {
-  markups.value.markup_rules[0].markup_rule_type = (event.target as HTMLSelectElement).value;
-};
-const updateCommissionTitle = (event: Event) => {
-  markups.value.markup_commission[0].markup_commission_title = (event.target as HTMLInputElement).value;
-};
 
 const markups = ref<Markup>({
-      markup_id: "",
-      markup_priority: 0,
-      markup_type: 0,
-      markup_tenants: "",
-      markup_aplied: 0,
-      markup_received: 0,
-      markup_title: "",
-      markup_is_active: false,
-      created_at: "",
-      updated_at: "",
-      markup_commission: [getDefaultCommission()] ,// Inicializa com uma comissão padrão
-      markup_rules: [getDefaultRule()] // Inicializa com uma regra padrão
+  markup_id: "",
+  markup_priority: 0,
+  markup_type: 0,
+  markup_tenants: "",
+  markup_aplied: 0,
+  markup_received: 0,
+  markup_title: "",
+  markup_is_active: true,
+  markup_commission: [commission.value],
+  markup_rules: [rule.value],
 });
-
-
-
-
-
 
 function handleSubmit() {
   const { idDeleteOrUpdate } = markupStore;
 
   const isUpdate = idDeleteOrUpdate !== "";
+
   const saveOrUpdateMarkup = isUpdate
     ? markupStore.updateMarkup
     : markupStore.saveMarkup;
 
-  const {
-    markup_id,
-    markup_priority,
-    markup_type,
-    markup_tenants,
-    markup_aplied,
-    markup_received,
-    markup_title,
-    markup_is_active,
-    created_at,
-    updated_at,
-    
-  } = markups.value;
-
-  const markupToUpdate = {
-  // Propriedades necessárias para updateMarkup
-  id: markupStore.idDeleteOrUpdate,
-  markup_id,
-  markup_priority,
-  markup_type,
-  markup_tenants,
-  markup_aplied,
-  markup_received,
-  markup_title,
-  markup_is_active,
-  created_at,
-  updated_at,
-  markup_commission: [], // ou commissions.toString() dependendo do tipo de commissions
-  markup_rules: []
-};
-
-  saveOrUpdateMarkup(markupToUpdate);
+  saveOrUpdateMarkup(markups.value);
 }
 
-
 const updateTenantId = (TenantName: string, newTenantId: any) => {
-  markups.value.markup_id = newTenantId;
+  console.log(typeof newTenantId);
+  markups.value.markup_tenants = newTenantId;
+};
+
+const updateTenantIdComission = (TenantName: string, newTenantId: any) => {
+  commission.value.markup_commission_tenants = newTenantId;
 };
 
 onMounted(() => {
   const markupExist = markupStore.markups?.find(
     (markup) => markup.markup_id === markupStore.idDeleteOrUpdate,
   );
+
+  // Se estiver no modo de edição, carrega os dados existentes
   if (markupExist) {
+    markups.value = { ...markupExist };
 
-    markups.value.markup_id = markupExist.markup_id
- 
+    // Carregar dados das comissões
+    if (markupExist.markup_commission && markupExist.markup_commission.length > 0) {
+  commission.value = { ...markupExist.markup_commission[0] };
+}
 
+    // Carregar dados das regras
+    if (markupExist.markup_rules && markupExist.markup_rules.length > 0) {
+  rule.value = { ...markupExist.markup_rules[0] };
+}
   }
 });
+
 </script>
 
 <template>
@@ -210,7 +173,6 @@ onMounted(() => {
           <!-- Cadastrar Markup -->
           <AccordionItem title="CADASTRAR MARKUP" :icon="icons.markupIcon">
             <div>
- 
               <div
                 class="grid xl:grid-cols-2 mt-1 grid-cols-1 gap-5 bg-slate-50 justify-center -mx-0 px-6 py-3"
               >
@@ -231,9 +193,9 @@ onMounted(() => {
                       <div class="relative fromGroup2">
                         <input
                           v-model="markups.markup_title"
-                          name="name"
+                          name="markup_title"
                           type="text"
-                          placeholder="Digite o nome de usuário"
+                          placeholder="Digite o título do markup"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -258,10 +220,10 @@ onMounted(() => {
                       <div class="relative fromGroup2">
                         <input
                           v-model="markups.markup_priority"
-                          label="Email"
-                          name="vi_Fullname"
+                          label="Prioridade do Markup"
+                          name="markup_priority"
                           type="number"
-                          placeholder="Digite seu email"
+                          placeholder="Digite a prioridade do markup"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -278,23 +240,23 @@ onMounted(() => {
                   </label>
                   <div class="mt-1">
                     <select
-                      id="type-account"
-                      name="type-account"
+                      id="markup_type"
+                      name="markup_type"
                       type="number"
                       v-model="markups.markup_type"
                       autocomplete="type-account"
                       class="block w-full rounded-sm b h-10 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
                     >
-                    <option value="1">Tipo 1</option>
-                    <option value="2">Tipo 2</option>
-                    <option value="3">Tipo 3</option>
-                    <option value="4">Tipo 4</option>
-                    <option value="5">Tipo 5</option>
-                    <option value="6">Tipo 6</option>
-                    <option value="7">Tipo 7</option>
-                    <option value="8">Tipo 8</option>
-                    <option value="9">Tipo 9</option>
-                    <option value="10">Tipo 10</option>
+                      <option value="1">Tipo 1</option>
+                      <option value="2">Tipo 2</option>
+                      <option value="3">Tipo 3</option>
+                      <option value="4">Tipo 4</option>
+                      <option value="5">Tipo 5</option>
+                      <option value="6">Tipo 6</option>
+                      <option value="7">Tipo 7</option>
+                      <option value="8">Tipo 8</option>
+                      <option value="9">Tipo 9</option>
+                      <option value="10">Tipo 10</option>
                     </select>
                   </div>
                 </div>
@@ -316,10 +278,10 @@ onMounted(() => {
                       <div class="relative fromGroup2">
                         <input
                           v-model="markups.markup_received"
-                          name="vi_Fullname"
-                          label="CPF"
-                          type="number"
-                          placeholder="ex. 999.999.999-99"
+                          name="markup_received"
+                          label="Valor recebido do Markup"
+                          type="Valor recebido do Markup"
+                          placeholder="Digite o valor a ser recebido do markup"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -344,32 +306,33 @@ onMounted(() => {
                       <div class="relative fromGroup2">
                         <input
                           v-model="markups.markup_aplied"
-                          name="vi_Fullname"
-                          label="Passaport"
+                          name="markup_aplied"
+                          label="Valor aplicado do Markup"
                           type="number"
-                          placeholder="Insira o númedo do passaport"
+                          placeholder="Insira o númedo do valor aplicado do markup"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <!-- Telefone -->
+                <!-- Autocomplete Tenante -->
                 <div>
-                  <AutoCompleteTenant
-                  :tenantId="markups.markup_id"
-                  :updateTenantId="updateTenantId"
-                />
+                  <AutoCompleteTenantmutiplo
+                    :tenantId="markups.markup_tenants"
+                    :updateTenantId="updateTenantId"
+                  />
                 </div>
               </div>
             </div>
           </AccordionItem>
 
           <!-- Cadastrar Comissão -->
-          <AccordionItem title="CADASTRAR COMISSÃO" :icon="icons.titleComission">
+          <AccordionItem
+            title="CADASTRAR COMISSÃO"
+            :icon="icons.titleComission"
+          >
             <div>
-
               <div
                 class="grid xl:grid-cols-2 mt-1 grid-cols-1 gap-5 bg-slate-50 justify-center -mx-0 px-6 py-3"
               >
@@ -389,24 +352,18 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                        v-model="markups.markup_commission[0].markup_commission_title"
-                        name="multi_password"
-                          label="Senha"
+                          v-model="commission.markup_commission_title"
+                          name="markup_commission_title"
+                          label=" Título da comissão"
                           type="text"
-                          placeholder="8+ caracteres, 1 letra maiúscula"
+                          placeholder="Digite o título da comissão"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-                <!-- Qual empresa receberá esse markup? -->
-                <div>
-                  <AutoCompleteTenant
-                  :tenantId="markups.markup_commission[0].markup_commission_tenants"
-                  :updateTenantId="updateTenantId"
-                />
-                </div>
+
 
                 <!-- Valor da Comissão -->
                 <div>
@@ -424,17 +381,25 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                          v-model="markups.markup_commission[0].markup_commission_commission_pay"
-                          name="mother_name"
-                          label="Nome da Mãe"
-                          type="text"
-                          placeholder="Digite o nome de usuário"
+                          v-model="commission.markup_commission_commission_pay"
+                          name="markup_commission_commission_pay"
+                          label="Valor da Comissão"
+                          type="number"
+                          placeholder="Digite o valor da comissão"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
+
+                                                <!-- Qual empresa receberá esse markup? -->
+                                                <div>
+                                                  <AutoCompleteTenantmutiplo
+                                                    :tenantId="commission.markup_commission_tenants"
+                                                    :updateTenantId="updateTenantIdComission"
+                                                  />
+                                                </div>
 
                 <!-- Valor da comissão  do provedor de serviços -->
                 <div>
@@ -452,17 +417,20 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                          v-model="markups.markup_commission[0].markup_commission_commission_receive"
-                          name="father_name"
-                          label="Nome do Pai"
-                          type="text"
-                          placeholder="Digite o nome do pai do usuário"
+                          v-model="
+                            commission.markup_commission_commission_receive
+                          "
+                          name="markup_commission_commission_receive"
+                          label="Valor da comissão do provedor de serviços"
+                          type="number"
+                          placeholder="Digite o valor da comissão do provedor de serviços"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
+                
 
                 <!-- Ativo? -->
                 <div>
@@ -471,7 +439,7 @@ onMounted(() => {
                   >
                     <label class="text-sm mt-1">Manter markup ativo? </label>
                     <Switch
-                      v-model="markups.markup_commission[0].markup_commission_is_active"
+                      v-model="commission.markup_commission_is_active"
                       :class="is_active ? 'bg-sky-800' : 'bg-slate-600'"
                       class="relative mt-1 inline-flex h-[18px] w-[36px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
                     >
@@ -479,21 +447,23 @@ onMounted(() => {
                       <span
                         aria-hidden="true"
                         :class="
-                        markups.markup_commission[0].markup_commission_is_active ? 'translate-x-4' : '-translate-x-0.5'
+                        commission.markup_commission_is_active
+                            ? 'translate-x-4'
+                            : '-translate-x-0.5'
                         "
                         class="pointer-events-none inline-block h-[18px] -mt-0.5 w-[18px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                       />
                     </Switch>
                   </div>
                 </div>
+
               </div>
             </div>
           </AccordionItem>
 
           <!-- Cadastrar Regra -->
-          <AccordionItem title="CADASTRAR REGRA"  :icon="icons.ruleIcon">
+          <AccordionItem title="CADASTRAR REGRA" :icon="icons.ruleIcon">
             <div>
-
               <div
                 class="grid xl:grid-cols-2 mt-1 grid-cols-1 gap-5 bg-slate-50 justify-center -mx-0 px-6 py-3"
               >
@@ -508,8 +478,7 @@ onMounted(() => {
                     <select
                       id="type-account"
                       name="type-account"
-                      :value="markups.markup_rules.length ? markups.markup_rules[0].markup_rule_type : null"
-                      @input="updateRuleType"           
+                      v-model="rule.markup_rule_type"
                       autocomplete="type-account"
                       class="block w-full rounded-sm b h-10 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
                     >
@@ -545,11 +514,11 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                          v-model="markups.markup_rules[0].markup_rule_period_inicial"
-                          name="vi_Fullname"
-                          label="Passaport"
+                          v-model="rule.markup_rule_period_inicial"
+                          name="markup_rule_period_inicial"
+                          label="Data de início da regra"
                           type="date"
-                          placeholder="Insira o númedo do passaport"
+                          placeholder="Insira a data de início da regra"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -574,11 +543,11 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                          v-model="markups.markup_rules[0].markup_rule_period_final"
-                          name="vi_Fullname"
-                          label="Passaport"
+                          v-model="rule.markup_rule_period_final"
+                          name="markup_rule_period_final"
+                          label="Data final da regra"
                           type="date"
-                          placeholder="Insira o númedo do passaport"
+                          placeholder="Insira a data final da regra"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -602,11 +571,11 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                          v-model="markups.markup_rules[0].markup_rule_days"
-                          name="vi_Fullname"
-                          label="CPF"
-                          type="text"
-                          placeholder="ex. 999.999.999-99"
+                          v-model="rule.markup_rule_days"
+                          name="markup_rule_days"
+                          label="Antecedência da Compra"
+                          type="number"
+                          placeholder="Digita a antecedência da Compra"
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -625,13 +594,35 @@ onMounted(() => {
                     <select
                       id="type-account"
                       name="type-account"
-                      v-model="markups.markup_rules[0].markup_rule_hotels_names"
+                      v-model="rule.markup_rule_hotels_names"
                       autocomplete="type-account"
                       class="block w-full rounded-sm b h-10 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
                     >
                       <option value="Teste">Teste</option>
                       <option value="Teste">Teste</option>
                       <option value="Teste">Teste</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="">
+                  <label
+                    for="type-account"
+                    class="flex-0 mr-6 text-sm md:w-[100px] w-[60px] break-words input-label"
+                    >Hotéis ids
+                  </label>
+                  <div class="mt-1">
+                    <select
+                      id="type-account"
+                      name="type-account"
+                      v-model="rule.markup_rule_hotels_ids"
+                      type="number"
+                      autocomplete="type-account"
+                      class="block w-full rounded-sm b h-10 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
+                    >
+                      <option value="1">Teste</option>
+                      <option value="1">Teste</option>
+                      <option value="1">Teste</option>
                     </select>
                   </div>
                 </div>
@@ -651,11 +642,11 @@ onMounted(() => {
                     <div class="flex-1">
                       <div class="relative fromGroup2">
                         <input
-                          v-model="markups.markup_rules[0].markup_rule_value"
-                          name="phone"
-                          label="Telefone"
-                          type="text"
-                          placeholder="ex. (41) 9999-9999"
+                          v-model="rule.markup_rule_value"
+                          name="markup_rule_value"
+                          label="Valor do markup"
+                          type="number"
+                          placeholder="digite o valor do markup "
                           class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
                         />
                       </div>
@@ -668,7 +659,7 @@ onMounted(() => {
                   >
                     <label class="text-sm mt-1">Manter regra ativa? </label>
                     <Switch
-                      v-model="markups.markup_rules[0].markup_rule_is_active"
+                      v-model="rule.markup_rule_is_active"
                       :class="is_active ? 'bg-sky-800' : 'bg-slate-600'"
                       class="relative mt-1 inline-flex h-[18px] w-[36px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
                     >
@@ -676,7 +667,9 @@ onMounted(() => {
                       <span
                         aria-hidden="true"
                         :class="
-                        markups.markup_rules[0].markup_rule_is_active ? 'translate-x-4' : '-translate-x-0.5'
+                          rule.markup_rule_is_active
+                            ? 'translate-x-4'
+                            : '-translate-x-0.5'
                         "
                         class="pointer-events-none inline-block h-[18px] -mt-0.5 w-[18px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                       />

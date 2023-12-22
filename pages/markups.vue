@@ -13,7 +13,10 @@ onMounted(async () => {
   <NuxtLayout name="dashboard-layout">
     <section>
       <Spinner v-if="markupStore.isLoading" />
-      <TableMarkup v-if="markupStore.markups !== null" :markups="markupStore.markups" />
+      <TableMarkup
+        v-if="markupStore.markups !== null"
+        :markups="markupStore.markups"
+      />
     </section>
   </NuxtLayout>
 </template>
