@@ -4,6 +4,10 @@ import { useExchangesStore } from "../stores/ExchangesStore";
 
 const exchangesStore = useExchangesStore();
 
+definePageMeta({
+  middleware: ['auth']
+});
+
 onMounted(async () => {
   exchangesStore.getAllExchanges();
 });

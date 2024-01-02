@@ -4,6 +4,10 @@ import { useStateStore } from "../stores/StatesStore";
 
 const stateStore = useStateStore();
 
+definePageMeta({
+  middleware: ['auth']
+});
+
 onMounted(async () => {
   stateStore.getAllStates();
 });

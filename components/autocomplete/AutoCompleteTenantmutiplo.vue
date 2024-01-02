@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, computed, defineProps } from "vue";
+import { ref, watch, computed, defineProps, onMounted } from "vue";
+import { useMarkupStore } from "~/stores/MarkupStore";
 import {
   Combobox,
   ComboboxInput,
@@ -22,6 +23,7 @@ const query = ref("");
 const selected = ref([]);
 const tenant_ids = ref([]);
 
+const markupStore = useMarkupStore();
 
 const props = defineProps(["updateTenantId"]);
 
@@ -52,27 +54,37 @@ const getAllTenants = async () => {
 getAllTenants();
 
 const removeItem = (itemToRemove) => {
-  selected.value = selected.value.filter(item => item.id !== itemToRemove.id);
+  selected.value = selected.value.filter((item) => item.id !== itemToRemove.id);
 };
 
 watch(selected, (newVal) => {
   tenant_ids.value = newVal.map((item) => item.id);
-  props.updateTenantId(newVal.map((item) => item.name), tenant_ids.value);
+  props.updateTenantId(
+    newVal.map((item) => item.name),
+    tenant_ids.value,
+  );
 });
 
 watch(query, () => {
   getAllTenants();
 });
 
-const filteredTenants = computed(() => 
+const filteredTenants = computed(() =>
   tenants.value.filter((tenant) =>
-    tenant.name.toLowerCase().includes(query.value.toLowerCase())
-  )
+    tenant.name.toLowerCase().includes(query.value.toLowerCase()),
+  ),
 );
 
 const updateQuery = (event) => {
   query.value = event.target.value;
 };
+
+onMounted(() => {
+  if (markupStore.markupToUpdate !== null) {
+    console.log("Dudu", markupStore.markupToUpdate.commissions);
+    selected.value = markupStore.markupToUpdate.commissions;
+  }
+});
 </script>
 
 <template>
@@ -82,17 +94,14 @@ const updateQuery = (event) => {
 
       <div class="relative mt-1">
         <ComboboxInput
-          class="w-full border-none py-2.5 pl-3 pr-10 text-sm leading-5 focus:ring-0"
-          placeholder="A quem esta empresa está filiada?"
+        class="block w-full rounded-sm b g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
+        placeholder="A quem esta empresa está filiada?"
           @input="updateQuery"
         />
         <ComboboxButton
           class="absolute inset-y-0 right-0 flex items-center pr-2"
         >
-          <ChevronUpDownIcon
-            class="h-5 w-5 text-gray-400"
-            aria-hidden="true"
-          />
+          <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </ComboboxButton>
         <TransitionRoot
           leave="transition ease-in duration-100"
@@ -143,53 +152,76 @@ const updateQuery = (event) => {
       </div>
     </Combobox>
 
-  <!-- Tabela para exibir itens selecionados -->
-  <div class="mt-4 font-sans text-gray-800">
-    <span class="block mb-2 text-sm text-slate-900">Itens Selecionados:</span>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-sm border-collapse">
-        <thead>
-          <tr>
-            <th class="px-2 py-2 border border-gray-900 text-white bg-slate-900">Empresa</th>
-            <th class="px-2 py-2 border border-gray-900 text-center text-white bg-slate-900">Excluir</th> <!-- Coluna adicional para ações -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in selected" :key="item.id" class="hover:bg-gray-100">
-            <td class="px-2 py-2 border border-gray-700">{{ item.name }}</td>
-            <td class="px-2 py-2  text-center border border-gray-700">
-              <button @click="removeItem(item)"                 
-              class="hover:text-red-600 text-slate-900 transform transition-transform duration-500"
-              @mouseover="handleMouseOverButton"
-              @mouseout="handleMouseOutButton">
-                <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
+    <!-- Tabela para exibir itens selecionados -->
+    <div class="mt-4 font-sans text-gray-800">
+      <span class="block mb-2 text-sm text-slate-900">Itens Selecionados:</span>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead>
+            <tr>
+              <th
+                class="px-2 py-2 border border-gray-900 text-white bg-slate-900"
               >
-                <path
-                  fill="currentColor"
-                  d="M19.45 4.06h-4.18v-.5a1.5 1.5 0 0 0-1.5-1.5h-3.54a1.5 1.5 0 0 0-1.5 1.5v.5H4.55a.5.5 0 0 0 0 1h.72l.42 14.45a2.493 2.493 0 0 0 2.5 2.43h7.62a2.493 2.493 0 0 0 2.5-2.43l.42-14.45h.72a.5.5 0 0 0 0-1Zm-9.72-.5a.5.5 0 0 1 .5-.5h3.54a.5.5 0 0 1 .5.5v.5H9.73Zm7.58 15.92a1.5 1.5 0 0 1-1.5 1.46H8.19a1.5 1.5 0 0 1-1.5-1.46L6.26 5.06h11.48Z"
-                />
-                <path
-                  fill="currentColor"
-                  d="M8.375 8a.5.5 0 0 1 1 0l.25 10a.5.5 0 0 1-1 0Zm7.25.007a.5.5 0 0 0-1 0l-.25 10a.5.5 0 0 0 1 0Z"
-                />
-              </svg>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                Empresa
+              </th>
+              <th
+                class="px-2 py-2 border border-gray-900 text-center text-white bg-slate-900"
+              >
+                Excluir
+              </th>
+              <!-- Coluna adicional para ações -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="item in selected"
+              :key="item.id"
+              class="hover:bg-gray-100"
+            >
+              <td class="px-2 py-2 border border-gray-700">{{ item.name }}</td>
+              <td class="px-2 py-2 text-center border border-gray-700">
+                <button
+                  @click="removeItem(item)"
+                  class="hover:text-red-600 text-slate-900 transform transition-transform duration-500"
+                  @mouseover="handleMouseOverButton"
+                  @mouseout="handleMouseOutButton"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M19.45 4.06h-4.18v-.5a1.5 1.5 0 0 0-1.5-1.5h-3.54a1.5 1.5 0 0 0-1.5 1.5v.5H4.55a.5.5 0 0 0 0 1h.72l.42 14.45a2.493 2.493 0 0 0 2.5 2.43h7.62a2.493 2.493 0 0 0 2.5-2.43l.42-14.45h.72a.5.5 0 0 0 0-1Zm-9.72-.5a.5.5 0 0 1 .5-.5h3.54a.5.5 0 0 1 .5.5v.5H9.73Zm7.58 15.92a1.5 1.5 0 0 1-1.5 1.46H8.19a1.5 1.5 0 0 1-1.5-1.46L6.26 5.06h11.48Z"
+                    />
+                    <path
+                      fill="currentColor"
+                      d="M8.375 8a.5.5 0 0 1 1 0l.25 10a.5.5 0 0 1-1 0Zm7.25.007a.5.5 0 0 0-1 0l-.25 10a.5.5 0 0 0 1 0Z"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 <style>
 @media screen and (max-width: 600px) {
-  .sm\:text-xs { font-size: 0.75rem; }
-  .sm\:px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
-  .sm\:py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+  .sm\:text-xs {
+    font-size: 0.75rem;
+  }
+  .sm\:px-1 {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+  .sm\:py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
 }
 </style>

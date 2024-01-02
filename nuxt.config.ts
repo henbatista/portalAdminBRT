@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "nuxt-primevue",
   ],
+
   primevue: {
     usePrimeVue: true,
     options: {},
@@ -48,6 +49,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vue-toastification"],
   },
+  
   components: [
     {
       path: "~/components",

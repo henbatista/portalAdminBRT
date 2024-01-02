@@ -4,6 +4,10 @@ import { useCountryStore } from "../stores/CountryStore";
 
 const countryStore = useCountryStore();
 
+definePageMeta({
+  middleware: ['auth']
+});
+
 onMounted(async () => {
   countryStore.getAllCountries();
 });

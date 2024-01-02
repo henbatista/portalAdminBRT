@@ -13,7 +13,8 @@ import {
 import { BellIcon, CheckIcon, HomeIcon } from "@heroicons/vue/20/solid";
 import { useSidebarStore } from "../stores/SidebarStore";
 import { useSidebarStoreTenant } from "../stores/SidebarStoreTenant";
-
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 import { Icon } from "@iconify/vue";
 
 const menuIcon = "line-md:menu-fold-right";
@@ -22,7 +23,11 @@ const closeIcon = "line-md:menu-fold-left";
 const icons = {
   menuIcon,
   closeIcon,
+  aiportIcon:
+    "streamline:travel-airport-take-off-travel-plane-adventure-airplane-take-off",
 };
+
+const toast = useToast();
 const sidebarStore = useSidebarStore();
 const sidebarStoreTenant = useSidebarStoreTenant();
 
@@ -47,11 +52,33 @@ const navigation: NavigationItem[] = [
   { name: "País", href: "/countries", icon: HomeIcon, current: true },
   { name: "Estados", href: "/states", icon: HomeIcon, current: true },
   { name: "Cidades", href: "/cities", icon: HomeIcon, current: true },
+  {
+    name: "Aeroportos",
+    href: "/airports",
+    icon: HomeIcon,
+    current: true,
+  },
+  {
+    name: "Hotéis Recomendados",
+    href: "/recommendedHotels",
+    icon: HomeIcon,
+    current: true,
+  },
 ];
 
 const userNavigation: UserNavigationItem[] = [
   { name: "Meu Perfil", href: "#" },
+  { name: "Logout", href: "#" } // Adicionado item de logout
 ];
+
+const router = useRouter();
+
+const logout = () => {
+  localStorage.removeItem('authStore'); // Remove a informação de autenticação
+  router.push('/'); // Redireciona para a página de login
+  console.log("Logout realizado!");
+
+};
 
 const sidebarOpen = ref(false);
 
@@ -167,10 +194,10 @@ const closeSidebarTenant = () => {
         </div>
         <div class="mt-2 flex-1 flex px-2 flex-col">
           <nav class="flex-1 px-2 pb-2 space-y-1">
-            <a
+            <NuxtLink
               v-for="item in navigation"
               :key="item.name"
-              :href="item.href"
+              :to="item.href"
               :class="[
                 item.current
                   ? 'bg-slate-800 text-white'
@@ -184,8 +211,9 @@ const closeSidebarTenant = () => {
                 aria-hidden="true"
               />
               {{ item.name }}
-            </a>
+            </NuxtLink>
           </nav>
+          
         </div>
       </div>
     </div>
@@ -235,20 +263,20 @@ const closeSidebarTenant = () => {
                 <MenuItems
                   class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                 >
-                  <MenuItem
-                    v-for="item in userNavigation"
-                    :key="item.name"
-                    v-slot="{ active }"
-                  >
-                    <a
-                      :href="item.href"
-                      :class="[
-                        active ? 'bg-gray-100' : '',
-                        'block px-4 py-2 text-sm text-gray-700',
-                      ]"
-                      >{{ item.name }}</a
-                    >
-                  </MenuItem>
+                <MenuItem
+                v-for="item in userNavigation"
+                :key="item.name"
+                v-slot="{ active }"
+              >
+                <a
+                  :href="item.href"
+                  :class="[
+                    active ? 'bg-gray-100' : '',
+                    'block px-4 py-2 text-sm text-gray-700',
+                  ]"
+                  @click="item.name === 'Logout' ? logout() : null"
+                >{{ item.name }}</a>
+              </MenuItem>
                 </MenuItems>
               </transition>
             </Menu>
@@ -275,6 +303,8 @@ const closeSidebarTenant = () => {
         <FormStates v-if="sidebarStore.currentAction === 'States'" />
         <FormUsers v-if="sidebarStore.currentAction === 'Users'" />
         <FormCities v-if="sidebarStore.currentAction === 'Cities'" />
+        <FormRecommendedHotel v-if="sidebarStore.currentAction === 'Cities'" />
+
       </section>
     </Transition>
     <section
@@ -298,6 +328,9 @@ const closeSidebarTenant = () => {
         <FormUsers v-if="sidebarStoreTenant.currentActionTenant === 'Users'" />
         <FormMarkup
           v-if="sidebarStoreTenant.currentActionTenant === 'Markups'"
+        />
+        <FormAiports
+          v-if="sidebarStoreTenant.currentActionTenant === 'Airports'"
         />
       </section>
     </Transition>

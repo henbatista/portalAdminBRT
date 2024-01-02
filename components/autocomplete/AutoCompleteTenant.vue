@@ -81,7 +81,7 @@ const filteredTenants = computed(() =>
 
       <div class="relative mt-1">
         <div
-          class="relative w-full h-[40px] bg-transparent transition duration-300 border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border"
+          class="relative w-full h-[40px] bg-transparent transition duration-300 border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 cursor-default overflow-hidden bg-white text-left focus:outline-none border"
         >
           <ComboboxInput
             class="w-full border-none py-2.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"

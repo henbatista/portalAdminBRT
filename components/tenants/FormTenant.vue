@@ -617,21 +617,20 @@ onMounted(async () => {
           :updateTenantId="updateTenantId"
         />
       </div>
+
       <div class="">
-        <label
-          for="type-account"
-          class="flex-0 mr-6 md:w-[100px] w-[60px] break-words input-label"
+        <label for="type-account" class="flex-0 md:w-[100px] w-[60px]"
           >Tipo de Conta
         </label>
-        <div class="mt-2 mb-4">
+        <div class="mt-1">
           <select
             id="type-account"
             name="type-account"
             v-model="form.agency.tenant_type"
             autocomplete="type-account"
-            class="block w-full rounded-sm b py-2.5 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
+            class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
           >
-            <option value="Matriz ">Matriz</option>
+            <option value="Matriz">Matriz</option>
             <option value="Agência">Agência</option>
             <option value="Cliente">Cliente</option>
             <option value="Unidade">Unidade</option>

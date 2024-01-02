@@ -34,7 +34,8 @@ const titleComission = "vaadin:money-deposit";
 const valueComission = "fluent-emoji-high-contrast:money-bag";
 const ruleTypeIcon = "carbon:rule";
 const dateIcon = "uiw:date";
-
+const plusIcon = "tabler:plus";
+const minusIcon = "tabler:minus";
 const icons = {
   markupIcon,
   titleIcon,
@@ -49,6 +50,8 @@ const icons = {
   valueComission,
   ruleTypeIcon,
   dateIcon,
+  plusIcon,
+  minusIcon,
 };
 
 const rule = ref<Rule>({
@@ -71,11 +74,36 @@ const commission = ref<Commission>({
   markup_commission_markup_id: 0,
 });
 
+const commissions = ref([
+  {
+    markup_commission_tenants: "",
+    markup_commission_commission_pay: 0,
+    markup_commission_commission_receive: "",
+    markup_commission_title: "",
+    markup_commission_is_active: false,
+    markup_commission_markup_id: 0,
+  },
+]);
+
+function addCommission() {
+  commissions.value.push({
+    markup_commission_tenants: "",
+    markup_commission_commission_pay: 0,
+    markup_commission_commission_receive: "",
+    markup_commission_title: "",
+    markup_commission_is_active: false,
+    markup_commission_markup_id: 0,
+  });
+}
+
+function removeCommission(index: number) {
+  commissions.value.splice(index, 1);
+}
 const markups = ref<Markup>({
   markup_id: "",
   markup_priority: 0,
   markup_type: 0,
-  markup_tenants: "",
+  markup_tenants: [],
   markup_aplied: 0,
   markup_received: 0,
   markup_title: "",
@@ -109,23 +137,32 @@ onMounted(() => {
   const markupExist = markupStore.markups?.find(
     (markup) => markup.markup_id === markupStore.idDeleteOrUpdate,
   );
+  const updateCommission = (commission: Commission[]) => {
+    const commissionsUpdated = commission.map((commission) => ({
+      ...commission,
+    }));
+    return commissionsUpdated;
+  };
 
-  // Se estiver no modo de edição, carrega os dados existentes
   if (markupExist) {
-    markups.value = { ...markupExist };
-
-    // Carregar dados das comissões
-    if (markupExist.markup_commission && markupExist.markup_commission.length > 0) {
-  commission.value = { ...markupExist.markup_commission[0] };
-}
-
-    // Carregar dados das regras
-    if (markupExist.markup_rules && markupExist.markup_rules.length > 0) {
-  rule.value = { ...markupExist.markup_rules[0] };
-}
+    markupStore.markupToUpdate = markupExist;
+    // console.log("COMMISION: ", toRaw(markupExist))
+    // markups.value.markup_id = markupExist.markup_id;
+    // markups.value.markup_priority = markupExist.markup_priority;
+    // markups.value.markup_type = markupExist.markup_type;
+    // markups.value.markup_tenants = markupExist.markup_tenants;
+    // markups.value.markup_aplied = markupExist.markup_aplied;
+    // markups.value.markup_received = markupExist.markup_received;
+    // markups.value.markup_title = markupExist.markup_title;
+    // markups.value.markup_is_active = markupExist.markup_is_active;
+    // Se a tua lógica funcionar é só mudar aqui... Por mais que deu problema no TYPE agora... conseguimos rodar somente para teste
+    // Temos que tirar a função do MAP... porque ela não é necessaria... pois só agora que eu vi que já vem do back como array...
+    // O problema dse ontem quando fizemos essa função é que não sabiamos que tava errado o nome commisions
+    // markups.value.markup_commission = markupExist.commission;
+    // markups.value.markup_commission = markupExist.markup_commission ;
+    // markups.value.markup_rules = markupExist.markup_rules;
   }
 });
-
 </script>
 
 <template>
@@ -321,6 +358,7 @@ onMounted(() => {
                   <AutoCompleteTenantmutiplo
                     :tenantId="markups.markup_tenants"
                     :updateTenantId="updateTenantId"
+                    teste="Tetetererer"
                   />
                 </div>
               </div>
@@ -332,7 +370,7 @@ onMounted(() => {
             title="CADASTRAR COMISSÃO"
             :icon="icons.titleComission"
           >
-            <div>
+            <div v-for="(commission, index) in commissions" :key="index">
               <div
                 class="grid xl:grid-cols-2 mt-1 grid-cols-1 gap-5 bg-slate-50 justify-center -mx-0 px-6 py-3"
               >
@@ -364,7 +402,6 @@ onMounted(() => {
                   </div>
                 </div>
 
-
                 <!-- Valor da Comissão -->
                 <div>
                   <label class="flex-0 text-sm md:w-[100px] w-[60px]">
@@ -392,14 +429,6 @@ onMounted(() => {
                     </div>
                   </div>
                 </div>
-
-                                                <!-- Qual empresa receberá esse markup? -->
-                                                <div>
-                                                  <AutoCompleteTenantmutiplo
-                                                    :tenantId="commission.markup_commission_tenants"
-                                                    :updateTenantId="updateTenantIdComission"
-                                                  />
-                                                </div>
 
                 <!-- Valor da comissão  do provedor de serviços -->
                 <div>
@@ -430,7 +459,14 @@ onMounted(() => {
                     </div>
                   </div>
                 </div>
-                
+
+                <!-- Qual empresa receberá esse markup? -->
+                <div>
+                  <AutoCompleteTenantmutiplo
+                    :tenantId="commission.markup_commission_tenants"
+                    :updateTenantId="updateTenantIdComission"
+                  />
+                </div>
 
                 <!-- Ativo? -->
                 <div>
@@ -447,7 +483,7 @@ onMounted(() => {
                       <span
                         aria-hidden="true"
                         :class="
-                        commission.markup_commission_is_active
+                          commission.markup_commission_is_active
                             ? 'translate-x-4'
                             : '-translate-x-0.5'
                         "
@@ -456,7 +492,24 @@ onMounted(() => {
                     </Switch>
                   </div>
                 </div>
-
+              </div>
+              <div class="flex p-3 justify-end">
+                <div class="grid gap-2 grid-cols-2">
+                  <button
+                    class="inline-flex items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-red-800 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm hover:bg-red-800 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
+                    @click="removeCommission(index)"
+                  >
+                    <Icon class="mr-1" :icon="icons.minusIcon" />
+                    Remover Comissão
+                  </button>
+                  <button
+                    class="inline-flex items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-green-900 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm hover:bg- focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
+                    @click="addCommission"
+                  >
+                    <Icon class="mr-1" :icon="icons.plusIcon" />
+                    Adicionar Comissão
+                  </button>
+                </div>
               </div>
             </div>
           </AccordionItem>

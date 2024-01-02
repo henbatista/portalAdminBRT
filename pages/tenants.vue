@@ -4,6 +4,10 @@ import { useTenantStore } from "~/stores/TenantStore";
 
 const tenantStore = useTenantStore();
 
+definePageMeta({
+  middleware: ['auth']
+});
+
 onMounted(async () => {
   tenantStore.getAllTenants();
 });

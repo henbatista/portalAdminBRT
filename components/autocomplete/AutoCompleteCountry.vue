@@ -1,150 +1,132 @@
-<script setup>
-import { ref, watch, computed } from "vue";
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxButton,
-  ComboboxOptions,
-  ComboboxOption,
-  TransitionRoot,
-} from "@headlessui/vue";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+<script setup lang="ts">
+import { ref, watch, nextTick } from "vue";
 import axios from "axios";
-import { useToast } from "vue-toastification";
-
 import useApiUrl from "@/composables/useApiUrl";
-import { updateCountry } from "~/services/countryService";
+import { Icon } from "@iconify/vue";
 
 const { getApiUrl } = useApiUrl();
 const apiUrl = getApiUrl();
-const toast = useToast();
 
-const countries = ref([{ name: "Afeganistão", id: 1 }]);
-const query = ref("");
+const countryIcon = "gis:search-country";
 
-const getAllCountries = async () => {
+const icons = {
+  countryIcon,
+};
+
+const props = defineProps({
+  countryId: {
+    type: Number,
+    required: true,
+  },
+  updateCountryId: {
+    type: Function,
+  },
+});
+
+interface ICountry {
+  name: string;
+  id: number;
+}
+
+const countries = ref<ICountry[]>([]);
+const isLoading = ref(false);
+const searchQuery = ref("");
+const userInput = ref(true);
+
+watch(searchQuery, (newSearchQuery) => {
+  if (userInput.value && newSearchQuery.length > 2) {
+    isLoading.value = true;
+    fetchStates(newSearchQuery);
+  } else {
+    countries.value = [];
+  }
+});
+
+const updateInput = (
+  nameSelectedCountry: string,
+  idSelectedCountry: number
+) => {
+  userInput.value = false; // Indicar que a atualização não é do usuário
+  searchQuery.value = nameSelectedCountry;
+  if (typeof props.updateCountryId === "function") {
+    props.updateCountryId(nameSelectedCountry, idSelectedCountry);
+  }
+
+  nextTick(() => {
+    countries.value = []; // Limpa a lista, se você quiser
+    userInput.value = true; // Voltar ao estado original
+  });
+};
+
+const fetchStates = async (stringSearch: string) => {
   try {
+    // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}",
+      localStorage.getItem("authStore") || "{}"
     );
     const token = authLocalStore.token;
-
     const { data } = await axios.get(
-      `${apiUrl}/api/v1/countries/pluck?search=${query.value}&per_page=10&order=asc&page=1`,
+      `${apiUrl}/api/v1/countries/pluck?search=${stringSearch}&per_page=10&order=asc&page=1`,
       {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
-    // Verifique se a propriedade 'data' existe na resposta
-    const newCountries = data && data.data ? data.data : [];
-
-    countries.value = Array.isArray(newCountries) ? newCountries : [];
+    countries.value = data.data;
   } catch (error) {
-    toast.error("API do CEP fora do ar, entre em contato com a BRT!");
+    console.error("Erro ao buscar estados:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
-
-getAllCountries();
-
-let selected = ref(null);
-let country_id = ref(null);
-
-watch(selected, (newVal) => {
-  country_id.value = newVal ? newVal.id : null;
-  props.updateCountryId(newVal.name, newVal.id);
-});
-
-watch(query, () => {
-  getAllCountries();
-});
-
-const filteredCountries = computed(() =>
-  query.value === ""
-    ? countries.value
-    : countries.value.filter((country) =>
-        country.name
-          .toLowerCase()
-          .replace(/\s+/g, "")
-          .includes(query.value.toLowerCase().replace(/\s+/g, "")),
-      ),
-);
 </script>
 
 <template>
-  <div class="text-sm w-full">
-    <Combobox v-model="selected">
-      <span>País</span>
-
-      <div class="relative mt-2">
-        <div
-          class="relative w-full h-[48px] bg-transparent transition duration-300 border-slate-200 focus:ring-slate-600 focus:ring-opacity-90 cursor-default overflow-hidden rounded bg-white text-left focus:outline-none border"
-        >
-          <ComboboxInput
-            class="w-full border-none py-3.5 pl-3 pr-10 text-sm leading-5 ali focus:ring-0"
-            :displayValue="(country) => country && country.name"
-            placeholder="Digite o País"
-            @change="query = $event.target.value"
-          />
-          <ComboboxButton
-            class="absolute inset-y-0 right-0 flex items-center pr-2"
+  <div>
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+        País</label
+      >
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
           >
-            <ChevronUpDownIcon
-              class="h-5 w-5 text-gray-400"
-              aria-hidden="true"
+            <Icon :icon="icons.countryIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+            type="text"
+            id="city"
+            v-model="searchQuery"
+            autocomplete="off"
+            placeholder="Digite o nome do País"
+            class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
             />
-          </ComboboxButton>
-        </div>
-        <TransitionRoot
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          @after-leave="query = ''"
-        >
-          <ComboboxOptions
-            class="absolute mt-1 max-h-40 z-50 w-full overflow-auto rounded-md bg-white py-1 text-sm border border-gray-300 ring-0 focus:outline-none shadow-lg"
+            <div
+            v-if="countries.length"
+            class="absolute w-full bg-white mt-1 p-2 border text-sm border-gray-300 rounded max-h-40 overflow-y-auto shadow-lg"
           >
             <div
-              v-if="filteredCountries.length === 0 && query !== ''"
-              class="relative cursor-default select-none py-2 px-4 text-gray-700"
-            >
-              Nenhum Estado encontrado!
-            </div>
-            <ComboboxOption
-              v-for="country in filteredCountries"
-              as="template"
+              v-for="country in countries"
               :key="country.id"
-              :value="country"
-              v-slot="{ selected, active }"
+              class="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+              @click="updateInput(country.name, country.id)"
             >
-              <li
-                class="relative cursor-default select-none py-2 pl-10 pr-4"
-                :class="{
-                  'bg-slate-900 text-white': active,
-                  'text-gray-900': !active,
-                }"
-              >
-                <span
-                  class="block truncate"
-                  :class="{ 'font-medium': selected, 'font-normal': !selected }"
-                >
-                  {{ country.name }}
-                </span>
-                <span
-                  v-if="selected"
-                  class="absolute inset-y-0 left-0 flex items-center pl-3"
-                  :class="{ 'text-white': active, 'text-blue-800': !active }"
-                >
-                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                </span>
-              </li>
-            </ComboboxOption>
-          </ComboboxOptions>
-        </TransitionRoot>
+              {{ country.name }}
+            </div>
+          </div>
+          </div>
+        </div>
       </div>
-    </Combobox>
+    </div>
+
+
+
   </div>
 </template>

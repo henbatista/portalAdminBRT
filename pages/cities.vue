@@ -4,6 +4,10 @@ import { useCityStore } from "../stores/CityStore";
 
 const cityStore = useCityStore();
 
+definePageMeta({
+  middleware: ['auth']
+});
+
 onMounted(async () => {
   cityStore.getAllCities();
 });

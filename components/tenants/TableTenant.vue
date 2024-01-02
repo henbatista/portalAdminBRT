@@ -51,6 +51,7 @@ const props = defineProps<{
   />
   <div class="px-4">
     <div class="sm:flex sm:items-center">
+      <!-- Seção do cabeçalho -->
       <div class="sm:flex-auto mb-3">
         <div class="flex items-center">
           <img

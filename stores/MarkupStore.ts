@@ -10,7 +10,11 @@ import {
 import { useToast } from "vue-toastification";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { useMainStore } from "~/stores/MainStore";
-import { type Markup, type ListMarkups, type Commission } from "../types/markup"; // Altere o caminho conforme a estrutura do seu projeto
+import {
+  type Markup,
+  type ListMarkups,
+  type Commission,
+} from "../types/markup"; // Altere o caminho conforme a estrutura do seu projeto
 
 // Define o store usando o Pinia
 export const useMarkupStore = defineStore("markupStore", () => {
@@ -34,6 +38,8 @@ export const useMarkupStore = defineStore("markupStore", () => {
   const markups = ref<ListMarkups | null>(null);
   const commissions = ref<Commission | null>(null);
 
+  const markupToUpdate = ref<Markup | null>(null);
+
   const toast = useToast();
   const isLoading = ref(true);
 
@@ -47,7 +53,6 @@ export const useMarkupStore = defineStore("markupStore", () => {
       if (response.success) {
         markups.value = response.data.data;
         commissions.value = response.data.data;
-
       } else {
         toast.error("Problemas em carregar lista de markup!");
       }
@@ -182,5 +187,6 @@ export const useMarkupStore = defineStore("markupStore", () => {
     markup_is_active,
     created_at,
     updated_at,
+    markupToUpdate,
   };
 });

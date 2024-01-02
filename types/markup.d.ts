@@ -22,7 +22,7 @@ export interface Markup {
   markup_id: string;
   markup_priority: number;
   markup_type: number;
-  markup_tenants: string; // Alterado para string[]
+  markup_tenants: string[];
   markup_aplied: number;
   markup_received: number;
   markup_title: string;

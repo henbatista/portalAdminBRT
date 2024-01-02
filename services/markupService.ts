@@ -53,7 +53,9 @@ export async function saveMarkup(markup: Markup) {
 
     const axiosPayload = {
       ...markup,
-      markup_commission: markup.markup_commission.map((commission) => ({ ...commission, })),
+      markup_commission: markup.markup_commission.map((commission) => ({
+        ...commission,
+      })),
       markup_rules: markup.markup_rules.map((rules) => ({ ...rules })),
     };
 

@@ -4,6 +4,10 @@ import { useMarkupStore } from "../stores/MarkupStore";
 
 const markupStore = useMarkupStore();
 
+definePageMeta({
+  middleware: ['auth']
+});
+
 onMounted(async () => {
   markupStore.getAllMarkup();
 });
