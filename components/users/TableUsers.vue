@@ -49,6 +49,7 @@ const props = defineProps<{
     title="Deletar Usuário"
     :deleteFunction="userStore.deleteUser"
   />
+
   <div class="px-4">
     <div class="sm:flex sm:items-center">
       <!-- Seção do cabeçalho -->
@@ -86,32 +87,32 @@ const props = defineProps<{
         <thead>
           <tr>
             <th
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Nome
             </th>
             <th
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               E-mail
             </th>
             <th
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Celular
             </th>
             <th
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Telefone
             </th>
             <th
-              class="py-3.5 md:px-0 px-3 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-2 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Ativo
             </th>
             <th
-              class="pr-10 py-3.5 text-right text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:pr-10 p-4 pr-3 md:py-3.5 text-right text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Actions
             </th>
@@ -126,7 +127,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pl-4 text-sm text-left flex flex-col sm:flex-row items-center',
+                'py-4 pl-4 text-sm text-center flex flex-col items-center sm:flex-row sm:items-center',
               ]"
             >
               <div class="lg:col-span-3 md:col-span-5 col-span-12">
@@ -142,12 +143,15 @@ const props = defineProps<{
                   </div>
                 </div>
               </div>
-              <span class="mt-2 sm:ml-4 sm:mt-0">{{ user.name }}</span>
+              <span class="sm:ml-4 text-xs md:text-sm mt-2 sm:mt-0">{{
+                user.name
+              }}</span>
             </td>
+
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ user.email }}
@@ -155,7 +159,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ user.cellphone }}
@@ -163,7 +167,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ user.phone }}
@@ -171,7 +175,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               <span
@@ -190,7 +194,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                'py-2  md:py-4 md:pr-10 pr-6 text-xs md:text-sm text-right',
               ]"
             >
               <button

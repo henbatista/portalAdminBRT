@@ -697,7 +697,7 @@ onMounted(() => {
       </div>
       <div>
         <div class="grid gap-1 text-slate-900 md:grid-cols-1 grid-cols-1 mb-2">
-          <label>Manter usuário ativo? </label>
+          <label>Manter empresa ativa? </label>
           <Switch
             v-model="formTenant.is_active"
             :class="is_active ? 'bg-sky-800' : 'bg-slate-600'"

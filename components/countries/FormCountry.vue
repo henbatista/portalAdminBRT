@@ -171,7 +171,7 @@ function handleCountry() {
               name="name"
               type="text"
               id="iso"
-              placeholder="Digite o código de telefone do país"
+              placeholder="Digite o código ISO do país com duas letras"
               maxlength="2"
               oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '');"
               class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
@@ -201,7 +201,7 @@ function handleCountry() {
               v-model="countryStore.iso3"
               maxlength="3"
               oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '');"
-              placeholder="Digite o código de telefone do país "
+              placeholder="Digite o código ISO do país com 3 dígitos "
               class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
             />
           </div>

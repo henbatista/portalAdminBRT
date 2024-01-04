@@ -94,8 +94,8 @@ onMounted(() => {
 
       <div class="relative mt-1">
         <ComboboxInput
-        class="block w-full rounded-sm b g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
-        placeholder="A quem esta empresa está filiada?"
+          class="block w-full rounded-sm b g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
+          placeholder="A quem esta empresa está filiada?"
           @input="updateQuery"
         />
         <ComboboxButton

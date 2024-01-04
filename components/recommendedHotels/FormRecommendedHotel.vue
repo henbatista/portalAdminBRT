@@ -1,164 +1,128 @@
 <script setup lang="ts">
-import Multiselect from "@vueform/multiselect";
-import { useAirportStore } from "~/stores/AirportStore";
+import { ref, watch, onMounted } from "vue";
+import { useRecommendedHotelStore } from "~/stores/RecommendedHotelStore";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
-import { useToast } from "vue-toastification";
+import type { HotelRecommended } from "../../types/recommendedHotels";
+import { Switch } from "@headlessui/vue";
 import { Icon } from "@iconify/vue";
-import type { ICity } from "../../types/airports"
-import { ref, onMounted } from "vue";
-import axios from "axios";
 
-const airportIcon = "mdi:airport";
-const airportNameIcon = "streamline:airport-plane";
-const iataIcon = "simple-icons:iata";
-const latIcon = "mdi:latitude"
-const logIcon = "mdi:longitude"
+// Definição de ícones relacionados a hotéis
+const recommendedStarIcon = "fluent:ribbon-star-20-regular";
+const hotelIdIcon = "icon-park-outline:hotel-please-clean";
+const providerIcon = "arcticons:providers-id";
+const dateIcon = "uiw:date";
 
+// Agrupando ícones em um objeto para fácil acesso
 const icons = {
-  airportIcon,
-  airportNameIcon,
-  iataIcon,
-  latIcon,
-  logIcon
+  recommendedStarIcon,
+  hotelIdIcon,
+  providerIcon,
+  dateIcon,
 };
 
-const airportStore = useAirportStore();
-const sidebarStoreTenant = useSidebarStoreTenant();
-const toast = useToast();
+// Variável reativa para controlar o estado de 'is_active'
+const status = ref(false);
 
-interface Airport {
-  icao: string;
-  iata: string;
-  name: string;
-  city: string;
-  state: string;
-  country: string;
-  elevation: number;
-  lat: string;
-  lon: string;
-  tz: string;
-}
-
-const airports = ref<Record<string, Airport>>({});
-const searchQuery = ref("");
-const filteredAirports = ref<Airport[]>([]);
-const isLoading = ref(false);
-
-// Carrega os dados dos aeroportos
-const loadAirports = async () => {
-  try {
-    const { data } = await axios.get("https://raw.githubusercontent.com/mwgg/Airports/master/airports.json");
-    airports.value = data;
-  } catch (error) {
-    console.error("Erro ao carregar dados dos aeroportos:", error);
-  }
-};
-
-onMounted(loadAirports);
-
-
-
-// Filtra os aeroportos com base na consulta de pesquisa
-const filterAirports = (query: string) => {
-  if (!query || query.length < 3) {
-    filteredAirports.value = [];
-    return;
-  }
-  isLoading.value = true;
-  filteredAirports.value = Object.values(airports.value).filter(airport =>
-    airport.name.toLowerCase().includes(query.toLowerCase())
-  );
-  isLoading.value = false;
-};
-
-watch(searchQuery, (newValue) => {
-  filterAirports(newValue);
+// Assista a mudanças em 'is_active' e imprima o valor no console
+watch(status, (newVal) => {
+  // Atribuir 1 se is_active for true, 0 se for false
+  const value = newVal ? true : false;
+  console.log(value); // Aqui você pode usar o valor conforme necessário
 });
 
+// Instâncias dos stores e do Toast
+const recommendedHotelStore = useRecommendedHotelStore();
+const sidebarStore = useSidebarStoreTenant();
 
-
-
-// Armazenar os dados do país escolhido no Autocomplete
-const cityType = ref<ICity>({
+const hotelRecommended = ref<HotelRecommended>({
   id: 0,
-  name: "",
-  state: "",
-  state_id: 0,
-  country: "",
-  country_id: 0,
-  destination_type: "",
+  idHotel: "",
+  provider: "",
+  validate_inicial: "",
+  validade_final: "",
+  status: false,
+  created_at: "",
+  updated_at: "",
 });
 
-const updateCountryId = (countryName: string, newCountryId: any) => {
-  cityType.value.country_id = newCountryId;
-  cityType.value.country = countryName;
-};
+function handleSubmit() {
+  // Atualize hotelRecommended com os valores atuais da store antes de enviar
+  hotelRecommended.value = {
+    ...hotelRecommended.value, // Mantém os valores existentes
+    ...recommendedHotelStore.selectedHotel, // Atualiza com valores de selectedHotel
+    // Defina valores padrão ou atualize campos faltantes aqui, se necessário
+  };
 
-const updateStateId = (stateName: string, newStateId: any) => {
-  cityType.value.state_id = newStateId;
-  cityType.value.state = stateName;
-};
-const updateTenantIdComission = (TenantName: string, newTenantId: any) => {
-  cityType.value.name = newTenantId;
-};
+  const { idDeleteOrUpdate } = recommendedHotelStore;
+  const isUpdate = idDeleteOrUpdate !== 0;
+  const saveOrUpdateRecommendedHotels = isUpdate
+    ? recommendedHotelStore.updateRecommendedHotel
+    : recommendedHotelStore.saveRecommendedHotel;
 
-const updateInput = async (selectedAirport: Airport) => {
-  searchQuery.value = selectedAirport.name;
-  selectAirport(selectedAirport);
-  await nextTick();
-  filteredAirports.value = []; // Limpa a lista após a atualização do DOM
-};
-
-const formIsValid = computed(() => allFieldsCompleted());
-
-// Método para selecionar um aeroporto e preencher o formulário
-const selectAirport = (airport: Airport) => {
-  airportStore.name = airport.name;
-  airportStore.iata = airport.iata;
-  airportStore.lat = airport.lat;
-  airportStore.long = airport.lon;
-  // Se necessário, atualize outros campos relacionados ao aeroporto selecionado
-};
-
-function allFieldsCompleted() {
-  const fields = [
-    airportStore.name,
-    airportStore.iata,
-    airportStore.lat,
-    airportStore.long,
-  ];
-  return fields.every((field) => field !== "");
+  console.log("idHotel:", hotelRecommended.value.idHotel);
+  saveOrUpdateRecommendedHotels(hotelRecommended.value);
 }
 
-function handleAirport() {
-  airportStore.saveAirport();
-}
+onMounted(() => {
+  const recommendedHotelsExist = recommendedHotelStore.hotels?.find(
+    (hotel) => hotel.id === recommendedHotelStore.idDeleteOrUpdate,
+  );
+  if (recommendedHotelsExist) {
+    hotelRecommended.value.id = recommendedHotelsExist.id;
+    hotelRecommended.value.idHotel = recommendedHotelsExist.idHotel;
+    hotelRecommended.value.provider = recommendedHotelsExist.provider;
+    hotelRecommended.value.validate_inicial =
+      recommendedHotelsExist.validate_inicial;
+    hotelRecommended.value.validade_final =
+      recommendedHotelsExist.validade_final;
+    hotelRecommended.value.status = recommendedHotelsExist.status;
+  }
+});
 
+const providerLocal = ref("");
+
+// Quando o hotel selecionado na store muda, atualize a variável local
+watch(
+  () => recommendedHotelStore.selectedHotel,
+  (newVal) => {
+    providerLocal.value = newVal ? newVal.provider : "";
+    console.log("providerLocal updated:", providerLocal.value); //
+  },
+  { immediate: true },
+);
+
+// Quando a variável local muda, atualize a store
+watch(providerLocal, (newVal) => {
+  if (recommendedHotelStore.selectedHotel) {
+    recommendedHotelStore.selectedHotel.provider = newVal;
+    hotelRecommended.value.provider = newVal;
+  }
+});
 </script>
 
 <template>
-  <div class="bg-slate-50 justify-end -mx-6 px-6 py-6">
+  <div class="bg-slate-50 justify-center -mx-6 px-6 py-6">
     <div class="flex justify-between mb-2">
       <div class="ml-6 grid text-slate-900 lg:grid-cols-1 grid-cols-1">
         <span
           class="flex items-center md:text-xl gap-2 font-semibold text-lg"
-          v-if="airportStore.idDeleteOrUpdate === 0"
+          v-if="recommendedHotelStore.idDeleteOrUpdate === 0"
         >
-          <Icon class="-mt-0.5" :icon="icons.airportIcon" />
-          Adicionar Aeroporto</span
+          <Icon class="-mt-0.5" :icon="icons.recommendedStarIcon" /> Adicionar
+          Hotel Recomendado</span
         >
         <span
           class="flex items-center md:text-xl gap-2 font-semibold text-lg"
           v-else
         >
-          <Icon class="-mt-0.5" :icon="icons.airportIcon" />
-          Atualizar Aeroporto</span
+          <Icon class="-mt-0.5" :icon="icons.recommendedStarIcon" />
+          Atualizar Hotel Recomendado</span
         >
         <div class="flex-1 md:text-base text-xs">
-          Preencha os dados para cadastrar um novo Aeroporto.
+          Preencha os dados para cadastrar um novo Hotel Recomendado.
         </div>
       </div>
-      <button @click="sidebarStoreTenant.sideBarActionTenant = false">
+      <button @click="sidebarStore.sideBarActionTenant = false">
         <svg
           class="mr-7"
           xmlns="http://www.w3.org/2000/svg"
@@ -174,217 +138,189 @@ function handleAirport() {
       </button>
     </div>
   </div>
+  <div class="mt-3">
+    <div class="mx-5">
+      <form @submit.prevent="handleSubmit">
+        <div class="grid xl:grid-cols-1 grid-cols-1 gap-5">
+          <!-- idHotel -->
+          <AutoCompleteHotels v-model="hotelRecommended.idHotel" />
 
-  <section class="grid lg:grid-cols-2 grid-cols-1 gap-5 p-6">
-
-    
-    <!-- Nome do Aeroporto -->
-
-    <div>
-      <label class="flex-0 text-sm md:w-[100px] w-[60px] ">Aeroporto</label>
-      <div class="flex items-stretch mt-1">
-        <span class="flex-none input-group-addon">
-          <span
-            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
-          >
-            <Icon :icon="icons.airportNameIcon" />
-          </span> 
-        </span>
-        <div class="flex-1">
-          <div class="relative fromGroup2">
-            <input
-            type="text"
-            id="airport"
-            v-model="searchQuery"
-            autocomplete="off"
-            placeholder="Digite o nome do Aeroporto"
-            class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-          />
-          <div
-          v-if="filteredAirports.length"
-          class="w-full bg-white mt-1 p-2 border text-sm border-gray-300 rounded max-h-40 overflow-y-auto shadow-lg"
-        >
-          <div
-            v-for="airport in filteredAirports"
-            :key="airport.icao"
-            class="px-2 py-1 hover:bg-gray-200 cursor-pointer"
-            @click="updateInput(airport)"
-          >
-            {{ airport.name }} ({{ airport.city }}, {{ airport.country }})
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- IATA -->
-    <div>
-      <label class="flex-0 text-sm md:w-[100px] w-[60px]">IATA</label>
-      <div class="flex mt-1 items-stretch">
-        <span class="flex-none input-group-addon">
-          <span
-            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
-          >
-            <Icon class="w-full" :icon="icons.iataIcon" />
-          </span>
-        </span>
-        <div class="flex-1">
-          <div class="relative fromGroup2">
-            <input
-              v-model="airportStore.iata"
-              name="iata"
-              id="iataName"
-              label="IATA"
-              type="text"
-              placeholder="Digite a sigla IATA"
-              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-        <!-- Latitude -->
-        <div>
-          <label class="flex-0 text-sm md:w-[100px] w-[60px]">Latitude</label>
-          <div class="flex mt-1 items-stretch">
-            <span class="flex-none input-group-addon">
-              <span
-                class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
-              >
-                <Icon class="w-full" :icon="icons.latIcon" />
+          <!-- Provedor -->
+          <div>
+            <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+              Provedor
+            </label>
+            <div class="flex mt-1 items-stretch">
+              <span class="flex-none input-group-addon">
+                <span
+                  class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-900 text-base font-light h-full"
+                >
+                  <Icon :icon="icons.providerIcon" />
+                </span>
               </span>
-            </span>
-            <div class="flex-1">
-              <div class="relative fromGroup2">
-                <input
-                  v-model="airportStore.lat"
-                  name="lat"
-                  id="latPosition"
-                  label="Latitude"
-                  type="text"
-                  placeholder="Digite a Latitude"
-                  class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-                />
+              <div class="flex-1">
+                <div class="relative fromGroup2">
+                  <input
+                    v-model="providerLocal"
+                    name="provider"
+                    label="provider"
+                    type="text"
+                    placeholder="Provedor do hotel"
+                    class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        
-        <!-- Latitude -->
-        <div>
-          <label class="flex-0 text-sm md:w-[100px] w-[60px]">Longitude</label>
-          <div class="flex mt-1 items-stretch">
-            <span class="flex-none input-group-addon">
-              <span
-                class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          <!-- Validade Inicial -->
+          <div class="grid xl:grid-cols-2 grid-cols-1 gap-5">
+            <div>
+              <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+                Validade Inicial</label
               >
-                <Icon class="w-full" :icon="icons.logIcon" />
-              </span>
-            </span>
-            <div class="flex-1">
-              <div class="relative fromGroup2">
-                <input
-                v-model="airportStore.long"
-                name="lat"
-                id="longPosition"
-                label="Longitude"
-                  type="text"
-                  placeholder="Digite a Longitude"
-                  class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-                />
+              <div class="flex mt-1 items-stretch">
+                <span class="flex-none input-group-addon">
+                  <span
+                    class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+                  >
+                    <Icon :icon="icons.dateIcon" />
+                  </span>
+                </span>
+                <div class="flex-1">
+                  <div class="relative fromGroup2">
+                    <input
+                      v-model="hotelRecommended.validate_inicial"
+                      name="vi_Fullname"
+                      label="Passaport"
+                      type="date"
+                      placeholder="Insira o númedo do passaport"
+                      class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Validade Final -->
+            <div>
+              <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+                Validade Final</label
+              >
+              <div class="flex mt-1 items-stretch">
+                <span class="flex-none input-group-addon">
+                  <span
+                    class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+                  >
+                    <Icon :icon="icons.dateIcon" />
+                  </span>
+                </span>
+                <div class="flex-1">
+                  <div class="relative fromGroup2">
+                    <input
+                      v-model="hotelRecommended.validade_final"
+                      name="vi_Fullname"
+                      label="Passaport"
+                      type="date"
+                      placeholder="Insira o númedo do passaport"
+                      class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <div>
+            <div
+              class="grid gap-1 text-slate-900 md:grid-cols-1 grid-cols-1 mb-2"
+            >
+              <label class="text-sm mt-1">Manter hotel ativo? </label>
+              <Switch
+                v-model="hotelRecommended.status"
+                :class="status ? 'bg-sky-800' : 'bg-slate-600'"
+                class="relative mt-1 inline-flex h-[18px] w-[36px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+              >
+                <span class="sr-only text-cyan-300"></span>
+                <span
+                  aria-hidden="true"
+                  :class="
+                    hotelRecommended.status
+                      ? 'translate-x-4'
+                      : '-translate-x-0.5'
+                  "
+                  class="pointer-events-none inline-block h-[18px] -mt-0.5 w-[18px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+                />
+              </Switch>
+            </div>
+          </div>
         </div>
+      </form>
 
-        
-    <div>
-      <AutoCompleteCountry
-        :countryId="cityType.country_id"
-        :updateCountryId="updateCountryId"
-      />
-    </div>
-
-    <div>
-      <AutoCompleteState
-        :stateId="cityType.state_id"
-        :updateStateId="updateStateId"
-      />
-    </div>
-
-
-
-
-  </section>
-
-
-
-  <div class="px-60">
-    <AutoCompleteCitymutiplo 
-    :tenantId="airportStore.citiesSelectedToAirport"
-    :updateTenantId="updateTenantIdComission"
-    />
-  </div>
-
-  <div class="flex p mt-8 flex-col items-end justify-end mr-6">
-    <button
-      :disabled="!formIsValid"
-      @click="handleAirport"
-      :class="airportStore.isLoading || !formIsValid ? 'opacity-25' : ''"
-      class="inline-flex mt-5 items-center justify-center rounded capitalize border border-transparent bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90"
-    >
-      <div
-        v-if="!airportStore.isLoading"
-        class="flex justify-center gap-5 items-center"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            d="M11 13H6q-.425 0-.713-.288T5 12q0-.425.288-.713T6 11h5V6q0-.425.288-.713T12 5q.425 0 .713.288T13 6v5h5q.425 0 .713.288T19 12q0 .425-.288.713T18 13h-5v5q0 .425-.288.713T12 19q-.425 0-.713-.288T11 18v-5Z"
-          />
-        </svg>
-        <span v-if="airportStore.idDeleteOrUpdate === 0"
-          >ADICIONAR AEROPORTO</span
-        ><span v-else>ATUALIZAR AEROPORTO</span>
+      <!-- Botão de envio -->
+      <div class="grid xl:grid-cols-1 grid-cols-">
+        <div class="justify-self-end xl:mt-0 mt-4">
+          <div class="text-right mt-6">
+            <button
+              @click="handleSubmit"
+              :class="!recommendedHotelStore.isLoading ? '' : 'opacity-50'"
+              class="inline-flex mt-5 transition-all duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+            >
+              <div
+                v-if="!recommendedHotelStore.isLoading"
+                class="flex justify-center gap-5 items-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M11 13H6q-.425 0-.713-.288T5 12q0-.425.288-.713T6 11h5V6q0-.425.288-.713T12 5q.425 0 .713.288T13 6v5h5q.425 0 .713.288T19 12q0 .425-.288.713T18 13h-5v5q0 .425-.288.713T12 19q-.425 0-.713-.288T11 18v-5Z"
+                  />
+                </svg>
+                <span v-if="recommendedHotelStore.idDeleteOrUpdate === 0"
+                  >ADICIONAR HOTEL RECOMENDADO</span
+                ><span v-else>ATUALIZAR HOTEL RECOMENDADO</span>
+              </div>
+              <div v-else>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="#ffffff"
+                    d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                    opacity=".25"
+                  />
+                  <path
+                    fill="#ffffff"
+                    d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                  >
+                    <animateTransform
+                      attributeName="transform"
+                      dur="0.75s"
+                      repeatCount="indefinite"
+                      type="rotate"
+                      values="0 12 12;360 12 12"
+                    />
+                  </path>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-else>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="#ffffff"
-            d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
-            opacity=".25"
-          />
-          <path
-            fill="#ffffff"
-            d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
-          >
-            <animateTransform
-              attributeName="transform"
-              dur="0.75s"
-              repeatCount="indefinite"
-              type="rotate"
-              values="0 12 12;360 12 12"
-            />
-          </path>
-        </svg>
-      </div>
-    </button>
+    </div>
   </div>
-
 </template>
 
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style lang="scss" scoped>
+button:hover {
+  transform: scale(1.02);
+}
+</style>

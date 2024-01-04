@@ -13,8 +13,8 @@ import {
 import { BellIcon, CheckIcon, HomeIcon } from "@heroicons/vue/20/solid";
 import { useSidebarStore } from "../stores/SidebarStore";
 import { useSidebarStoreTenant } from "../stores/SidebarStoreTenant";
-import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 import { Icon } from "@iconify/vue";
 
 const menuIcon = "line-md:menu-fold-right";
@@ -60,7 +60,7 @@ const navigation: NavigationItem[] = [
   },
   {
     name: "Hotéis Recomendados",
-    href: "/recommendedHotels",
+    href: "/recommendedhotels",
     icon: HomeIcon,
     current: true,
   },
@@ -68,16 +68,15 @@ const navigation: NavigationItem[] = [
 
 const userNavigation: UserNavigationItem[] = [
   { name: "Meu Perfil", href: "#" },
-  { name: "Logout", href: "#" } // Adicionado item de logout
+  { name: "Logout", href: "#" }, // Adicionado item de logout
 ];
 
 const router = useRouter();
 
 const logout = () => {
-  localStorage.removeItem('authStore'); // Remove a informação de autenticação
-  router.push('/'); // Redireciona para a página de login
-  console.log("Logout realizado!");
-
+  localStorage.removeItem("authStore"); // Remove a informação de autenticação
+  router.push("/"); // Redireciona para a página de login
+  toast.success("Logout realizado com sucesso!");
 };
 
 const sidebarOpen = ref(false);
@@ -213,7 +212,6 @@ const closeSidebarTenant = () => {
               {{ item.name }}
             </NuxtLink>
           </nav>
-          
         </div>
       </div>
     </div>
@@ -263,20 +261,21 @@ const closeSidebarTenant = () => {
                 <MenuItems
                   class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                 >
-                <MenuItem
-                v-for="item in userNavigation"
-                :key="item.name"
-                v-slot="{ active }"
-              >
-                <a
-                  :href="item.href"
-                  :class="[
-                    active ? 'bg-gray-100' : '',
-                    'block px-4 py-2 text-sm text-gray-700',
-                  ]"
-                  @click="item.name === 'Logout' ? logout() : null"
-                >{{ item.name }}</a>
-              </MenuItem>
+                  <MenuItem
+                    v-for="item in userNavigation"
+                    :key="item.name"
+                    v-slot="{ active }"
+                  >
+                    <a
+                      :href="item.href"
+                      :class="[
+                        active ? 'bg-gray-100' : '',
+                        'block px-4 py-2 text-sm text-gray-700',
+                      ]"
+                      @click="item.name === 'Logout' ? logout() : null"
+                      >{{ item.name }}</a
+                    >
+                  </MenuItem>
                 </MenuItems>
               </transition>
             </Menu>
@@ -303,8 +302,9 @@ const closeSidebarTenant = () => {
         <FormStates v-if="sidebarStore.currentAction === 'States'" />
         <FormUsers v-if="sidebarStore.currentAction === 'Users'" />
         <FormCities v-if="sidebarStore.currentAction === 'Cities'" />
-        <FormRecommendedHotel v-if="sidebarStore.currentAction === 'Cities'" />
-
+        <FormRecommendedHotel
+          v-if="sidebarStore.currentAction === 'Recommended'"
+        />
       </section>
     </Transition>
     <section

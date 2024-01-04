@@ -5,7 +5,7 @@ import { useStateStore } from "../stores/StatesStore";
 const stateStore = useStateStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

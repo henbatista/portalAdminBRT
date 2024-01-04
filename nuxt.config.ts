@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vue-toastification"],
   },
-  
+
   components: [
     {
       path: "~/components",

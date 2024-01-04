@@ -5,7 +5,7 @@ import { useBankStore } from "../stores/BankStore";
 const bankStore = useBankStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

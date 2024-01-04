@@ -4,7 +4,7 @@ import type { ListMarkups } from "~/types/markup";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { useMarkupStore } from "~/stores/MarkupStore";
 import { useMainStore } from "~/stores/MainStore";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 // Variáveis reativas para lidar com estados de hover
 const activeHover = ref({
@@ -18,6 +18,21 @@ const handleMouseOver = () => {
 const handleMouseOut = () => {
   activeHover.value.is_active = !activeHover.value.is_active;
 };
+
+const filterState = ref("all");
+
+const setFilterState = (state: "all" | "active" | "inactive") => {
+  filterState.value = state;
+};
+
+const sortedMarkups = computed(() => {
+  if (props.markups) {
+    return [...props.markups].sort((a, b) =>
+      a.markup_title.localeCompare(b.markup_title),
+    );
+  }
+  return [];
+});
 
 // Variáveis reativas para o estado de hover do botão
 const buttonHover = ref({
@@ -82,37 +97,59 @@ const props = defineProps<{
 
     <!-- Seção da tabela de usuários -->
     <div class="overflow-x-auto mt-5">
+      <div class="mt-4 mb-4 px-2">
+        <div class="grid xl:grid-cols-5 md:grid-cols-4 grid-cols-1 gap-4">
+          <button
+            @click="setFilterState('all')"
+            class="inline-flex transition-all md:mx-0 mx-10 p-5 duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 sm:w-auto"
+          >
+            Mostrar Todos
+          </button>
+          <button
+            @click="setFilterState('active')"
+            class="inline-flex transition-all md:mx-0 mx-10 duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-teal-600 bg-teal-600 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-teal-600 focus:ring-offset-2 sm:w-auto"
+          >
+            Mostrar Apenas Ativos
+          </button>
+          <button
+            @click="setFilterState('inactive')"
+            class="inline-flex transition-all md:mx-0 mx-10 duration-150 items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-opacity-80 ring-black-900 hover:ring-offset-1 ring-red-500 bg-red-500 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-opacity-90 focus:outline-1 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:w-auto"
+          >
+            Mostrar Apenas Desativados
+          </button>
+        </div>
+      </div>
       <table class="min-w-full divide-y shadow-lg mb-10 divide-gray-300">
         <thead>
           <tr>
             <th
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Markup
             </th>
             <th
-              class="py-3.5 text-center text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Prioridade do Markup
             </th>
             <th
-              class="py-3.5 text-center text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Markup Recebido
             </th>
             <th
-              class="py-3.5 text-center text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Tipo do Markup
             </th>
 
             <th
-              class="py-3.5 md:px-0 px-3 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Ativo
             </th>
             <th
-              class="pr-10 py-3.5 text-right text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:pr-10 p-4 pr-3 md:py-3.5 text-right text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Actions
             </th>
@@ -120,14 +157,20 @@ const props = defineProps<{
         </thead>
         <tbody>
           <template
-            v-for="(markup, markupIdx) in props.markups"
+            v-for="(markup, markupIdx) in sortedMarkups"
             :key="markupIdx"
           >
-            <tr v-if="markup.markup_is_active">
+            <tr
+              v-if="
+                filterState === 'all' ||
+                (filterState === 'active' && markup.markup_is_active) ||
+                (filterState === 'inactive' && !markup.markup_is_active)
+              "
+            >
               <td
                 :class="[
                   markupIdx === 0 ? '' : 'border-t border-gray-200',
-                  'py-4  pl-4  text-sm text-left',
+                  'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
                 ]"
               >
                 {{ markup.markup_title }}
@@ -135,7 +178,7 @@ const props = defineProps<{
               <td
                 :class="[
                   markupIdx === 0 ? '' : 'border-t border-gray-200',
-                  'py-4 text-sm text-center',
+                  'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
                 ]"
               >
                 {{ markup.markup_priority }}
@@ -143,7 +186,7 @@ const props = defineProps<{
               <td
                 :class="[
                   markupIdx === 0 ? '' : 'border-t border-gray-200',
-                  'py-4 text-sm text-center',
+                  'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
                 ]"
               >
                 {{ markup.markup_received }}
@@ -151,7 +194,7 @@ const props = defineProps<{
               <td
                 :class="[
                   markupIdx === 0 ? '' : 'border-t border-gray-200',
-                  'py-4 text-sm text-center',
+                  'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
                 ]"
               >
                 {{ markup.markup_type }}
@@ -159,7 +202,7 @@ const props = defineProps<{
               <td
                 :class="[
                   markupIdx === 0 ? '' : 'border-t border-gray-200',
-                  'py-4  text-sm text-left',
+                  'py-2 md:px-4 px-11 md:py-4 text-xs md:text-sm text-left',
                 ]"
               >
                 <span
@@ -174,11 +217,10 @@ const props = defineProps<{
                   @mouseout="handleMouseOut"
                 ></span>
               </td>
-
               <td
                 :class="[
                   markupIdx === 0 ? '' : 'border-t border-gray-200',
-                  'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                  'py-2  md:py-4 md:pr-10 pr-6 text-xs md:text-sm text-right',
                 ]"
               >
                 <button

@@ -44,7 +44,7 @@ watch(searchQuery, (newSearchQuery) => {
 
 const updateInput = (
   nameSelectedCountry: string,
-  idSelectedCountry: number
+  idSelectedCountry: number,
 ) => {
   userInput.value = false; // Indicar que a atualização não é do usuário
   searchQuery.value = nameSelectedCountry;
@@ -62,7 +62,7 @@ const fetchStates = async (stringSearch: string) => {
   try {
     // Pegar o token do localStorage
     const authLocalStore = JSON.parse(
-      localStorage.getItem("authStore") || "{}"
+      localStorage.getItem("authStore") || "{}",
     );
     const token = authLocalStore.token;
     const { data } = await axios.get(
@@ -72,9 +72,8 @@ const fetchStates = async (stringSearch: string) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
-
     countries.value = data.data;
   } catch (error) {
     console.error("Erro ao buscar estados:", error);
@@ -87,9 +86,7 @@ const fetchStates = async (stringSearch: string) => {
 <template>
   <div>
     <div>
-      <label class="flex-0 text-sm md:w-[100px] w-[60px]">
-        País</label
-      >
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]"> País</label>
       <div class="flex mt-1 items-stretch">
         <span class="flex-none input-group-addon">
           <span
@@ -101,32 +98,29 @@ const fetchStates = async (stringSearch: string) => {
         <div class="flex-1">
           <div class="relative fromGroup2">
             <input
-            type="text"
-            id="city"
-            v-model="searchQuery"
-            autocomplete="off"
-            placeholder="Digite o nome do País"
-            class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+              type="text"
+              id="city"
+              v-model="searchQuery"
+              autocomplete="off"
+              placeholder="Digite o nome do País"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
             />
             <div
-            v-if="countries.length"
-            class="absolute w-full bg-white mt-1 p-2 border text-sm border-gray-300 rounded max-h-40 overflow-y-auto shadow-lg"
-          >
-            <div
-              v-for="country in countries"
-              :key="country.id"
-              class="px-2 py-1 hover:bg-gray-200 cursor-pointer"
-              @click="updateInput(country.name, country.id)"
+              v-if="countries.length"
+              class="absolute w-full bg-white mt-1 p-2 border text-sm border-gray-300 rounded max-h-40 overflow-y-auto shadow-lg"
             >
-              {{ country.name }}
+              <div
+                v-for="country in countries"
+                :key="country.id"
+                class="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                @click="updateInput(country.name, country.id)"
+              >
+                {{ country.name }}
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
     </div>
-
-
-
   </div>
 </template>

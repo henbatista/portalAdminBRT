@@ -5,7 +5,7 @@ import { useTenantStore } from "~/stores/TenantStore";
 const tenantStore = useTenantStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

@@ -64,15 +64,13 @@ const props = defineProps<{
         <thead>
           <tr>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               DATA
             </th>
 
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               <div class="flex items-center justify-center space-x-1">
                 <Icon :icon="icons.dolar" class="w-4 h-4" />
@@ -81,8 +79,7 @@ const props = defineProps<{
             </th>
 
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               <div class="flex items-center justify-center space-x-1">
                 <Icon :icon="icons.euro" class="w-4 h-4" />
@@ -90,8 +87,7 @@ const props = defineProps<{
               </div>
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               <div class="flex items-center justify-center space-x-1">
                 <Icon :icon="icons.libra" class="w-4 h-4" />
@@ -108,7 +104,7 @@ const props = defineProps<{
             <td
               :class="[
                 exchangeIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4 pl-4 text-sm text-left',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ exchange.created_at }}
@@ -116,7 +112,7 @@ const props = defineProps<{
             <td
               :class="[
                 exchangeIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-center',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
               ]"
             >
               {{ exchange.USD }}
@@ -124,7 +120,7 @@ const props = defineProps<{
             <td
               :class="[
                 exchangeIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-center',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
               ]"
             >
               {{ exchange.EUR }}
@@ -132,7 +128,7 @@ const props = defineProps<{
             <td
               :class="[
                 exchangeIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-center',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
               ]"
             >
               {{ exchange.GBP }}

@@ -5,7 +5,7 @@ import { useCityStore } from "../stores/CityStore";
 const cityStore = useCityStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

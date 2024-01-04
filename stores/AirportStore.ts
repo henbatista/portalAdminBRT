@@ -22,7 +22,6 @@ export const useAirportStore = defineStore("airportStore", () => {
   const long = ref("");
   const country = ref("");
 
-
   const airportToUpdateCities = ref("");
   const citiesSelectedToAirport = ref([]);
 
@@ -96,7 +95,7 @@ export const useAirportStore = defineStore("airportStore", () => {
         iata: iata.value,
         lat: lat.value,
         long: long.value,
-        country: country.value
+        country: country.value,
       };
       const { data } = await axios.post(
         `${apiUrl}/api/v1/airports`,

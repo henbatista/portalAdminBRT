@@ -2,7 +2,14 @@
 import { ref, onMounted, watch } from "vue";
 import { useMarkupStore } from "~/stores/MarkupStore";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
-import type { Markup, Commission, Rule } from "../../types/markup";
+import { useRecommendedHotelStore } from "~/stores/RecommendedHotelStore";
+import type {
+  Markup,
+  Commission,
+  Rule,
+  HotelRuleId,
+  HotelRuleName,
+} from "../../types/markup";
 import { Icon } from "@iconify/vue";
 import { Switch } from "@headlessui/vue";
 
@@ -18,6 +25,7 @@ watch(is_active, (newVal) => {
 
 // Instâncias dos stores e do Toast
 const markupStore = useMarkupStore();
+const recommendedHotelStore = useRecommendedHotelStore();
 const sidebarStore = useSidebarStoreTenant();
 
 // icons
@@ -36,6 +44,7 @@ const ruleTypeIcon = "carbon:rule";
 const dateIcon = "uiw:date";
 const plusIcon = "tabler:plus";
 const minusIcon = "tabler:minus";
+const hotelNameIcon = "emojione-monotone:hotel";
 const icons = {
   markupIcon,
   titleIcon,
@@ -52,58 +61,41 @@ const icons = {
   dateIcon,
   plusIcon,
   minusIcon,
+  hotelNameIcon,
 };
+const hotelRuleId = ref<HotelRuleId>({
+  hotel_id: "",
+  hotel_name: "",
+});
+
+const hotelRuleName = ref<HotelRuleName>({
+  hotel_name: "",
+});
 
 const rule = ref<Rule>({
   markup_rule_type: "",
   markup_rule_period_inicial: "",
   markup_rule_period_final: "",
   markup_rule_days: 0,
-  markup_rule_hotels_ids: [],
-  markup_rule_hotels_names: [],
+  markup_rule_hotel_ids: [hotelRuleId.value],
+  markup_rule_hotel_names: [hotelRuleName.value],
   markup_rule_value: 0,
   markup_rule_is_active: false,
 });
 
 const commission = ref<Commission>({
-  markup_commission_tenants: "",
+  markup_commission_tenant_ids: "",
   markup_commission_commission_pay: 0,
   markup_commission_commission_receive: "",
   markup_commission_title: "",
   markup_commission_is_active: false,
-  markup_commission_markup_id: 0,
 });
 
-const commissions = ref([
-  {
-    markup_commission_tenants: "",
-    markup_commission_commission_pay: 0,
-    markup_commission_commission_receive: "",
-    markup_commission_title: "",
-    markup_commission_is_active: false,
-    markup_commission_markup_id: 0,
-  },
-]);
-
-function addCommission() {
-  commissions.value.push({
-    markup_commission_tenants: "",
-    markup_commission_commission_pay: 0,
-    markup_commission_commission_receive: "",
-    markup_commission_title: "",
-    markup_commission_is_active: false,
-    markup_commission_markup_id: 0,
-  });
-}
-
-function removeCommission(index: number) {
-  commissions.value.splice(index, 1);
-}
 const markups = ref<Markup>({
   markup_id: "",
   markup_priority: 0,
   markup_type: 0,
-  markup_tenants: [],
+  markup_tenant_ids: [],
   markup_aplied: 0,
   markup_received: 0,
   markup_title: "",
@@ -126,11 +118,11 @@ function handleSubmit() {
 
 const updateTenantId = (TenantName: string, newTenantId: any) => {
   console.log(typeof newTenantId);
-  markups.value.markup_tenants = newTenantId;
+  markups.value.markup_tenant_ids = newTenantId;
 };
 
 const updateTenantIdComission = (TenantName: string, newTenantId: any) => {
-  commission.value.markup_commission_tenants = newTenantId;
+  commission.value.markup_commission_tenant_ids = newTenantId;
 };
 
 onMounted(() => {
@@ -163,6 +155,48 @@ onMounted(() => {
     // markups.value.markup_rules = markupExist.markup_rules;
   }
 });
+
+const idHotelLocal = ref("");
+
+// Quando o hotel selecionado na store muda, atualize a variável local
+watch(
+  () => recommendedHotelStore.selectedHotel,
+  (newVal) => {
+    // Converte o valor para string antes de atribuir a idHotelLocal
+    idHotelLocal.value = newVal && newVal.code ? newVal.code.toString() : "";
+    console.log("idHotelLocal updated:", idHotelLocal.value); // Checagem para ver o valor atualizado
+  },
+  { immediate: true },
+);
+
+// Quando a variável local muda, atualize a store
+watch(idHotelLocal, (newVal) => {
+  if (recommendedHotelStore.selectedHotel) {
+    recommendedHotelStore.selectedHotel.code = newVal;
+    hotelRuleId.value.hotel_id = newVal;
+  }
+});
+
+const nameHotelLocal = ref("");
+
+// Quando o hotel selecionado na store muda, atualize a variável local
+watch(
+  () => recommendedHotelStore.selectedHotel,
+  (newVal) => {
+    // Converte o valor para string antes de atribuir a idHotelLocal
+    nameHotelLocal.value = newVal && newVal.name ? newVal.name.toString() : "";
+    console.log("idHotelLocal updated:", nameHotelLocal.value); // Checagem para ver o valor atualizado
+  },
+  { immediate: true },
+);
+
+// Quando a variável local muda, atualize a store
+watch(nameHotelLocal, (newVal) => {
+  if (recommendedHotelStore.selectedHotel) {
+    recommendedHotelStore.selectedHotel.name = newVal;
+    hotelRuleName.value.hotel_name = newVal;
+  }
+});
 </script>
 
 <template>
@@ -181,7 +215,7 @@ onMounted(() => {
           v-else
         >
           <Icon class="-mt-0.5" :icon="icons.markupIcon" />
-          Atualizar Usuário</span
+          Atualizar Markup</span
         >
         <div class="flex-1 md:text-base text-xs">
           Preencha os dados para cadastrar um novo Usuário.
@@ -356,7 +390,7 @@ onMounted(() => {
                 <!-- Autocomplete Tenante -->
                 <div>
                   <AutoCompleteTenantmutiplo
-                    :tenantId="markups.markup_tenants"
+                    :tenantId="markups.markup_tenant_ids"
                     :updateTenantId="updateTenantId"
                     teste="Tetetererer"
                   />
@@ -370,7 +404,7 @@ onMounted(() => {
             title="CADASTRAR COMISSÃO"
             :icon="icons.titleComission"
           >
-            <div v-for="(commission, index) in commissions" :key="index">
+            <div>
               <div
                 class="grid xl:grid-cols-2 mt-1 grid-cols-1 gap-5 bg-slate-50 justify-center -mx-0 px-6 py-3"
               >
@@ -463,7 +497,7 @@ onMounted(() => {
                 <!-- Qual empresa receberá esse markup? -->
                 <div>
                   <AutoCompleteTenantmutiplo
-                    :tenantId="commission.markup_commission_tenants"
+                    :tenantId="commission.markup_commission_tenant_ids"
                     :updateTenantId="updateTenantIdComission"
                   />
                 </div>
@@ -491,24 +525,6 @@ onMounted(() => {
                       />
                     </Switch>
                   </div>
-                </div>
-              </div>
-              <div class="flex p-3 justify-end">
-                <div class="grid gap-2 grid-cols-2">
-                  <button
-                    class="inline-flex items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-red-800 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm hover:bg-red-800 focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
-                    @click="removeCommission(index)"
-                  >
-                    <Icon class="mr-1" :icon="icons.minusIcon" />
-                    Remover Comissão
-                  </button>
-                  <button
-                    class="inline-flex items-center justify-center rounded capitalize border border-transparent hover:ring-2 hover:ring-green-900 ring-black-900 hover:ring-offset-1 ring-slate-950 bg-slate-900 px-2 py-1 text-xs font-medium text-white shadow-sm hover:bg- focus:outline-1 focus:ring-2 focus:ring-slate-950 focus:ring-offset-2"
-                    @click="addCommission"
-                  >
-                    <Icon class="mr-1" :icon="icons.plusIcon" />
-                    Adicionar Comissão
-                  </button>
                 </div>
               </div>
             </div>
@@ -637,48 +653,65 @@ onMounted(() => {
                 </div>
 
                 <!-- Hotéis -->
-                <div class="">
-                  <label
-                    for="type-account"
-                    class="flex-0 mr-6 text-sm md:w-[100px] w-[60px] break-words input-label"
-                    >Hotéis
+
+                <AutoCompleteHotels v-model="hotelRuleId.hotel_name" />
+
+                <div class="hidden">
+                  <!-- ID do Hotel -->
+                  <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+                    ID do Hotel
                   </label>
-                  <div class="mt-1">
-                    <select
-                      id="type-account"
-                      name="type-account"
-                      v-model="rule.markup_rule_hotels_names"
-                      autocomplete="type-account"
-                      class="block w-full rounded-sm b h-10 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
-                    >
-                      <option value="Teste">Teste</option>
-                      <option value="Teste">Teste</option>
-                      <option value="Teste">Teste</option>
-                    </select>
+                  <div class="flex mt-1 items-stretch">
+                    <span class="flex-none input-group-addon">
+                      <span
+                        class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+                      >
+                        <Icon :icon="icons.markupReceivedIcon" />
+                      </span>
+                    </span>
+                    <div class="flex-1">
+                      <div class="relative fromGroup2">
+                        <input
+                          v-model="idHotelLocal"
+                          name="idHotel"
+                          label="idHotel"
+                          type="text"
+                          placeholder="Provedor do hotel"
+                          class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="">
-                  <label
-                    for="type-account"
-                    class="flex-0 mr-6 text-sm md:w-[100px] w-[60px] break-words input-label"
-                    >Hotéis ids
+                <div class="hidden">
+                  <!-- Nome do Hotel -->
+                  <label class="flex-0 text-sm md:w-[100px] w-[60px]">
+                    Nome do Hotel
                   </label>
-                  <div class="mt-1">
-                    <select
-                      id="type-account"
-                      name="type-account"
-                      v-model="rule.markup_rule_hotels_ids"
-                      type="number"
-                      autocomplete="type-account"
-                      class="block w-full rounded-sm b h-10 g-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 focus:outline-none text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600"
-                    >
-                      <option value="1">Teste</option>
-                      <option value="1">Teste</option>
-                      <option value="1">Teste</option>
-                    </select>
+                  <div class="flex mt-1 items-stretch">
+                    <span class="flex-none input-group-addon">
+                      <span
+                        class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+                      >
+                        <Icon :icon="icons.hotelNameIcon" />
+                      </span>
+                    </span>
+                    <div class="flex-1">
+                      <div class="relative fromGroup2">
+                        <input
+                          v-model="nameHotelLocal"
+                          name="idHotel"
+                          label="idHotel"
+                          type="text"
+                          placeholder="Provedor do hotel"
+                          class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
+
                 <!-- Valor do markup -->
                 <div>
                   <label class="flex-0 text-sm md:w-[100px] w-[60px]"

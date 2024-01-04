@@ -5,7 +5,7 @@ import { useCountryStore } from "../stores/CountryStore";
 const countryStore = useCountryStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

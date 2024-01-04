@@ -37,13 +37,12 @@ export const useMarkupStore = defineStore("markupStore", () => {
 
   const markups = ref<ListMarkups | null>(null);
   const commissions = ref<Commission | null>(null);
-
   const markupToUpdate = ref<Markup | null>(null);
 
   const toast = useToast();
   const isLoading = ref(true);
 
-  // Busca todos os Usuários na API
+  // Busca todos os Markups na API
   async function getAllMarkup() {
     isLoading.value = true;
     try {
@@ -131,7 +130,7 @@ export const useMarkupStore = defineStore("markupStore", () => {
     }
   }
 
-  // Atualiza um Usuário existente na API
+  // Atualiza um Markup existente na API
   async function updateMarkup(markup: Markup) {
     try {
       const response = await updateMarkupService(markup);

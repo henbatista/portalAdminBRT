@@ -88,44 +88,37 @@ const props = defineProps<{
           <!-- Cabeçalho da tabela -->
           <tr>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Nome da empresa
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               CNPJ
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               E-mail
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Telefone
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-center text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Tipo de empresa
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-2 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Ativo
             </th>
             <th
-              scope="col"
-              class="pr-10 py-3.5 text-right text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:pr-10 p-4 pr-3 md:py-3.5 text-right text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Actions
             </th>
@@ -142,7 +135,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pl-4 text-sm text-left flex flex-col sm:flex-row items-center',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ tenant.name }}
@@ -151,7 +144,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ tenant.cpf_cnpj }}
@@ -160,7 +153,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4  text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ tenant.email }}
@@ -169,7 +162,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
               ]"
             >
               {{ tenant.phone }}
@@ -178,7 +171,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-center',
               ]"
             >
               {{ tenant.tenant_type }}
@@ -187,7 +180,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4 text-sm text-left',
+                'py-2 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               <span
@@ -207,7 +200,7 @@ const props = defineProps<{
             <td
               :class="[
                 index === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                'py-2  md:py-4 md:pr-10 pr-6 text-xs md:text-sm text-right',
               ]"
             >
               <!-- Botão para deletar cliente -->

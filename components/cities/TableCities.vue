@@ -73,26 +73,22 @@ const props = defineProps<{
         <thead>
           <tr>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Cidade
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Estado
             </th>
             <th
-              scope="col"
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               País
             </th>
             <th
-              scope="col"
-              class="pr-10 py-3.5 text-right text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:pr-5 pr-2 md:py-3.5 text-right text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Actions
             </th>
@@ -103,7 +99,7 @@ const props = defineProps<{
             <td
               :class="[
                 cityIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4 pl-4 text-sm text-left',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ city.name }}
@@ -111,7 +107,7 @@ const props = defineProps<{
             <td
               :class="[
                 cityIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ city.state }}
@@ -119,7 +115,7 @@ const props = defineProps<{
             <td
               :class="[
                 cityIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ city.country }}
@@ -127,7 +123,7 @@ const props = defineProps<{
             <td
               :class="[
                 cityIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                'py-2 px-5 md:py-4 text-xs md:text-sm text-right',
               ]"
             >
               <button

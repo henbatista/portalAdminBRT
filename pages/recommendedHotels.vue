@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useAirportStore } from "../stores/AirportStore";
+import { useRecommendedHotelStore } from "../stores/RecommendedHotelStore";
 
-const airportStore = useAirportStore();
+const recommendedHotelStore = useRecommendedHotelStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {
-  airportStore.getAllAirports();
+  recommendedHotelStore.getAllRecommendedHotel();
 });
 </script>
 
 <template>
   <NuxtLayout name="dashboard-layout">
     <section>
-      <Spinner v-if="airportStore.isLoading" />
+      <Spinner v-if="recommendedHotelStore.isLoading" />
       <TableRecommendedHotel
-        v-if="airportStore.airports !== null"
-        :airports="airportStore.airports"
+        v-if="recommendedHotelStore.hotels !== null"
+        :hotels="recommendedHotelStore.hotels"
       />
     </section>
   </NuxtLayout>

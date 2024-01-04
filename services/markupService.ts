@@ -41,7 +41,7 @@ export async function getAllMarkup() {
   }
 }
 
-// Função para salvar um novo Usuário
+// Função para salvar um novo Markup
 export async function saveMarkup(markup: Markup) {
   try {
     const authLocalStore = JSON.parse(
@@ -58,9 +58,8 @@ export async function saveMarkup(markup: Markup) {
       })),
       markup_rules: markup.markup_rules.map((rules) => ({ ...rules })),
     };
-
-    // console.log('Markup Commission:', axiosPayload.markup_commission);
-    // console.log('Markup Rules:', axiosPayload.markup_rules);
+    console.log("Markup Commission:", axiosPayload.markup_commission);
+    console.log("Markup Rules:", axiosPayload.markup_rules);
     const { data } = await axios.post(
       `${apiUrl}/api/v1/markups`,
       axiosPayload,
@@ -86,12 +85,14 @@ export async function saveMarkup(markup: Markup) {
   }
 }
 
+// Interface para atualizar um Markup existente
 interface UpdateMarkupResponse {
   success: boolean;
   data?: any; // Tipo do objeto de dados retornado pela API
   error?: string | object; // Pode ser uma mensagem de erro ou detalhes específicos
 }
 
+// Função para Autualizar um Markup existente
 export async function updateMarkup(
   markup: Markup,
 ): Promise<UpdateMarkupResponse> {
@@ -132,12 +133,14 @@ export async function updateMarkup(
   }
 }
 
+// Interface para deletar um Markup existente
 interface DeleteMarkupResponse {
   success: boolean;
   data?: any; // Adapte conforme necessário para os dados retornados pela API
   error?: string; // Adapte conforme necessário para o tipo de erro retornado pela API
 }
-// Função para deletar um estado existente
+
+// Função para deletar um Markup existente
 export async function deleteMarkup(
   markupId: string,
 ): Promise<DeleteMarkupResponse> {

@@ -5,7 +5,7 @@ import { useExchangesStore } from "../stores/ExchangesStore";
 const exchangesStore = useExchangesStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

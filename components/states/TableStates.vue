@@ -65,17 +65,17 @@ const props = defineProps<{
         <thead>
           <tr>
             <th
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Nome
             </th>
             <th
-              class="py-3.5 text-left text-sm font-semibold text-slate-900 bg-gray-50"
+              class="py-2 md:py-3.5 md:px-3 px-10 text-left text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               País
             </th>
             <th
-              class="pr-10 py-3.5 text-right text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:pr-10 p-4 pr-3 md:py-3.5 text-right text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Actions
             </th>
@@ -86,7 +86,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4 pl-4 text-sm text-left',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ state.name }}
@@ -94,7 +94,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-left',
+                'py-2 md:px-3 px-10 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ state.country }}
@@ -103,7 +103,7 @@ const props = defineProps<{
             <td
               :class="[
                 stateIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                'py-2  md:py-4 md:pr-10 pr-6 text-xs md:text-sm text-right',
               ]"
             >
               <button

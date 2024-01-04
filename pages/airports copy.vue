@@ -5,7 +5,7 @@ import { useAirportStore } from "../stores/AirportStore";
 const airportStore = useAirportStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

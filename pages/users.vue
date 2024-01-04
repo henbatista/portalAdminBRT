@@ -5,7 +5,7 @@ import { useUserStore } from "../stores/userStore";
 const userStore = useUserStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

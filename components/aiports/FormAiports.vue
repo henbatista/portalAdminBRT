@@ -1,31 +1,35 @@
 <script setup lang="ts">
-import Multiselect from "@vueform/multiselect";
+// Importações necessárias para gerenciamento de estado, notificações, ícones e requisições HTTP
 import { useAirportStore } from "~/stores/AirportStore";
 import { useSidebarStoreTenant } from "~/stores/SidebarStoreTenant";
 import { useToast } from "vue-toastification";
 import { Icon } from "@iconify/vue";
-import type { ICity } from "../../types/airports"
+import type { ICity } from "../../types/airports";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
+// Definição de ícones relacionados a aeroportos
 const airportIcon = "mdi:airport";
 const airportNameIcon = "streamline:airport-plane";
 const iataIcon = "simple-icons:iata";
-const latIcon = "mdi:latitude"
-const logIcon = "mdi:longitude"
+const latIcon = "mdi:latitude";
+const logIcon = "mdi:longitude";
 
+// Agrupando ícones em um objeto para fácil acesso
 const icons = {
   airportIcon,
   airportNameIcon,
   iataIcon,
   latIcon,
-  logIcon
+  logIcon,
 };
 
+// Inicializando stores e toast para notificações
 const airportStore = useAirportStore();
 const sidebarStoreTenant = useSidebarStoreTenant();
 const toast = useToast();
 
+// Tipo para dados do aeroporto
 interface Airport {
   icao: string;
   iata: string;
@@ -39,46 +43,46 @@ interface Airport {
   tz: string;
 }
 
+// Variáveis reativas para armazenar dados dos aeroportos e estado da aplicação
 const airports = ref<Record<string, Airport>>({});
 const searchQuery = ref("");
 const filteredAirports = ref<Airport[]>([]);
 const isLoading = ref(false);
 
-// Carrega os dados dos aeroportos
+// Função assíncrona para carregar dados dos aeroportos de um arquivo JSON
 const loadAirports = async () => {
   try {
-    const { data } = await axios.get("https://raw.githubusercontent.com/mwgg/Airports/master/airports.json");
+    const { data } = await axios.get(
+      "https://raw.githubusercontent.com/mwgg/Airports/master/airports.json",
+    );
     airports.value = data;
   } catch (error) {
-    console.error("Erro ao carregar dados dos aeroportos:", error);
+    toast.error("Erro ao carregar dados dos aeroportos:");
   }
 };
 
+// Carrega aeroportos quando o componente é montado
 onMounted(loadAirports);
 
-
-
-// Filtra os aeroportos com base na consulta de pesquisa
+// Filtra aeroportos baseado na consulta de pesquisa
 const filterAirports = (query: string) => {
   if (!query || query.length < 3) {
     filteredAirports.value = [];
     return;
   }
   isLoading.value = true;
-  filteredAirports.value = Object.values(airports.value).filter(airport =>
-    airport.name.toLowerCase().includes(query.toLowerCase())
+  filteredAirports.value = Object.values(airports.value).filter((airport) =>
+    airport.name.toLowerCase().includes(query.toLowerCase()),
   );
   isLoading.value = false;
 };
 
+// Atualiza a lista de aeroportos filtrados quando a consulta de pesquisa muda
 watch(searchQuery, (newValue) => {
   filterAirports(newValue);
 });
 
-
-
-
-// Armazenar os dados do país escolhido no Autocomplete
+// Variáveis e funções para atualizar o estado do formulário e do Autocomplete
 const cityType = ref<ICity>({
   id: 0,
   name: "",
@@ -98,10 +102,12 @@ const updateStateId = (stateName: string, newStateId: any) => {
   cityType.value.state_id = newStateId;
   cityType.value.state = stateName;
 };
+
 const updateTenantIdComission = (TenantName: string, newTenantId: any) => {
   cityType.value.name = newTenantId;
 };
 
+// Atualiza o estado do formulário com base na seleção do usuário
 const updateInput = async (selectedAirport: Airport) => {
   searchQuery.value = selectedAirport.name;
   selectAirport(selectedAirport);
@@ -109,17 +115,18 @@ const updateInput = async (selectedAirport: Airport) => {
   filteredAirports.value = []; // Limpa a lista após a atualização do DOM
 };
 
+// Computed property para verificar se todos os campos do formulário estão preenchidos
 const formIsValid = computed(() => allFieldsCompleted());
 
-// Método para selecionar um aeroporto e preencher o formulário
+// Função para selecionar um aeroporto e preencher o formulário
 const selectAirport = (airport: Airport) => {
   airportStore.name = airport.name;
   airportStore.iata = airport.iata;
   airportStore.lat = airport.lat;
   airportStore.long = airport.lon;
-  // Se necessário, atualize outros campos relacionados ao aeroporto selecionado
 };
 
+// Verifica se todos os campos obrigatórios estão preenchidos
 function allFieldsCompleted() {
   const fields = [
     airportStore.name,
@@ -130,10 +137,10 @@ function allFieldsCompleted() {
   return fields.every((field) => field !== "");
 }
 
+// Função para salvar as informações do aeroporto no estado
 function handleAirport() {
   airportStore.saveAirport();
 }
-
 </script>
 
 <template>
@@ -176,48 +183,44 @@ function handleAirport() {
   </div>
 
   <section class="grid lg:grid-cols-2 grid-cols-1 gap-5 p-6">
-
-    
     <!-- Nome do Aeroporto -->
-
     <div>
-      <label class="flex-0 text-sm md:w-[100px] w-[60px] ">Aeroporto</label>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">Aeroporto</label>
       <div class="flex items-stretch mt-1">
         <span class="flex-none input-group-addon">
           <span
             class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
           >
             <Icon :icon="icons.airportNameIcon" />
-          </span> 
+          </span>
         </span>
         <div class="flex-1">
           <div class="relative fromGroup2">
             <input
-            type="text"
-            id="airport"
-            v-model="searchQuery"
-            autocomplete="off"
-            placeholder="Digite o nome do Aeroporto"
-            class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-          />
-          <div
-          v-if="filteredAirports.length"
-          class="w-full bg-white mt-1 p-2 border text-sm border-gray-300 rounded max-h-40 overflow-y-auto shadow-lg"
-        >
-          <div
-            v-for="airport in filteredAirports"
-            :key="airport.icao"
-            class="px-2 py-1 hover:bg-gray-200 cursor-pointer"
-            @click="updateInput(airport)"
-          >
-            {{ airport.name }} ({{ airport.city }}, {{ airport.country }})
-          </div>
-        </div>
+              type="text"
+              id="airport"
+              v-model="searchQuery"
+              autocomplete="off"
+              placeholder="Digite o nome do Aeroporto"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
+            <div
+              v-if="filteredAirports.length"
+              class="w-full bg-white mt-1 p-2 border text-sm border-gray-300 rounded max-h-40 overflow-y-auto shadow-lg"
+            >
+              <div
+                v-for="airport in filteredAirports"
+                :key="airport.icao"
+                class="px-2 py-1 hover:bg-gray-200 cursor-pointer"
+                @click="updateInput(airport)"
+              >
+                {{ airport.name }} ({{ airport.city }}, {{ airport.country }})
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
 
     <!-- IATA -->
     <div>
@@ -246,62 +249,60 @@ function handleAirport() {
       </div>
     </div>
 
-        <!-- Latitude -->
-        <div>
-          <label class="flex-0 text-sm md:w-[100px] w-[60px]">Latitude</label>
-          <div class="flex mt-1 items-stretch">
-            <span class="flex-none input-group-addon">
-              <span
-                class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
-              >
-                <Icon class="w-full" :icon="icons.latIcon" />
-              </span>
-            </span>
-            <div class="flex-1">
-              <div class="relative fromGroup2">
-                <input
-                  v-model="airportStore.lat"
-                  name="lat"
-                  id="latPosition"
-                  label="Latitude"
-                  type="text"
-                  placeholder="Digite a Latitude"
-                  class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-                />
-              </div>
-            </div>
+    <!-- Latitude -->
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">Latitude</label>
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon class="w-full" :icon="icons.latIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="airportStore.lat"
+              name="lat"
+              id="latPosition"
+              label="Latitude"
+              type="text"
+              placeholder="Digite a Latitude"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
           </div>
         </div>
+      </div>
+    </div>
 
-        
-        <!-- Latitude -->
-        <div>
-          <label class="flex-0 text-sm md:w-[100px] w-[60px]">Longitude</label>
-          <div class="flex mt-1 items-stretch">
-            <span class="flex-none input-group-addon">
-              <span
-                class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
-              >
-                <Icon class="w-full" :icon="icons.logIcon" />
-              </span>
-            </span>
-            <div class="flex-1">
-              <div class="relative fromGroup2">
-                <input
-                v-model="airportStore.long"
-                name="lat"
-                id="longPosition"
-                label="Longitude"
-                  type="text"
-                  placeholder="Digite a Longitude"
-                  class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
-                />
-              </div>
-            </div>
+    <!-- Latitude -->
+    <div>
+      <label class="flex-0 text-sm md:w-[100px] w-[60px]">Longitude</label>
+      <div class="flex mt-1 items-stretch">
+        <span class="flex-none input-group-addon">
+          <span
+            class="bg-white transition duration-300 ease-in-out flex items-center justify-center px-3 border border-slate-200 text-slate-400 text-base font-light h-full"
+          >
+            <Icon class="w-full" :icon="icons.logIcon" />
+          </span>
+        </span>
+        <div class="flex-1">
+          <div class="relative fromGroup2">
+            <input
+              v-model="airportStore.long"
+              name="lat"
+              id="longPosition"
+              label="Longitude"
+              type="text"
+              placeholder="Digite a Longitude"
+              class="bg-white transition duration-300 ease-in-out border border-slate-200 focus:ring-0 placeholder:text-slate-400 text-slate-900 text-sm px-3 placeholder:font-light focus:border-slate-600 block w-full focus:outline-none h-[40px]"
+            />
           </div>
         </div>
+      </div>
+    </div>
 
-        
     <div>
       <AutoCompleteCountry
         :countryId="cityType.country_id"
@@ -315,18 +316,12 @@ function handleAirport() {
         :updateStateId="updateStateId"
       />
     </div>
-
-
-
-
   </section>
 
-
-
   <div class="md:px-60 px-6">
-    <AutoCompleteCitymutiplo 
-    :tenantId="airportStore.citiesSelectedToAirport"
-    :updateTenantId="updateTenantIdComission"
+    <AutoCompleteCitymutiplo
+      :tenantId="airportStore.citiesSelectedToAirport"
+      :updateTenantId="updateTenantIdComission"
     />
   </div>
 
@@ -384,7 +379,6 @@ function handleAirport() {
       </div>
     </button>
   </div>
-
 </template>
 
 <style src="@vueform/multiselect/themes/default.css"></style>

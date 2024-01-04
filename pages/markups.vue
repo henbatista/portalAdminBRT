@@ -5,7 +5,7 @@ import { useMarkupStore } from "../stores/MarkupStore";
 const markupStore = useMarkupStore();
 
 definePageMeta({
-  middleware: ['auth']
+  middleware: ["auth"],
 });
 
 onMounted(async () => {

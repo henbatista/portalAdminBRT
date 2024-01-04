@@ -72,32 +72,27 @@ const props = defineProps<{
         <thead>
           <tr>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Aeroporto
             </th>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Cidade
             </th>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               Estado
             </th>
             <th
-              scope="col"
-              class="py-3.5 pl-4 pr-3 text-center text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:py-3.5 pl-4 pr-3 text-left text-xs md:text-sm font-semibold text-gray-900 bg-gray-50"
             >
               País
             </th>
             <th
-              scope="col"
-              class="pr-5 py-3.5 text-right text-sm font-semibold text-gray-900 bg-gray-50"
+              class="py-2 md:pr-10 p-4 pr-3 md:py-3.5 text-right text-xs md:text-sm font-semibold text-slate-900 bg-gray-50"
             >
               Actions
             </th>
@@ -108,7 +103,7 @@ const props = defineProps<{
             <td
               :class="[
                 airportIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4 pl-4 text-sm text-left',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{ airport.name }}
@@ -116,7 +111,7 @@ const props = defineProps<{
             <td
               :class="[
                 airportIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4 pl-4 text-sm text-center',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{
@@ -128,7 +123,7 @@ const props = defineProps<{
             <td
               :class="[
                 airportIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-center',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{
@@ -140,7 +135,7 @@ const props = defineProps<{
             <td
               :class="[
                 airportIdx === 0 ? '' : 'border-t border-gray-200',
-                'relative py-4  text-sm text-center',
+                'py-2 md:px-4 px-3 md:py-4 text-xs md:text-sm text-left',
               ]"
             >
               {{
@@ -149,10 +144,11 @@ const props = defineProps<{
                   : "Sem país"
               }}
             </td>
+
             <td
               :class="[
                 airportIdx === 0 ? '' : 'border-t border-gray-200',
-                'py-4 pr-10 text-right text-sm font-semibold text-gray-900',
+                'py-2 md:px-11 px-6 md:py-4 text-xs md:text-sm text-right',
               ]"
             >
               <button
